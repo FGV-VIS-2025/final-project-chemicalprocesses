@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Page 0 - Summary</title>
+
+  <!-- Estilo global -->
+  <link rel="stylesheet" href="../style.css" />
+
+  <!-- Biblioteca D3.js -->
+  <script src="https://d3js.org/d3.v7.min.js" defer></script>
+
+  <!-- Script específico da página -->
+  <script src="../js/page1.js" defer></script>
+</head>
+<body>
+  <div id="container">
+    
+    <!-- Navigation Menu -->
+    <nav>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="page0.html">Introduction</a></li>
+        <li><a href="page1.html">Reaction orders</a></li>
+        <li><a href="page2.html">Activation Energy</a></li>
+        <li><a href="page3.html">Reaction Mechanism</a></li>
+        <li><a href="page4.html">Catalyst Effect</a></li>
+        <li><a href="page5.html">Radioactivity</a></li>
+      </ul>
+    </nav>
+
+
+<div class="page" id="page0" style="font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; padding: 20px; background-color: #f7f7f7;">
+    <h1 style="color: #2c3e50; text-align: center;">Chemical Reaction Visualizer</h1>
+    <p style="font-size: 1.1em; color: #4b4b4b;">
+      <strong style="color: #34495e;">Chemical kinetics</strong> is the branch of chemistry that studies the speed or rate of chemical reactions and how various factors, like reactant concentration, temperature, and the presence of catalysts, influence this rate. This knowledge is vital for optimizing chemical processes in a variety of applications, ranging from industrial production to biological systems.
+    </p>
+    
+    <p style="font-size: 1.1em; color: #4b4b4b;">
+      A fundamental concept in kinetics is the <strong style="color: #34495e;">rate law</strong>, which defines how the rate of a reaction is related to the concentrations of the reactants. The rate law varies based on the order of the reaction, which is determined experimentally. Below are explanations for the most common types of reaction orders:
+    </p>
+    
+    <ul style="font-size: 1.1em; list-style-type: square; padding-left: 20px; color: #555;">
+      <li><strong style="color: #34495e;">First-order reactions:</strong> In a first-order reaction, the rate is directly proportional to the concentration of one reactant. For example, for the reaction <em>A → B</em>, the rate law is: <code style="color: #16a085;">rate = k[A]</code>. Here, doubling the concentration of A will double the reaction rate.</li>
+      <li><strong style="color: #34495e;">Second-order reactions:</strong> In a second-order reaction, the rate is proportional to the square of the concentration of the reactant, or to the product of the concentrations of two reactants. For example, <em>2A → B</em> would have the rate law: <code style="color: #16a085;">rate = k[A]<sup>2</sup></code>. If the concentration of A is doubled, the rate increases by a factor of four.</li>
+      <li><strong style="color: #34495e;">Third-order reactions:</strong> In a third-order reaction, the rate depends on the concentration of a reactant raised to the third power or a combination of three reactants. For example, the rate law for a reaction involving three molecules of A might be: <code style="color: #16a085;">rate = k[A]<sup>3</sup></code>. If the concentration of A is doubled, the rate increases by a factor of eight.</li>
+    </ul>
+    
+    <p style="font-size: 1.1em; color: #4b4b4b;">
+      The rate constant, <code style="color: #16a085;">k</code>, is unique to each reaction and depends on factors such as temperature and the presence of a catalyst.
+    </p>
+  
+    <p style="font-size: 1.1em; color: #4b4b4b;">
+      The <strong style="color: #34495e;">Arrhenius equation</strong> describes how the rate constant <code style="color: #16a085;">k</code> changes with temperature:
+    </p>
+  
+    <p style="text-align: center; font-size: 1.2em; color: #333;">
+      <code style="font-size: 1.5em; font-weight: bold; color: #34495e;">k = A · e<sup style="font-size: 1.3em;">−Eₐ/RT</sup></code>
+    </p>
+    
+    <p style="font-size: 1.1em; color: #4b4b4b;">
+      In the Arrhenius equation:
+      <ul style="font-size: 1.1em; list-style-type: square; padding-left: 20px; color: #555;">
+        <li><code style="color: #16a085;">A</code> is the frequency factor, related to the number of collisions between molecules,</li>
+        <li><code style="color: #16a085;">Eₐ</code> is the activation energy, which represents the minimum energy needed to initiate the reaction,</li>
+        <li><code style="color: #16a085;">R</code> is the gas constant, and</li>
+        <li><code style="color: #16a085;">T</code> is the temperature in kelvins.</li>
+      </ul>
+      As temperature increases, the rate constant <code style="color: #16a085;">k</code> increases exponentially, leading to faster reactions.
+    </p>
+    
+    <p style="font-size: 1.1em; color: #4b4b4b;">
+      Reactions often proceed via a series of elementary steps, each with its own rate law. These steps form the <strong style="color: #34495e;">reaction mechanism</strong>, which provides insight into the detailed process of a reaction. For example, the <strong style="color: #34495e;">SN2 reaction</strong> involves a single, concerted step where a nucleophile attacks the substrate, displacing the leaving group.
+    </p>
+    
+    <p style="font-size: 1.1em; color: #4b4b4b;">
+      <strong style="color: #34495e;">Catalysts</strong> are substances that accelerate chemical reactions without being consumed. They work by offering an alternative reaction pathway with a lower activation energy, making the reaction occur more easily.
+    </p>
+    
+    <p style="font-size: 1.1em; color: #4b4b4b;">
+      This interactive tool allows you to explore these principles visually and intuitively:
+      <ul style="font-size: 1.1em; list-style-type: square; padding-left: 20px; color: #555;">
+        <li><strong style="color: #34495e;">Kinetics:</strong> Adjust reactant concentrations and rate constants to observe how the reaction rate changes over time.</li>
+        <li><strong style="color: #34495e;">Activation Energy:</strong> Visualize the Arrhenius equation and see how changes in temperature affect the reaction rate.</li>
+        <li><strong style="color: #34495e;">Reaction Mechanism:</strong> Explore animations of complex mechanisms, such as SN2, showing each step in detail.</li>
+        <li><strong style="color: #34495e;">Catalyst Effect:</strong> Compare reaction profiles with and without a catalyst to understand its impact.</li>
+      </ul>
+      Dive into this interactive project to gain a deeper understanding of chemical reactions and the factors that govern them!
+    </p>
+  </div>

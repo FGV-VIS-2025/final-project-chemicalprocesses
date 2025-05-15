@@ -1,0 +1,206 @@
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #e7eff2; /* Background color that is easy on the eyes */
+      color: #333;
+    }
+
+    #container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Navigation Styles */
+    nav {
+      background-color: #34495e;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    nav ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    nav a {
+      color: #ecf0f1;
+      text-decoration: none;
+      font-size: 1.2em;
+      padding: 10px;
+    }
+
+    nav a:hover {
+      background-color: #16a085;
+      color: #fff;
+      border-radius: 5px;
+    }
+
+    /* Content Styling */
+    #content {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    h1 {
+      font-size: 3em;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 1.3em;
+      color: #4b4b4b;
+    }
+
+    /* Team Information Section */
+    .team-info {
+      margin-top: 50px;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      color: #333;
+    }
+
+    .team-info h2 {
+      color: #34495e;
+      font-size: 2em;
+    }
+
+    .team-info p {
+      font-size: 1.1em;
+      color: #555;
+    }
+
+    .team-info ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .team-info li {
+      font-size: 1.1em;
+      color: #16a085;
+    }
+
+    .team-info li span {
+      color: #34495e;
+      font-weight: bold;
+    }
+
+    /* Footer Section */
+    footer {
+      background-color: #34495e;
+      color: #ecf0f1;
+      padding: 15px;
+      text-align: center;
+      margin-top: 50px;
+      border-radius: 8px;
+    }
+    
+
+    .navbar {
+      background-color: #222;
+      padding: 10px;
+      color: white;
+    }
+    
+    .navbar-menu {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+    }
+    
+    .navbar-menu li a {
+      color: white;
+      text-decoration: none;
+    }
+    
+    .navbar-menu li a:hover {
+      text-decoration: underline;
+    }
+    
+
+    #chat {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      min-height: 300px;
+      font-size: 1.2rem;
+    }
+    .bot-msg {
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    #options {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    button {
+      font-size: 1.4rem;
+      padding: 15px 25px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: #007acc;
+      color: white;
+      flex-grow: 1;
+      min-width: 120px;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #005fa3;
+    }
+    #result {
+      margin-top: 25px;
+      background: #e1f0ff;
+      padding: 15px;
+      border-radius: 6px;
+      font-size: 1.6rem;
+      white-space: pre-line;
+      min-height: 150px;
+    }
+    select, input[type=number] {
+      font-size: 1.2rem;
+      padding: 8px 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 10px;
+    }
+    label {
+      font-weight: 600;
+      margin-top: 15px;
+      display: block;}
+
+
+      #animacao {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        background: #f7f7f7;
+        border: 1px solid #ccc;
+        margin-top: 20px;
+        overflow: hidden;
+      }
+      
+      .particula {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      
+      
