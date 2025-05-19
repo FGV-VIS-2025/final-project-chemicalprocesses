@@ -1,241 +1,340 @@
-// Aguarda o carregamento completo do DOM antes de executar o script
-document.addEventListener("DOMContentLoaded", () => {
-  // Seleciona os elementos de entrada e exibição de valores
-  const concAInput = document.getElementById("concA");           // Slider de concentração inicial [A]₀
-  const rateKInput = document.getElementById("rateK");           // Slider da constante de taxa k
-  const concAVal = document.getElementById("concAVal");          // Span que exibe o valor de [A]₀
-  const rateKVal = document.getElementById("rateKVal");          // Span que exibe o valor de k
-  const reactionOrderSelect = document.getElementById("reactionOrder"); // Dropdown da ordem da reação
+// =======================
+// Seletores e Configuração Inicial
+// =======================
+const concAInput = document.getElementById("concA");
+const concAVal = document.getElementById("concAVal");
+const kInput = document.getElementById("k");
+const kVal = document.getElementById("kVal");
+const orderInput = document.getElementById("order");
+const orderValue = document.getElementById("orderValue");
+const rateLawDescription = document.getElementById("rateLawDescription");
 
-  // Atualiza a simulação sempre que os controles são modificados
-  concAInput.addEventListener("input", updateSimulation);
-  rateKInput.addEventListener("input", updateSimulation);
-  reactionOrderSelect.addEventListener("change", updateSimulation);
+const svg = d3.select("#chart");
+const animSvg = d3.select("#animation");
 
-  // Função principal que atualiza a simulação e o gráfico
-  function updateSimulation() {
-    const order = parseInt(reactionOrderSelect.value);   // Ordem da reação (0, 1 ou 2)
-    const A0 = parseFloat(concAInput.value);             // Concentração inicial
-    const k = parseFloat(rateKInput.value);              // Constante de velocidade
+const width = +svg.attr("width") - 60;
+const height = +svg.attr("height") - 60;
+const margin = { top: 20, right: 30, bottom: 30, left: 40 };
 
-    // Atualiza os valores visíveis ao usuário
-    concAVal.textContent = A0;
-    rateKVal.textContent = k;
+const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // Atualiza a descrição da equação de taxa
-    const descriptions = [
-      "The rate is independent of concentration: rate = k.",
-      "The rate depends linearly on the concentration of A: rate = k[A].",
-      "The rate depends quadratically on the concentration of A: rate = k[A]²."
-    ];
-    document.getElementById("rateLawDescription").innerHTML =
-      `The selected reaction is <strong>${["zero", "first", "second"][order]}-order</strong>. ${descriptions[order]}`;
+const xScale = d3.scaleLinear().domain([0, 10]).range([0, width]);
+const yScale = d3.scaleLinear().domain([0, 100]).range([height, 0]);
 
-    // Geração de dados de concentração [A](t) ao longo do tempo
-    const timePoints = d3.range(0, 50, 1);  // Gera tempos de t = 0 até t = 49
-    const data = timePoints.map(t => {
-      let At;
-      if (order === 0) At = A0 - k * t;
-      else if (order === 1) At = A0 * Math.exp(-k * t);
-      else At = A0 / (1 + k * A0 * t);
-      return { time: t, conc: Math.max(0, At) };  // Garante que [A] ≥ 0
+const xAxis = d3.axisBottom(xScale);
+const yAxis = d3.axisLeft(yScale);
+
+// Eixos
+g.append("g")
+  .attr("transform", `translate(0,${height})`)
+  .attr("class", "x-axis")
+  .call(xAxis);
+
+g.append("g")
+  .attr("class", "y-axis")
+  .call(yAxis);
+
+// Linha da curva de concentração
+const line = d3.line()
+  .x(d => xScale(d.time))
+  .y(d => yScale(d.conc));
+
+const linePath = g.append("path")
+  .attr("fill", "none")
+  .attr("stroke", "steelblue")
+  .attr("stroke-width", 2);
+
+// =======================
+// Atualização do Gráfico e Partículas
+// =======================
+function updateChart() {
+  const A0 = +concAInput.value;
+  const k = +kInput.value;
+  const n = +orderInput.value;
+
+  // Atualizar valores exibidos
+  concAVal.textContent = A0;
+  kVal.textContent = k;
+  orderValue.textContent = n;
+
+  // Atualizar descrição da lei de velocidade
+  const description = n === 0 ? `rate = k` :
+                      n === 1 ? `rate = k[A]` :
+                      n === 2 ? `rate = k[A]^2` :
+                                `rate = k[A]^${n}`;
+  rateLawDescription.innerHTML = `The selected reaction has an order of <strong>${n}</strong>. The rate law is: <code>${description}</code>`;
+
+  // Gerar dados da curva de concentração ao longo do tempo
+  const data = [];
+  const dt = 0.1;
+  let A = A0;
+  for (let t = 0; t <= 10; t += dt) {
+    data.push({ time: t, conc: Math.max(A, 0) });
+    A -= k * Math.pow(A, n) * dt;
+  }
+
+  yScale.domain([0, A0]);
+  g.select(".y-axis").transition().duration(300).call(d3.axisLeft(yScale));
+
+  linePath.datum(data)
+    .transition()
+    .duration(300)
+    .attr("d", line);
+
+  updateParticles(A0, k, n);
+}
+
+function updateParticles(A0, k, n) {
+  animSvg.selectAll("*").remove();
+
+  const numParticles = Math.min(100, Math.floor(A0));
+  const particles = animSvg.selectAll("circle")
+    .data(d3.range(numParticles))
+    .enter()
+    .append("circle")
+    .attr("cx", () => Math.random() * 480)
+    .attr("cy", () => Math.random() * 280)
+    .attr("r", 5)
+    .attr("fill", "blue");
+
+  particles.transition()
+    .delay((d, i) => i * 10)
+    .duration(2000 / k)
+    .ease(d3.easeLinear)
+    .attr("cx", () => Math.random() * 480)
+    .attr("cy", () => Math.random() * 280)
+    .attr("fill", "red")
+    .on("end", function() {
+      d3.select(this).attr("opacity", 0.1);
     });
+}
 
-    // Atualiza o gráfico
-    drawChart(data);
+// =======================
+// Interações
+// =======================
+concAInput.addEventListener("input", updateChart);
+kInput.addEventListener("input", updateChart);
+orderInput.addEventListener("input", updateChart);
+
+// Inicializar gráfico
+updateChart();
+
+// =======================
+// Animação Molecular: Decomposição de N2O5 Profissional em Loop
+// =======================
+
+const molSvg = d3.select("#zeroOrderExample");
+molSvg.selectAll("*").remove();
+
+const centerX = 150;
+const centerY = 100;
+
+const colors = {
+  N: "steelblue",
+  O: "crimson"
+};
+
+// Definição da marker para seta
+molSvg.append("defs").append("marker")
+  .attr("id", "arrowhead")
+  .attr("viewBox", "0 -5 10 10")
+  .attr("refX", 8)
+  .attr("refY", 0)
+  .attr("markerWidth", 6)
+  .attr("markerHeight", 6)
+  .attr("orient", "auto")
+  .append("path")
+  .attr("d", "M0,-5L10,0L0,5")
+  .attr("fill", "black");
+
+function createN2O5Group() {
+  const group = molSvg.append("g").attr("class", "N2O5");
+
+  // 2 Nitrogênios
+  group.append("circle")
+    .attr("cx", centerX - 20)
+    .attr("cy", centerY)
+    .attr("r", 12)
+    .attr("fill", colors.N);
+
+  group.append("circle")
+    .attr("cx", centerX + 20)
+    .attr("cy", centerY)
+    .attr("r", 12)
+    .attr("fill", colors.N);
+
+  group.append("text")
+    .attr("x", centerX - 20)
+    .attr("y", centerY + 5)
+    .attr("text-anchor", "middle")
+    .attr("fill", "white")
+    .attr("font-size", "14px")
+    .attr("font-weight", "bold")
+    .text("N");
+
+  group.append("text")
+    .attr("x", centerX + 20)
+    .attr("y", centerY + 5)
+    .attr("text-anchor", "middle")
+    .attr("fill", "white")
+    .attr("font-size", "14px")
+    .attr("font-weight", "bold")
+    .text("N");
+
+  // 5 Oxigênios em círculo ao redor
+  const radius = 40;
+  for (let i = 0; i < 5; i++) {
+    const angle = (2 * Math.PI / 5) * i - Math.PI / 2;
+    const ox = centerX + radius * Math.cos(angle);
+    const oy = centerY + radius * Math.sin(angle);
+
+    group.append("circle")
+      .attr("cx", ox)
+      .attr("cy", oy)
+      .attr("r", 10)
+      .attr("fill", colors.O);
+
+    group.append("text")
+      .attr("x", ox)
+      .attr("y", oy + 5)
+      .attr("text-anchor", "middle")
+      .attr("fill", "white")
+      .attr("font-size", "12px")
+      .attr("font-weight", "bold")
+      .text("O");
   }
 
-  // Função que desenha o gráfico de concentração vs tempo
-  function drawChart(data) {
-    const svg = d3.select("#chart");
-    const width = +svg.attr("width");
-    const height = +svg.attr("height");
-
-    svg.selectAll("*").remove(); // Limpa o conteúdo anterior do SVG
-
-    // Define margens internas
-    const margin = { top: 20, right: 20, bottom: 40, left: 50 };
-    const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
-
-    // Escalas para os eixos x (tempo) e y (concentração)
-    const xScale = d3.scaleLinear()
-      .domain([0, d3.max(data, d => d.time)])
-      .range([0, innerWidth]);
-
-    const yScale = d3.scaleLinear()
-      .domain([0, d3.max(data, d => d.conc)])
-      .range([innerHeight, 0]);
-
-    // Cria grupo principal com margens aplicadas
-    const g = svg.append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
-
-    // Eixo X
-    g.append("g")
-      .attr("transform", `translate(0,${innerHeight})`)
-      .call(d3.axisBottom(xScale).ticks(10));
-
-    // Eixo Y
-    g.append("g")
-      .call(d3.axisLeft(yScale).ticks(5));
-
-    // Define a linha da curva de concentração
-    const line = d3.line()
-      .x(d => xScale(d.time))
-      .y(d => yScale(d.conc));
-
-    // Desenha a curva no SVG
-    g.append("path")
-      .datum(data)
-      .attr("fill", "none")
-      .attr("stroke", "#16a085")
-      .attr("stroke-width", 2)
-      .attr("d", line);
-
-    // Legenda do eixo X
-    svg.append("text")
-      .attr("x", width / 2)
-      .attr("y", height - 5)
-      .attr("text-anchor", "middle")
-      .attr("font-size", "14px")
-      .text("Time");
-
-    // Legenda do eixo Y
-    svg.append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("x", -height / 2)
-      .attr("y", 15)
-      .attr("text-anchor", "middle")
-      .attr("font-size", "14px")
-      .text("[A]");
-  }
-
-  // Executa a primeira simulação ao carregar a página
-  updateSimulation();
-});
-
-// Variáveis principais
-let scene, camera, renderer, controls;
-let atomGeometry, bondMaterial;
-let molecules = [];
-let time = 0; // Controlador de tempo para animação
-
-// Função para inicializar a cena 3D
-function init() {
-  // Criando a cena, câmera e renderizador
-  scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  
-  renderer = new THREE.WebGLRenderer();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setClearColor(0xf0f0f0);  // Cor de fundo da cena (branco claro)
-  document.getElementById('container').appendChild(renderer.domElement);
-
-  // Controle de órbita para permitir interação com a cena
-  controls = new THREE.OrbitControls(camera, renderer.domElement);
-
-  // Geometria dos átomos (esferas)
-  atomGeometry = new THREE.SphereGeometry(0.5, 16, 16);
-  bondMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
-
-  // Adicionando luz ambiente
-  const light = new THREE.AmbientLight(0x404040); // Luz suave
-  scene.add(light);
-
-  // Luz direcional para iluminar a cena
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-  directionalLight.position.set(5, 5, 5).normalize();
-  scene.add(directionalLight);
-
-  // Definir a posição inicial da câmera
-  camera.position.z = 5;
-
-  // Criar a molécula de exemplo (NO₂)
-  createMoleculeNO2();
-
-  // Função de animação
-  animate();
+  return group;
 }
 
-// Função para criar a molécula de NO₂
-function createMoleculeNO2() {
-  // Átomos de Nitrogênio (N) e Oxigênio (O)
-  const nitrogenAtom = createAtom(0, 0, 0, 0x00ff00); // Nitrogênio (verde)
-  const oxygenAtom1 = createAtom(2, 0, 0, 0xff0000); // Oxigênio (vermelho)
-  const oxygenAtom2 = createAtom(-2, 0, 0, 0xff0000); // Oxigênio (vermelho)
+function createArrow() {
+  const arrowGroup = molSvg.append("g").attr("class", "arrow");
 
-  // Ligação entre Nitrogênio e Oxigênio
-  createBond(nitrogenAtom.position, oxygenAtom1.position);
-  createBond(nitrogenAtom.position, oxygenAtom2.position);
+  arrowGroup.append("line")
+    .attr("x1", centerX + 70)
+    .attr("y1", centerY)
+    .attr("x2", centerX + 150)
+    .attr("y2", centerY)
+    .attr("stroke", "black")
+    .attr("stroke-width", 3)
+    .attr("marker-end", "url(#arrowhead)");
 
-  // Armazenar as moléculas
-  molecules.push({ nitrogenAtom, oxygenAtom1, oxygenAtom2 });
+  return arrowGroup;
 }
 
-// Função para criar um átomo na posição especificada
-function createAtom(x, y, z, color) {
-  const atomMaterial = new THREE.MeshBasicMaterial({ color: color });
-  const atom = new THREE.Mesh(atomGeometry, atomMaterial);
-  atom.position.set(x, y, z);
-  scene.add(atom);
-  return atom;
+function createProductsGroup() {
+  const productsGroup = molSvg.append("g").attr("class", "products");
+
+  // NO
+  productsGroup.append("circle")
+    .attr("cx", centerX + 180)
+    .attr("cy", centerY - 15)
+    .attr("r", 12)
+    .attr("fill", colors.N);
+
+  productsGroup.append("circle")
+    .attr("cx", centerX + 210)
+    .attr("cy", centerY - 15)
+    .attr("r", 10)
+    .attr("fill", colors.O);
+
+  productsGroup.append("text")
+    .attr("x", centerX + 180)
+    .attr("y", centerY - 10)
+    .attr("text-anchor", "middle")
+    .attr("fill", "white")
+    .attr("font-size", "14px")
+    .attr("font-weight", "bold")
+    .text("N");
+
+  productsGroup.append("text")
+    .attr("x", centerX + 210)
+    .attr("y", centerY - 10)
+    .attr("text-anchor", "middle")
+    .attr("fill", "white")
+    .attr("font-size", "12px")
+    .attr("font-weight", "bold")
+    .text("O");
+
+  productsGroup.append("text")
+    .attr("x", centerX + 195)
+    .attr("y", centerY + 15)
+    .attr("text-anchor", "middle")
+    .attr("font-size", "16px")
+    .attr("font-weight", "bold")
+    .text("+");
+
+  // O2
+  productsGroup.append("circle")
+    .attr("cx", centerX + 230)
+    .attr("cy", centerY + 15)
+    .attr("r", 10)
+    .attr("fill", colors.O);
+
+  productsGroup.append("circle")
+    .attr("cx", centerX + 260)
+    .attr("cy", centerY + 15)
+    .attr("r", 10)
+    .attr("fill", colors.O);
+
+  productsGroup.append("text")
+    .attr("x", centerX + 230)
+    .attr("y", centerY + 20)
+    .attr("text-anchor", "middle")
+    .attr("fill", "white")
+    .attr("font-size", "12px")
+    .attr("font-weight", "bold")
+    .text("O");
+
+  productsGroup.append("text")
+    .attr("x", centerX + 260)
+    .attr("y", centerY + 20)
+    .attr("text-anchor", "middle")
+    .attr("fill", "white")
+    .attr("font-size", "12px")
+    .attr("font-weight", "bold")
+    .text("O");
+
+  return productsGroup;
 }
 
-// Função para criar uma ligação entre dois átomos
-function createBond(position1, position2) {
-  const geometry = new THREE.BufferGeometry().setFromPoints([position1, position2]);
-  const bond = new THREE.Line(geometry, bondMaterial);
-  scene.add(bond);
-}
-
-// Função de animação
-function animate() {
-  requestAnimationFrame(animate);
-
-  // Atualiza os controles de órbita
-  controls.update();
-
-  // Move os átomos para simular uma reação
-  time += 0.02; // Controla a velocidade da animação
-
-  // Aqui você pode adicionar lógica para movimentar os átomos (exemplo para animar NO₂ para N₂O₄)
-  animateMolecule();
-
-  // Renderiza a cena
-  renderer.render(scene, camera);
-}
-
-// Função para animar a molécula NO₂ se transformando em N₂O₄
 function animateMolecule() {
-  // A lógica de animação pode ser a movimentação dos átomos
-  const molecule = molecules[0];
+  molSvg.selectAll(".N2O5").remove();
+  molSvg.selectAll(".arrow").remove();
+  molSvg.selectAll(".products").remove();
 
-  // Exemplo: os átomos de oxigênio se movem em direção ao átomo de nitrogênio
-  const nitrogenAtom = molecule.nitrogenAtom;
-  const oxygenAtom1 = molecule.oxygenAtom1;
-  const oxygenAtom2 = molecule.oxygenAtom2;
+  const n2o5 = createN2O5Group();
 
-  // Modificando as posições de oxigênio para se aproximar do nitrogênio (simulando reação)
-  oxygenAtom1.position.x -= 0.01 * Math.sin(time); // Movimento os átomos de oxigênio
-  oxygenAtom2.position.x += 0.01 * Math.cos(time);
+  // Pisca 2 vezes para indicar reação
+  n2o5
+    .attr("opacity", 1)
+    .transition()
+    .duration(1500)
+    .attr("opacity", 0.3)
+    .transition()
+    .duration(1500)
+    .attr("opacity", 1)
+    .on("end", () => {
+      createArrow();
 
-  // Agora você pode adicionar outras lógicas de animação, como rotações ou movimentos diferentes de átomos
+      setTimeout(() => {
+        n2o5.transition()
+          .duration(1000)
+          .attr("opacity", 0)
+          .remove();
 
-  // Se você quiser voltar a animação ao estado inicial (loop), apenas reinicie as posições
-  if (time > 20) {
-    resetMoleculePositions();
-    time = 0;
-  }
+        const products = createProductsGroup();
+        products.attr("opacity", 0)
+          .transition()
+          .duration(1000)
+          .attr("opacity", 1);
+
+        setTimeout(() => {
+          animateMolecule();
+        }, 3000);
+
+      }, 1000);
+    });
 }
 
-// Função para resetar as posições dos átomos
-function resetMoleculePositions() {
-  const molecule = molecules[0];
-  molecule.nitrogenAtom.position.set(0, 0, 0);
-  molecule.oxygenAtom1.position.set(2, 0, 0);
-  molecule.oxygenAtom2.position.set(-2, 0, 0);
-}
-
-// Inicializa a cena
-window.onload = init;
+animateMolecule();

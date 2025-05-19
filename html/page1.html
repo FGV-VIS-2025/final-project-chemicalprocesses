@@ -1,38 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Define o conjunto de caracteres como UTF-8 -->
   <meta charset="UTF-8" />
-  
-  <!-- Responsividade: garante que o layout se ajuste a diferentes tamanhos de tela -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  
-  <!-- Título da aba do navegador -->
-  <title>Page 1 - Reaction Kinetics</title>
+  <title>Reaction Kinetics</title>
 
-  <!-- Importa o arquivo de estilo global -->
+  <!-- Estilos principais -->
   <link rel="stylesheet" href="../style.css" />
 
-  <!-- Importa a biblioteca D3.js versão 7, defer para carregar após o HTML -->
+  <!-- Bibliotecas JavaScript -->
   <script src="https://d3js.org/d3.v7.min.js" defer></script>
-
- <!-- Importando o Three.js -->
- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/controls/OrbitControls.js"></script>
-
-  <!-- Importa o script JavaScript específico desta página (simulação da cinética) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/controls/OrbitControls.js"></script>
   <script src="../js/page1.js" defer></script>
 </head>
+
 <body>
   <div id="container">
-    
-    <!-- Menu de navegação principal -->
+
+    <!-- Navegação -->
     <nav>
       <ul>
-        <!-- Links entre páginas do projeto -->
         <li><a href="../index.html">Home</a></li>
         <li><a href="page0.html">Introduction</a></li>
-        <li><a href="page1.html">Reaction orders</a></li>
+        <li><a href="page1.html" class="active">Reaction Orders</a></li>
         <li><a href="page2.html">Activation Energy</a></li>
         <li><a href="page3.html">Reaction Mechanism</a></li>
         <li><a href="page4.html">Catalyst Effect</a></li>
@@ -40,87 +31,116 @@
       </ul>
     </nav>
 
-    <!-- Conteúdo específico da página 1 -->
-    <div class="page" id="page1">
+    <!-- Conteúdo Principal -->
+    <section class="page" id="page1">
       <h2>Reaction Kinetics</h2>
-
-      <!-- Introdução à simulação de reações químicas -->
       <p>
-        Choose a reaction order below to explore how reactant concentration changes over time. The rate law depends on the order:
+        Adjust the reaction order below to explore how the rate changes with concentration. The rate law depends on the order:
       </p>
 
-      <!-- Lista explicativa das ordens de reação -->
-      <ul>
-        <li><strong>Zero-order:</strong> rate = k</li>
-        <li><strong>First-order:</strong> rate = k[A]</li>
-        <li><strong>Second-order:</strong> rate = k[A]<sup>2</sup></li>
-      </ul>
+      <!-- Controles de Parâmetros -->
+      <div class="controls">
+        <label for="order"><strong>Reaction Order (n):</strong> <span id="orderValue">1</span></label><br />
+        <input type="number" id="order" step="0.1" value="1" min="-2" max="3" /><br /><br />
 
-      <!-- Menu suspenso para seleção da ordem da reação -->
-      <label for="reactionOrder"><strong>Reaction Order:</strong></label>
-      <select id="reactionOrder">
-        <option value="0">Zero-order</option>
-        <option value="1" selected>First-order</option>
-        <option value="2">Second-order</option>
-      </select>
-      <br /><br />
+        <label>[A]₀:
+          <input type="range" id="concA" min="1" max="100" value="50" />
+          <span id="concAVal">50</span>
+        </label><br/>
 
-      <!-- Controle deslizante da concentração inicial [A]₀ -->
-      <label>[A]₀:
-        <input type="range" id="concA" min="1" max="100" value="50" />
-        <!-- Valor exibido ao lado do controle -->
-        <span id="concAVal">50</span>
-      </label><br/>
+        <label>k:
+          <input type="range" id="k" min="0.01" max="1" step="0.01" value="0.1" />
+          <span id="kVal">0.1</span>
+        </label>
+      </div>
 
-      <!-- Controle deslizante da constante de taxa k -->
-      <label>k:
-        <input type="range" id="rateK" min="0.01" max="1" step="0.01" value="0.1" />
-        <!-- Valor exibido ao lado do controle -->
-        <span id="rateKVal">0.1</span>
-      </label>
-
-      <!-- Descrição dinâmica da equação da taxa, atualizada via JS -->
+      <!-- Descrição da Lei de Velocidade -->
       <p id="rateLawDescription">
         The selected reaction is <strong>first-order</strong>. The rate depends linearly on the concentration of A: <code>rate = k[A]</code>.
       </p>
 
-      <!-- SVG para o gráfico de concentração vs. tempo gerado por D3 -->
-      <svg id="chart" width="500" height="300" style="border:1px solid gray"></svg>
+      <!-- Gráficos -->
+      <div class="visuals">
+        <svg id="chart" width="500" height="300" style="border:1px solid gray"></svg>
+        <svg id="animation" width="500" height="300" style="border:1px solid black"></svg>
+      </div>
+    </section>
 
-      <!-- SVG reservado para futura animação de partículas (ainda não implementado) -->
-      <svg id="animation" width="500" height="300" style="border:1px solid black"></svg>
-    </div>
+    <!-- Caixa de Explicação da Animação -->
+      <h3>🧪 Explicação da Animação de Partículas</h3>
+      <p>
+        A animação no quadro preto (<code>#animation</code>) está representando uma simulação visual abstrata do comportamento de reagentes durante uma reação química, com foco em <strong>cinética química</strong>.
+      </p>
 
+      <p>
+        Cada <strong>partícula azul</strong> representa uma molécula do reagente <strong>A</strong>, proporcional à concentração inicial <code>[A]₀</code>. À medida que a reação avança:
+      </p>
 
+      <ul>
+        <li>Partículas se <strong>movimentam aleatoriamente</strong>, simulando movimento térmico.</li>
+        <li>Algumas mudam de <strong>azul para vermelho</strong>, representando conversão em produtos.</li>
+        <li>A taxa de conversão depende de <code>k</code>, <code>[A]</code> e ordem <code>n</code>:</li>
+      </ul>
 
-    <!-- Example Reaction Simulations -->
-    <div id="examples">
+      <p style="text-align: center; font-size: 1.2em;"><code>rate = k [A]<sup>n</sup></code></p>
+
+      <h4>💡 Interpretação Educacional</h4>
+      <ul>
+        <li><strong>Ordem zero:</strong> taxa constante.</li>
+        <li><strong>Primeira ordem:</strong> taxa proporcional à concentração.</li>
+        <li><strong>Segunda ordem:</strong> taxa proporcional ao quadrado da concentração.</li>
+      </ul>
+
+      <h4>📈 Relação com o Gráfico</h4>
+      <p>
+        O gráfico mostra a diminuição de <code>[A]</code> ao longo do tempo; a animação visualiza esse processo.
+      </p>
+
+      <h4>✨ Possibilidades Futuras</h4>
+      <ul>
+        <li>Identificação flutuante de partículas.</li>
+        <li>Formação visual dos produtos.</li>
+        <li>Simulação de colisões moleculares.</li>
+      </ul>
+    </section>
+
+    <!-- Exemplos de Reações Famosas -->
+    <section id="examples">
       <h3>Famous Reaction Examples</h3>
 
-      <h4>Zero-order reaction: Decomposition of N₂O₅</h4>
-      <p>This reaction is an example of a zero-order reaction, where the rate is constant regardless of the concentration of N₂O₅. The reaction proceeds as follows:</p>
-      <p><code>N₂O₅ → 2NO + O₂</code></p>
-      <svg id="zeroOrderExample" width="500" height="300"></svg>
+      <article>
+        <h4>Zero-order reaction: Decomposition of N₂O₅</h4>
+        <p>
+          In this zero-order reaction, the rate is constant regardless of the concentration:
+          <br /><code>N₂O₅ → 2NO + O₂</code>
+        </p>
+        <svg id="zeroOrderExample" width="500" height="300"></svg>
+      </article>
 
-      <h4>First-order reaction: Decomposition of NO₂</h4>
-      <p>This reaction is a classic first-order reaction, where the rate depends linearly on the concentration of NO₂. The reaction proceeds as follows:</p>
-      <p><code>2NO₂ → 2NO + O₂</code></p>
-      <svg id="firstOrderExample" width="500" height="300"></svg>
+      <article>
+        <h4>First-order reaction: Decomposition of NO₂</h4>
+        <p>
+          A classic first-order example, with rate linearly dependent on NO₂:
+          <br /><code>2NO₂ → 2NO + O₂</code>
+        </p>
+        <svg id="firstOrderExample" width="500" height="300"></svg>
+      </article>
 
-      <h4>Second-order reaction: NO₂ + NO₂ → N₂O₄</h4>
-      <p>This reaction follows second-order kinetics, with the rate depending on the square of the concentration of NO₂. The reaction proceeds as follows:</p>
-      <p><code>2NO₂ → N₂O₄</code></p>
-      <svg id="secondOrderExample" width="500" height="300"></svg>
-    </div>
+      <article>
+        <h4>Second-order reaction: NO₂ + NO₂ → N₂O₄</h4>
+        <p>
+          This reaction follows second-order kinetics:
+          <br /><code>2NO₂ → N₂O₄</code>
+        </p>
+        <svg id="secondOrderExample" width="500" height="300"></svg>
+      </article>
+    </section>
+
   </div>
 
-
-
-
-    <!-- Rodapé fixo da aplicação -->
-    <footer>
-      <p>&copy; 2025 Chemical Reaction Visualizer | All rights reserved</p>
-    </footer>
-  </div>
+  <!-- Rodapé -->
+  <footer>
+    <p>&copy; 2025 Chemical Reaction Visualizer | All rights reserved</p>
+  </footer>
 </body>
 </html>

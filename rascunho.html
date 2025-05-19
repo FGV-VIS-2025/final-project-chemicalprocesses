@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<head>
+  <title>Animação Reação Química - D3</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+      gap: 60px;
+      flex-wrap: wrap;
+    }
+    svg {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 15px #ccc;
+    }
+    .axis-label {
+      font-weight: bold;
+      fill: #123455;
+      font-size: 14px;
+    }
+    .tube {
+      fill: #c49b6a;
+      stroke: #987a4d;
+      stroke-width: 2px;
+      filter: drop-shadow(0 1px 0px #7a5f2e);
+    }
+    .cork {
+      fill: #8c6d4a;
+      stroke: #6b5436;
+      stroke-width: 1.5px;
+    }
+    .bubbleA {
+      fill: #2ca02c; /* verde */
+      opacity: 0.85;
+    }
+    .bubbleB {
+      fill: #d95f02; /* laranja */
+      opacity: 0.85;
+    }
+    .label-reactant {
+      fill: #d62728;
+      font-weight: bold;
+    }
+    .label-product {
+      fill: #1f77b4;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Gráfico + Tubos lado a lado -->
+<div id="container"></div>
+
+<script>
+  // Configurações básicas do gráfico
+  const width = 450, height = 350, margin = {top: 40, right: 30, bottom: 40, left: 50};
+
+  // Cria SVG para o gráfico de linhas
+  const svg = d3.select("#container")
+    .append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+  // Dados simulados da reação (tempo de 0 a 20)
+  const duration = 20000; // tempo total animação (ms)
+  const totalSteps = 200;
+  const times = d3.range(0, totalSteps + 1);
+
+  // Funções concentração: reagente A decai, produto B cresce
+  // Usamos curva tipo exponencial decrescente / crescente
+  function concA(t) {
+    return Math.exp(-t / totalSteps * 4);  // decresce rápido até estabilizar
+  }
+  function concB(t) {
+    return 1 - concA(t);
+  }
+
+  // Escalas
+  const xScale = d3.scaleLinear()
+    .domain([0, totalSteps])
+    .range([margin.left, width - margin.right]);
+
+  const yScale = d3.scaleLinear()
+    .domain([0, 1])
+    .range([height - margin.bottom, margin.top]);
+
+  // Criar os eixos
+  const xAxis = d3.axisBottom(xScale).ticks(6).tickFormat(d => Math.round(d/10));
+  const yAxis = d3.axisLeft(yScale).ticks(5);
+
+  svg.append("g")
+    .attr("transform", `translate(0,${height - margin.bottom})`)
+    .call(xAxis)
+    .append("text")
+    .attr("class", "axis-label")
+    .attr("x", width - margin.right)
+    .attr("y", 35)
+    .attr("text-anchor", "end")
+    .text("Tempo");
+
+  svg.append("g")
+    .attr("transform", `translate(${margin.left},0)`)
+    .call(yAxis)
+    .append("text")
+    .attr("class", "axis-label")
+    .attr("x", -margin.left)
+    .attr("y", margin.top - 20)
+    .attr("text-anchor", "start")
+    .text("Concentração");
+
+  // Linha reagente A (vermelho)
+  const lineA = d3.line()
+    .x(d => xScale(d))
+    .y(d => yScale(concA(d)));
+
+  // Linha produto B (azul)
+  const lineB = d3.line()
+    .x(d => xScale(d))
+    .y(d => yScale(concB(d)));
+
+  // Caminhos para as linhas, começamos vazios
+  const pathA = svg.append("path")
+    .attr("fill", "none")
+    .attr("stroke", "#d62728") // vermelho
+    .attr("stroke-width", 3);
+
+  const pathB = svg.append("path")
+    .attr("fill", "none")
+    .attr("stroke", "#1f77b4") // azul
+    .attr("stroke-width", 3);
+
+  // Labels no gráfico
+  svg.append("text")
+    .attr("class", "label-reactant")
+    .attr("x", xScale(8))
+    .attr("y", yScale(concA(8)) - 10)
+    .text("Reagente A");
+
+  svg.append("text")
+    .attr("class", "label-product")
+    .attr("x", xScale(12))
+    .attr("y", yScale(concB(12)) + 20)
+    .text("Produto B");
+
+  // --- Tubos de ensaio animados ---
+
+  // SVG para tubos, mais estreito
+  const tubeWidth = 100, tubeHeight = 250;
+  const tubeSVG = d3.select("#container")
+    .append("svg")
+    .attr("width", tubeWidth)
+    .attr("height", tubeHeight);
+
+  // Desenha tubo (retângulo com bordas arredondadas)
+  tubeSVG.append("rect")
+    .attr("class", "tube")
+    .attr("x", tubeWidth * 0.15)
+    .attr("y", tubeHeight * 0.12)
+    .attr("width", tubeWidth * 0.7)
+    .attr("height", tubeHeight * 0.8)
+    .attr("rx", 20)
+    .attr("ry", 20);
+
+  // Desenha rolha
+  tubeSVG.append("rect")
+    .attr("class", "cork")
+    .attr("x", tubeWidth * 0.15)
+    .attr("y", tubeHeight * 0.04)
+    .attr("width", tubeWidth * 0.7)
+    .attr("height", tubeHeight * 0.08)
+    .attr("rx", 5)
+    .attr("ry", 5);
+
+  // Define área interna do líquido dentro do tubo
+  const liquidX = tubeWidth * 0.18,
+        liquidY = tubeHeight * 0.14,
+        liquidWidth = tubeWidth * 0.64,
+        liquidHeight = tubeHeight * 0.75;
+
+  // Fundo do líquido (azul claro)
+  tubeSVG.append("rect")
+    .attr("x", liquidX)
+    .attr("y", liquidY)
+    .attr("width", liquidWidth)
+    .attr("height", liquidHeight)
+    .attr("fill", "#cee7f0")
+    .attr("rx", 15)
+    .attr("ry", 15);
+
+  // Número máximo de bolinhas para reagente + produto (para visual)
+  const maxBubbles = 50;
+
+  // G grupo das bolinhas
+  const bubblesGroup = tubeSVG.append("g");
+
+  // Cria arrays para bolhas A (verdes) e B (laranja)
+  let bubblesA = d3.range(maxBubbles).map(() => ({
+    x: liquidX + Math.random() * liquidWidth,
+    y: liquidY + Math.random() * liquidHeight,
+    radius: 5 + Math.random() * 3
+  }));
+
+  let bubblesB = d3.range(maxBubbles).map(() => ({
+    x: liquidX + Math.random() * liquidWidth,
+    y: liquidY + Math.random() * liquidHeight,
+    radius: 5 + Math.random() * 3
+  }));
+
+  // Cria círculos svg para bolhas reagente A (verde)
+  const circlesA = bubblesGroup.selectAll(".bubbleA")
+    .data(bubblesA)
+    .enter()
+    .append("circle")
+    .attr("class", "bubbleA")
+    .attr("cx", d => d.x)
+    .attr("cy", d => d.y)
+    .attr("r", d => d.radius);
+
+  // Cria círculos svg para bolhas produto B (laranja)
+  const circlesB = bubblesGroup.selectAll(".bubbleB")
+    .data(bubblesB)
+    .enter()
+    .append("circle")
+    .attr("class", "bubbleB")
+    .attr("cx", d => d.x)
+    .attr("cy", d => d.y)
+    .attr("r", d => d.radius);
+
+  // Label dentro do tubo
+  tubeSVG.append("text")
+    .attr("x", tubeWidth / 2)
+    .attr("y", tubeHeight * 0.95)
+    .attr("text-anchor", "middle")
+    .attr("font-weight", "bold")
+    .attr("fill", "#444")
+    .text("Reação A → B");
+
+  // --- Animação ---
+
+  // Função que atualiza a animação a cada frame (tempo t de 0 a totalSteps)
+  function update(t) {
+    // Atualiza linhas do gráfico
+    pathA.datum(times.slice(0, t+1)).attr("d", lineA);
+    pathB.datum(times.slice(0, t+1)).attr("d", lineB);
+
+    // Atualiza número de bolhas visíveis para A e B no tubo conforme concentração
+    const concAVal = concA(t);
+    const concBVal = concB(t);
+
+    // Número de bolhas visíveis = concentração * maxBubbles
+    const visibleA = Math.round(concAVal * maxBubbles);
+    const visibleB = Math.round(concBVal * maxBubbles);
+
+    // Bolhas A: define visibilidade
+    circlesA.attr("visibility", (d,i) => i < visibleA ? "visible" : "hidden");
+    // Bolhas B: visibilidade
+    circlesB.attr("visibility", (d,i) => i < visibleB ? "visible" : "hidden");
+
+    // Pequeno movimento vertical suave para dar vida
+    bubblesA.forEach((b, i) => {
+      b.y += 0.3 * (i % 2 ? 1 : -1);
+      if (b.y > liquidY + liquidHeight) b.y = liquidY + 5;
+      if (b.y < liquidY) b.y = liquidY + liquidHeight - 5;
+    });
+    circlesA.data(bubblesA).attr("cy", d => d.y);
+
+    bubblesB.forEach((b, i) => {
+      b.y += 0.25 * (i % 2 ? -1 : 1);
+      if (b.y > liquidY + liquidHeight) b.y = liquidY + 5;
+      if (b.y < liquidY) b.y = liquidY + liquidHeight - 5;
+    });
+    circlesB.data(bubblesB).attr("cy", d => d.y);
+  }
+
+  // Loop da animação usando d3.timer
+  let timeStep = 0;
+  d3.timer(() => {
+    update(timeStep);
+    timeStep = (timeStep + 1) % (totalSteps + 1);
+  });
+</script>
+
+</body>
+</html>

@@ -36,3 +36,35 @@
     <svg id="catalystChart" width="500" height="300" style="border:1px solid gray"></svg>
   </div>
 </div>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Velocidade de Reação vs. Concentração</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <h1>Velocidade vs. Concentração</h1>
+  <div>
+    <label>Concentração de A: <span id="concValue">1</span> mol/L</label><br/>
+    <input type="range" id="concentration" min="0" max="5" step="0.1" value="1" />
+  </div>
+  <div>
+    <label>Ordem da Reação:</label>
+    <select id="order">
+      <option value="0">0ª Ordem</option>
+      <option value="1">1ª Ordem</option>
+      <option value="2">2ª Ordem</option>
+    </select>
+  </div>
+  <div>
+    <label>Constante de velocidade (k): <span id="kValue">1</span></label><br/>
+    <input type="range" id="k" min="0.1" max="5" step="0.1" value="1" />
+  </div>
+  <svg id="graph" width="600" height="400"></svg>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="../js/page0.js"></script>
+</body>
+</html>
