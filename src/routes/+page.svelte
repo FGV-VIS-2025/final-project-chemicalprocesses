@@ -7,6 +7,7 @@
   let n0 = 1000;
   let lambda = 0.1;
   let simulatedTime = 0;
+  let simulationFinished = false;
   let lifetimes = [];
 
   let decayRef;
@@ -54,6 +55,13 @@
   .formula-section {
     margin-top: 2rem;
   }
+
+  :global(body) {
+    background-color: #424242; 
+    margin: 0;
+    font-family: sans-serif;
+    font-weight: bold;
+  }
 </style>
 
 <div class="container">
@@ -69,10 +77,16 @@
     </label>
     <p>Meia-vida (T₁/₂): {(Math.log(2)/lambda).toFixed(2)} s</p>
 
-    <div class="button-row" style="margin-left: auto;">
-      <button on:click={() => decayRef?.start()}>▶️ Iniciar simulação</button>
-      <button on:click={() => decayRef?.pause()}>⏸️ Pausar simulação</button>
-      <button on:click={() => decayRef?.reset()}>🔄 Resetar simulação</button>
+    <div style="margin-left: auto;">
+      <div class="button-row">
+        <button on:click={() => decayRef?.start()}>▶️ Iniciar</button>
+        <button on:click={() => decayRef?.pause()}>⏸️ Pausar</button>
+        <button on:click={() => {
+          decayRef?.reset();
+          simulationFinished = false;
+          simulatedTime = 0;
+        }}>🔄 Resetar</button>
+      </div>
     </div>
   </section>
 
@@ -81,7 +95,7 @@
       <div class="section-header">
         <h2>Gráfico de N(t)</h2>
       </div>
-      <DecayGraph {n0} {lambda} />
+      <DecayGraph {n0} {lambda} currentTime={simulatedTime} />
 
       <div class="section-header">
         <h2>Histograma de decaimento</h2>
@@ -99,9 +113,18 @@
         bind:this={decayRef}
         {n0}
         {lambda}
-        on:tick={(e) => simulatedTime = e.detail.t}
+        on:tick={(e) => {
+          if (e.detail.t <= 120) simulatedTime = e.detail.t;
+        }}
         on:generated={(e) => lifetimes = e.detail.lifetimes}
+        on:finished={() => simulationFinished = true}
       />
+
+      {#if simulationFinished}
+        <p style="color: darkred; font-weight: bold; margin-top: 0.5rem;">
+          ⚠️ A simulação foi finalizada. Todas as partículas decaíram ou o tempo máximo foi atingido.
+        </p>
+      {/if}
     </div>
   </section>
 

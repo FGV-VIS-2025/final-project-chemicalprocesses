@@ -28,33 +28,37 @@
 
     const numBins = 30;
     const maxTime = d3.max(lifetimes) || 1;
-    const maxPerBin = Math.ceil(n0/5);
-    const filtered = lifetimes.filter(d => d <= currentTime);
-
-    const x = d3.scaleLinear()
-      .domain([0, maxTime])
-      .range([margin.left, width - margin.right]);
 
     const binGenerator = d3.bin()
       .domain([0, maxTime])
       .thresholds(numBins);
 
+    const allBins = binGenerator(lifetimes);
+    const filtered = lifetimes.filter(d => d <= currentTime);
     const bins = binGenerator(filtered);
+    const maxPerBin = d3.max(allBins, d => d.length) || 1;
+
+    const x = d3.scaleLinear()
+      .domain([0, maxTime])
+      .range([margin.left, width - margin.right]);
 
     const y = d3.scaleLinear()
       .domain([0, maxPerBin])
       .range([height - margin.bottom, margin.top]);
 
-    const bar = svg.selectAll('g')
+    svg.selectAll('g')
       .data(bins)
       .join('g')
-      .attr('transform', d => `translate(${x(d.x0)},${y(d.length)})`);
-
-    bar.append('rect')
-      .attr('x', 1)
-      .attr('width', d => Math.max(0, x(d.x1) - x(d.x0) - 1))
+      .attr('transform', d => `translate(${x(d.x0)},${y(d.length)})`)
+      .append('rect')
+      .attr('x', 0)
+      .attr('width', d => Math.max(0, x(d.x1) - x(d.x0)))
       .attr('height', d => y(0) - y(d.length))
-      .attr('fill', 'steelblue');
+      .attr('fill', 'steelblue')
+      .append('title')
+      .text(d =>
+        `Intervalo: ${d.x0.toFixed(1)}–${d.x1.toFixed(1)}\nPartículas: ${d.length}`
+      );
 
     svg.append('g')
       .attr('transform', `translate(0,${height - margin.bottom})`)
@@ -66,4 +70,12 @@
   }
 </script>
 
-<svg bind:this={svgEl} width="600" height="300" style="border: 2px solid red;" />
+<svg bind:this={svgEl} width="600" height="300" style="border: 2px solid red; background-color: #424242;" />
+
+<!-- Legenda -->
+<div style="font-size: 0.85rem; margin-top: 0.4rem; font-weight: bold;">
+  <p>
+    <span style="display: inline-block; width: 12px; height: 12px; background: steelblue;"></span>
+    &nbsp; Frequência de partículas por intervalo de tempo de decaimento
+  </p>
+</div>
