@@ -6,6 +6,8 @@
 
   let n0 = 1000;
   let lambda = 0.1;
+  let simulatedTime = 0;
+  let lifetimes = [];
 </script>
 
 <style>
@@ -17,10 +19,9 @@
   }
 
   .top-row {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: end;
-    justify-content: space-between;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
   }
 
   .controls {
@@ -28,12 +29,6 @@
     align-items: center;
     gap: 1rem;
     flex-wrap: wrap;
-  }
-
-  .title-align {
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
   }
 
   .main-layout {
@@ -47,6 +42,12 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .section-title {
@@ -71,25 +72,31 @@
         <input type="range" bind:value={lambda} min="0.01" max="1" step="0.01" />
         {lambda}
       </label>
-      <p>Meia-vida (T₁/₂): {(Math.log(2)/lambda).toFixed(2)}</p>
-    </div>
-
-    <div class="title-align">
-      <span class="section-title">Animação do decaimento de partículas</span>
+      <p style="margin: 0;">Meia-vida (T₁/₂): {(Math.log(2)/lambda).toFixed(2)}</p>
     </div>
   </div>
 
   <div class="main-layout">
     <div class="left">
-      <div class="section-title">Gráfico de N(t)</div>
+      <div class="section-header">
+        <div class="section-title">Gráfico de N(t)</div>
+      </div>
       <DecayGraph {n0} {lambda} />
+      <DecayHistogram {lifetimes} currentTime={simulatedTime} {n0} />
     </div>
 
     <div class="right">
-      <ParticleDecay {n0} {lambda} />
+      <div class="section-title" style="display: flex; justify-content: space-between;">
+        <span>Decaimento de partículas</span>
+        <span>{simulatedTime.toFixed(1)} segundos</span>
+      </div>
+      <ParticleDecay
+        {n0}
+        {lambda}
+        on:tick={(e) => simulatedTime = e.detail.t}
+        on:generated={(e) => lifetimes = e.detail.lifetimes}
+      />
+      <FormulaBox />
     </div>
   </div>
-
-  <DecayHistogram {n0} {lambda} />
-  <FormulaBox />
 </div>

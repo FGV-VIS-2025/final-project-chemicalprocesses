@@ -1,32 +1,48 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount, afterUpdate } from 'svelte';
   import * as d3 from 'd3';
 
+  export let lifetimes = [];
+  export let currentTime = 0;
   export let n0 = 1000;
-  export let lambda = 0.2;
 
   let svgEl;
 
-  $: drawHistogram();
+  onMount(() => {
+    drawHistogram();
+  });
+
+  afterUpdate(() => {
+    if (svgEl && lifetimes.length > 0) {
+      drawHistogram();
+    }
+  });
 
   function drawHistogram() {
     const svg = d3.select(svgEl);
     svg.selectAll('*').remove();
 
-    const width = 400;
+    const width = 600;
     const height = 300;
-    const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+    const margin = { top: 20, right: 20, bottom: 30, left: 60 };
 
-    const lifetimes = d3.range(n0).map(() => -Math.log(Math.random()) / lambda);
+    const numBins = 30;
+    const maxTime = d3.max(lifetimes) || 1;
+    const maxPerBin = Math.ceil(n0/5);
+    const filtered = lifetimes.filter(d => d <= currentTime);
 
     const x = d3.scaleLinear()
-      .domain([0, d3.max(lifetimes)])
+      .domain([0, maxTime])
       .range([margin.left, width - margin.right]);
 
-    const bins = d3.bin().thresholds(30)(lifetimes);
+    const binGenerator = d3.bin()
+      .domain([0, maxTime])
+      .thresholds(numBins);
+
+    const bins = binGenerator(filtered);
+
     const y = d3.scaleLinear()
-      .domain([0, d3.max(bins, d => d.length)])
-      .nice()
+      .domain([0, maxPerBin])
       .range([height - margin.bottom, margin.top]);
 
     const bar = svg.selectAll('g')
@@ -50,4 +66,4 @@
   }
 </script>
 
-<svg bind:this={svgEl} width="400" height="300" />
+<svg bind:this={svgEl} width="600" height="300" style="border: 2px solid red;" />

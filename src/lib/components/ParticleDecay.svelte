@@ -1,24 +1,29 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount, createEventDispatcher } from 'svelte';
 
   export let n0 = 100;
   export let lambda = 0.1;
-  let particles = [];
+  const dispatch = createEventDispatcher();
 
-  // tempo global da simulação (em segundos)
+  let particles = [];
   let t = 0;
   let interval;
 
   function generateParticles() {
     t = 0;
-    particles = Array.from({ length: n0 }, () => ({
-      decayTime: -Math.log(Math.random()) / lambda,
-      active: true
-    }));
+    particles = Array.from({ length: n0 }, () => {
+      const decayTime = -Math.log(Math.random()) / lambda;
+      return { decayTime, active: true };
+    });
+
+    dispatch("generated", {
+      lifetimes: particles.map(p => p.decayTime)
+    });
   }
 
   function updateParticles() {
     t += 0.2;
+    dispatch("tick", { t });
     particles = particles.map(p => ({
       ...p,
       active: p.decayTime > t
@@ -52,8 +57,6 @@
     opacity: 0.3;
   }
 </style>
-
-<p>Tempo simulado: {t.toFixed(1)} s</p>
 
 <div class="grid">
   {#each particles as p (p.decayTime)}
