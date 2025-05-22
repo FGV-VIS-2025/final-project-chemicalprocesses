@@ -3,11 +3,34 @@
 
   export let n0 = 100;
   export let lambda = 0.1;
+
   const dispatch = createEventDispatcher();
 
   let particles = [];
   let t = 0;
   let interval;
+  let running = false;
+
+  export function start() {
+    if (!running) {
+      running = true;
+      interval = setInterval(updateParticles, 200);
+    }
+  }
+
+  export function pause() {
+    if (running) {
+      running = false;
+      clearInterval(interval);
+    }
+  }
+
+  export function reset() {
+    pause();
+    generateParticles();
+    t = 0;
+    dispatch("tick", { t });
+  }
 
   function generateParticles() {
     t = 0;
@@ -15,7 +38,6 @@
       const decayTime = -Math.log(Math.random()) / lambda;
       return { decayTime, active: true };
     });
-
     dispatch("generated", {
       lifetimes: particles.map(p => p.decayTime)
     });
@@ -31,10 +53,10 @@
   }
 
   onMount(() => {
-    generateParticles();
-    interval = setInterval(updateParticles, 200);
-    return () => clearInterval(interval);
+    generateParticles(); // gera partículas iniciais
+    return () => clearInterval(interval); // limpa se o componente for destruído
   });
+
 
   $: if (n0 && lambda) generateParticles();
 </script>
