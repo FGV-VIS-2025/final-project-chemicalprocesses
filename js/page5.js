@@ -129,351 +129,386 @@ document.addEventListener("DOMContentLoaded", () => {
         {Z:118, simbolo:"Og", nome:"Oganessônio"}
       ];
 
-    
 
+  let estado = {
+    metodoEscolha: null,
+    elementoSelecionado: null,
+    isotopoSelecionado: null,
+    emissoes: { alfa: 0, beta: 0, positron: 0, neutron: 0 }
+  };
 
+  function botFala(texto) {
+    const p = document.createElement("p");
+    p.className = "bot-msg";
+    p.textContent = texto;
+    chat.appendChild(p);
+    chat.scrollTop = chat.scrollHeight;
+  }
 
+  function limpaOpcoes() {
+    options.innerHTML = "";
+  }
 
+  function criaBotao(texto, callback) {
+    const btn = document.createElement("button");
+    btn.textContent = texto;
+    btn.onclick = callback;
+    options.appendChild(btn);
+  }
 
-        let estado = {
-          metodoEscolha: null,
-          elementoSelecionado: null,
-          isotopoSelecionado: null,
-          emissoes: { alfa: 0, beta: 0, positron: 0, neutron: 0 }
-        };
-      
-        // Funções auxiliares de interface
-        function botFala(texto) {
-          const p = document.createElement("p");
-          p.className = "bot-msg";
-          p.textContent = texto;
-          chat.appendChild(p);
-          chat.scrollTop = chat.scrollHeight;
-        }
-      
-        function limpaOpcoes() {
-          options.innerHTML = "";
-        }
-      
-        function criaBotao(texto, callback) {
-          const btn = document.createElement("button");
-          btn.textContent = texto;
-          btn.onclick = callback;
-          options.appendChild(btn);
-        }
-      
-        // Etapas do fluxo de interação
-        function etapa1() {
-          botFala("Olá! Vamos começar escolhendo um elemento.");
-          botFala("Você quer escolher pelo nome ou pelo número atômico?");
-          limpaOpcoes();
-          criaBotao("Pelo nome", () => {
-            estado.metodoEscolha = "nome";
-            etapa2();
-          });
-          criaBotao("Pelo número atômico", () => {
-            estado.metodoEscolha = "numero";
-            etapa2();
-          });
-        }
-      
-        function etapa2() {
-          limpaOpcoes();
-      
-          if (estado.metodoEscolha === "nome") {
-            botFala("Digite o nome do elemento:");
-            const input = document.createElement("input");
-            input.type = "text";
-            input.placeholder = "Ex: Carbono";
-            input.style.fontSize = "1.4rem";
-            options.appendChild(input);
-      
-            const btn = document.createElement("button");
-            btn.textContent = "Confirmar";
-            btn.onclick = () => {
-              const nomeBusca = input.value.trim().toLowerCase();
-              const elem = tabelaPeriodica.find(
-                (el) => el.nome.toLowerCase() === nomeBusca
-              );
-              if (elem) {
-                estado.elementoSelecionado = elem;
-                botFala(
-                  `Você escolheu ${elem.nome} (${elem.simbolo}), Z=${elem.Z}.`
-                );
-                etapa3();
-              } else {
-                botFala("Elemento não encontrado. Tente novamente.");
-              }
-            };
-            options.appendChild(btn);
-          } else {
-            botFala("Digite o número atômico (1 a 118):");
-            const input = document.createElement("input");
-            input.type = "number";
-            input.min = "1";
-            input.max = "118";
-            options.appendChild(input);
-      
-            const btn = document.createElement("button");
-            btn.textContent = "Confirmar";
-            btn.onclick = () => {
-              const num = parseInt(input.value);
-              const elem = tabelaPeriodica.find((el) => el.Z === num);
-              if (elem) {
-                estado.elementoSelecionado = elem;
-                botFala(
-                  `Você escolheu ${elem.nome} (${elem.simbolo}), Z=${elem.Z}.`
-                );
-                etapa3();
-              } else {
-                botFala("Número atômico inválido. Tente novamente.");
-              }
-            };
-            options.appendChild(btn);
-          }
-        }
-      
-        // Gera isotopos plausíveis para o elemento selecionado
-        function gerarIsotopos(Z) {
-          const Aprovavel = Math.round(Z * 1.3);
-          return [Aprovavel - 2, Aprovavel - 1, Aprovavel, Aprovavel + 1, Aprovavel + 2].filter(
-            (a) => a >= Z
+  function etapa1() {
+    botFala("Olá! Vamos começar escolhendo um elemento.");
+    botFala("Você quer escolher pelo nome ou pelo número atômico?");
+    limpaOpcoes();
+    criaBotao("Pelo nome", () => {
+      estado.metodoEscolha = "nome";
+      etapa2();
+    });
+    criaBotao("Pelo número atômico", () => {
+      estado.metodoEscolha = "numero";
+      etapa2();
+    });
+  }
+
+  function etapa2() {
+    limpaOpcoes();
+
+    if (estado.metodoEscolha === "nome") {
+      botFala("Digite o nome do elemento:");
+      const input = document.createElement("input");
+      input.type = "text";
+      input.placeholder = "Ex: Carbono";
+      input.style.fontSize = "1.4rem";
+      options.appendChild(input);
+
+      const btn = document.createElement("button");
+      btn.textContent = "Confirmar";
+      btn.onclick = () => {
+        const nomeBusca = input.value.trim().toLowerCase();
+        const elem = tabelaPeriodica.find(
+          (el) => el.nome.toLowerCase() === nomeBusca
+        );
+        if (elem) {
+          estado.elementoSelecionado = elem;
+          botFala(
+            `Você escolheu ${elem.nome} (${elem.simbolo}), Z=${elem.Z}.`
           );
+          etapa3();
+        } else {
+          botFala("Elemento não encontrado. Tente novamente.");
         }
-      
-        function etapa3() {
-          limpaOpcoes();
-          botFala("Agora escolha um isótopo plausível para esse elemento.");
-      
-          const Z = estado.elementoSelecionado.Z;
-          const isotopos = gerarIsotopos(Z);
-      
-          const label = document.createElement("label");
-          label.textContent = "Selecione um isótopo:";
-          label.style.display = "block";
-          label.style.marginBottom = "5px";
-          options.appendChild(label);
-      
-          const select = document.createElement("select");
-          select.style.fontSize = "1.2rem";
-          select.style.marginBottom = "10px";
-      
-          isotopos.forEach((a) => {
-            const option = document.createElement("option");
-            option.value = a;
-            option.textContent = `A = ${a}`;
-            select.appendChild(option);
-          });
-      
-          select.selectedIndex = 2; // valor central
-          options.appendChild(select);
-      
-          const btn = document.createElement("button");
-          btn.textContent = "Confirmar Isótopo";
-          btn.onclick = () => {
-            const A = +select.value;
-            estado.isotopoSelecionado = {
-              A,
-              nome: `${estado.elementoSelecionado.nome}-${A}`
-            };
-            botFala(`Isótopo selecionado: ${estado.isotopoSelecionado.nome}`);
-            etapa4();
-          };
-          options.appendChild(btn);
+      };
+      options.appendChild(btn);
+    } else {
+      botFala("Digite o número atômico (1 a 118):");
+      const input = document.createElement("input");
+      input.type = "number";
+      input.min = "1";
+      input.max = "118";
+      options.appendChild(input);
+
+      const btn = document.createElement("button");
+      btn.textContent = "Confirmar";
+      btn.onclick = () => {
+        const num = parseInt(input.value);
+        const elem = tabelaPeriodica.find((el) => el.Z === num);
+        if (elem) {
+          estado.elementoSelecionado = elem;
+          botFala(
+            `Você escolheu ${elem.nome} (${elem.simbolo}), Z=${elem.Z}.`
+          );
+          etapa3();
+        } else {
+          botFala("Número atômico inválido. Tente novamente.");
         }
-      
-        function etapa4() {
-          limpaOpcoes();
-          botFala("Quantas partículas de cada tipo serão emitidas?");
-      
-          const tipos = ["alfa", "beta", "positron", "neutron"];
-          estado.emissoes = { alfa: 0, beta: 0, positron: 0, neutron: 0 };
-      
-          tipos.forEach((tipo) => {
-            const label = document.createElement("label");
-            label.textContent = `Partículas ${tipo}:`;
-            label.style.display = "block";
-            options.appendChild(label);
-      
-            const input = document.createElement("input");
-            input.type = "number";
-            input.min = "0";
-            input.value = "0";
-            input.dataset.tipo = tipo;
-            input.style.marginBottom = "10px";
-            options.appendChild(input);
-          });
-      
-          const btn = document.createElement("button");
-          btn.textContent = "Calcular Decaimento";
-          btn.onclick = () => {
-            const inputs = options.querySelectorAll("input[type=number]");
-            inputs.forEach((i) => {
-              estado.emissoes[i.dataset.tipo] = parseInt(i.value) || 0;
-            });
-            calculaDecaimento();
-          };
-          options.appendChild(btn);
-        }
-      
-        
+      };
+      options.appendChild(btn);
+    }
+  }
 
+  function gerarIsotopos(Z) {
+    const Aprovavel = Math.round(Z * 1.3);
+    return [Aprovavel - 2, Aprovavel - 1, Aprovavel, Aprovavel + 1, Aprovavel + 2].filter(
+      (a) => a >= Z
+    );
+  }
 
+  function etapa3() {
+    limpaOpcoes();
+    botFala("Agora escolha um isótopo plausível para esse elemento.");
 
-        function animarParticulas(quantidades) {
-            const largura = 300, altura = 300;
-            const centroX = largura / 2, centroY = altura / 2;
-            const svg = d3.select("#animacao")
-              .html("")
-              .append("svg")
-              .attr("width", largura)
-              .attr("height", altura);
-          
-            // Gradientes (iguais à versão anterior)
-            const defs = svg.append("defs");
-            const gradientes = {
-              alfa: [["0%", "rgba(255,0,0,1)"], ["100%", "rgba(255,0,0,0)"]],
-              beta: [["0%", "rgba(0,0,255,1)"], ["100%", "rgba(0,0,255,0)"]],
-              positron: [["0%", "rgba(255,0,255,1)"], ["100%", "rgba(255,0,255,0)"]],
-              neutron: [["0%", "rgba(128,128,128,1)"], ["100%", "rgba(128,128,128,0)"]],
-            };
-          
-            Object.entries(gradientes).forEach(([tipo, stops]) => {
-              const grad = defs.append("radialGradient").attr("id", `grad-${tipo}`);
-              grad.selectAll("stop").data(stops).enter().append("stop")
-                .attr("offset", d => d[0])
-                .attr("stop-color", d => d[1]);
-            });
-          
-            const propriedades = {
-              alfa: { r: 6, dur: 2200, cor: "url(#grad-alfa)" },
-              beta: { r: 4, dur: 1800, cor: "url(#grad-beta)" },
-              positron: { r: 5, dur: 1600, cor: "url(#grad-positron)" },
-              neutron: { r: 8, dur: 2500, cor: "url(#grad-neutron)" }
-            };
-          
-            // 🌟 Explosão no centro (círculo pulsante)
-            const explosao = svg.append("circle")
-              .attr("cx", centroX)
-              .attr("cy", centroY)
-              .attr("r", 0)
-              .attr("fill", "orange")
-              .attr("opacity", 0.7);
-          
-            explosao.transition()
-              .duration(400)
-              .attr("r", 40)
-              .attr("opacity", 0)
-              .remove();
-          
-            // Partículas
-            Object.entries(quantidades).forEach(([tipo, qtd]) => {
-              const { r, dur, cor } = propriedades[tipo];
-          
-              for (let i = 0; i < qtd; i++) {
-                const angulo = Math.random() * 2 * Math.PI;
-                const distancia = 80 + Math.random() * 80;
-                const controleAngulo = angulo + (Math.random() - 0.5);
-          
-                const x1 = centroX;
-                const y1 = centroY;
-                const cx = centroX + Math.cos(controleAngulo) * (distancia * 0.5);
-                const cy = centroY + Math.sin(controleAngulo) * (distancia * 0.5);
-                const x2 = centroX + Math.cos(angulo) * distancia;
-                const y2 = centroY + Math.sin(angulo) * distancia;
-          
-                const caminho = svg.append("path")
-                  .attr("d", `M${x1},${y1} Q${cx},${cy} ${x2},${y2}`)
-                  .attr("fill", "none");
-          
-                const part = svg.append("circle")
-                  .attr("r", r)
-                  .attr("fill", cor)
-                  .attr("opacity", 1);
-          
-                part.transition()
-                  .duration(dur)
-                  .ease(d3.easeCubicOut)
-                  .attrTween("transform", () => {
-                    return t => {
-                      const p = caminho.node().getPointAtLength(t * caminho.node().getTotalLength());
-                      return `translate(${p.x},${p.y})`;
-                    };
-                  })
-                  .attrTween("opacity", () => t => 1 - t)
-                  .on("end", () => part.remove());
-          
-                setTimeout(() => caminho.remove(), dur + 100);
-              }
-            });
-          }
-          
-          
+    const Z = estado.elementoSelecionado.Z;
+    const isotopos = gerarIsotopos(Z);
 
+    const label = document.createElement("label");
+    label.textContent = "Selecione um isótopo:";
+    label.style.display = "block";
+    label.style.marginBottom = "5px";
+    options.appendChild(label);
 
+    const select = document.createElement("select");
+    select.style.fontSize = "1.2rem";
+    select.style.marginBottom = "10px";
 
+    isotopos.forEach((a) => {
+      const option = document.createElement("option");
+      option.value = a;
+      option.textContent = `A = ${a}`;
+      select.appendChild(option);
+    });
 
+    select.selectedIndex = 2;
+    options.appendChild(select);
 
+    const btn = document.createElement("button");
+    btn.textContent = "Confirmar Isótopo";
+    btn.onclick = () => {
+      const A = +select.value;
+      estado.isotopoSelecionado = {
+        A,
+        nome: `${estado.elementoSelecionado.nome}-${A}`
+      };
+      botFala(`Isótopo selecionado: ${estado.isotopoSelecionado.nome}`);
+      etapa4();
+    };
+    options.appendChild(btn);
+  }
 
+  function etapa4() {
+    limpaOpcoes();
+    botFala("Quantas partículas de cada tipo serão emitidas?");
 
+    const tipos = ["alfa", "beta", "positron", "neutron"];
+    estado.emissoes = { alfa: 0, beta: 0, positron: 0, neutron: 0 };
 
-        function calculaDecaimento() {
-          limpaOpcoes();
-          result.textContent = "";
-      
-          let Z = estado.elementoSelecionado.Z;
-          let A = estado.isotopoSelecionado.A;
-          let explicacao = `Decaimento de ${estado.isotopoSelecionado.nome} (Z=${Z}, A=${A}):\n\n`;
-      
-          const aplicarDecaimento = (tipo, vezes) => {
-            for (let i = 0; i < vezes; i++) {
-              if (tipo === "alfa") {
-                Z -= 2;
-                A -= 4;
-                explicacao += `→ Emissão alfa: Z -= 2, A -= 4 ⇒ Z=${Z}, A=${A}\n`;
-              } else if (tipo === "beta") {
-                Z += 1;
-                explicacao += `→ Emissão beta (β⁻): Z += 1 ⇒ Z=${Z}, A=${A}\n`;
-              } else if (tipo === "positron") {
-                Z -= 1;
-                explicacao += `→ Emissão de pósitron (β⁺): Z -= 1 ⇒ Z=${Z}, A=${A}\n`;
-              } else if (tipo === "neutron") {
-                A -= 1;
-                explicacao += `→ Emissão de nêutron: A -= 1 ⇒ Z=${Z}, A=${A}\n`;
-              }
-            }
-          };
-      
-          for (const tipo in estado.emissoes) {
-            aplicarDecaimento(tipo, estado.emissoes[tipo]);
-          }
-      
-          const novoElemento = tabelaPeriodica.find((e) => e.Z === Z);
-      
-          if (novoElemento) {
-            explicacao += `\nResultado final: ${novoElemento.simbolo}-${A} (${novoElemento.nome}), Z=${Z}, A=${A}`;
-          } else {
-            explicacao += `\nResultado final: Elemento fora da tabela periódica (Z=${Z}, A=${A})`;
-          }
-      
-          // Exibir resultado
-          const pre = document.createElement("pre");
-          pre.style.whiteSpace = "pre-wrap";
-          pre.style.backgroundColor = "#f0f0f0";
-          pre.style.padding = "10px";
-          pre.style.borderRadius = "8px";
-          pre.textContent = explicacao;
-          result.appendChild(pre);
-      
-          // Botão reiniciar
-          criaBotao("Reiniciar", () => {
-            chat.innerHTML = "";
-            result.textContent = "";
-            etapa1();
-          });
-        }
-        animarParticulas(estado.emissoes);
+    tipos.forEach((tipo) => {
+      const label = document.createElement("label");
+      label.textContent = `Partículas ${tipo}:`;
+      label.style.display = "block";
+      options.appendChild(label);
 
-        etapa1();
+      const input = document.createElement("input");
+      input.type = "number";
+      input.min = "0";
+      input.value = "0";
+      input.dataset.tipo = tipo;
+      input.style.marginBottom = "10px";
+      options.appendChild(input);
+    });
+
+    const btn = document.createElement("button");
+    btn.textContent = "Calcular Decaimento";
+    btn.onclick = () => {
+      const inputs = options.querySelectorAll("input[type=number]");
+      inputs.forEach((i) => {
+        estado.emissoes[i.dataset.tipo] = parseInt(i.value) || 0;
       });
-      
+      calculaDecaimento();
+    };
+    options.appendChild(btn);
+  }
+
+  function calculaDecaimento() {
+    limpaOpcoes();
+    result.textContent = "";
+
+    let Z = estado.elementoSelecionado.Z;
+    let A = estado.isotopoSelecionado.A;
+    let explicacao = `Decaimento de ${estado.isotopoSelecionado.nome} (Z=${Z}, A=${A}):\n\n`;
+
+    const aplicarDecaimento = (tipo, vezes) => {
+      for (let i = 0; i < vezes; i++) {
+        if (tipo === "alfa") {
+          Z -= 2;
+          A -= 4;
+          explicacao += `→ Emissão alfa: Z -= 2, A -= 4 ⇒ Z=${Z}, A=${A}\n`;
+        } else if (tipo === "beta") {
+          Z += 1;
+          explicacao += `→ Emissão beta (β⁻): Z += 1 ⇒ Z=${Z}, A=${A}\n`;
+        } else if (tipo === "positron") {
+          Z -= 1;
+          explicacao += `→ Emissão de pósiton (β⁺): Z -= 1 ⇒ Z=${Z}, A=${A}\n`;
+        } else if (tipo === "neutron") {
+          A -= 1;
+          explicacao += `→ Emissão de nêtron: A -= 1 ⇒ Z=${Z}, A=${A}\n`;
+        }
+      }
+    };
+
+    for (const tipo in estado.emissoes) {
+      aplicarDecaimento(tipo, estado.emissoes[tipo]);
+    }
+
+    const novoElemento = tabelaPeriodica.find((e) => e.Z === Z);
+
+    if (novoElemento) {
+      explicacao += `\nResultado final: ${novoElemento.simbolo}-${A} (${novoElemento.nome}), Z=${Z}, A=${A}`;
+    } else {
+      explicacao += `\nResultado final: Elemento fora da tabela periódica (Z=${Z}, A=${A})`;
+    }
+
+    const pre = document.createElement("pre");
+    pre.style.whiteSpace = "pre-wrap";
+    pre.style.backgroundColor = "#f0f0f0";
+    pre.style.padding = "10px";
+    pre.style.borderRadius = "8px";
+    pre.textContent = explicacao;
+    result.appendChild(pre);
+
+    animarParticulas(estado.emissoes);
+
+    criaBotao("Reiniciar", () => {
+      chat.innerHTML = "";
+      result.textContent = "";
+      etapa1();
+    });
+  }
+function animarParticulas(quantidades) {
+  const largura = 600, altura = 600;
+  const centroX = largura / 2, centroY = altura / 2;
+
+  const svg = d3.select("#animacao")
+    .html("")
+    .append("svg")
+    .attr("width", largura)
+    .attr("height", altura);
+
+  const grupoNucleo = svg.append("g").attr("id", "nucleo");
+  const grupoOrbitas = svg.append("g").attr("id", "orbitas");
+  const grupoSetas = svg.append("g").attr("id", "setas");
+
+  // Núcleo
+  grupoNucleo.append("circle")
+    .attr("cx", centroX)
+    .attr("cy", centroY)
+    .attr("r", 15)
+    .attr("fill", "orange");
+
+  // Orbitas e elétrons
+  const orbitas = [40, 70, 100];
+  orbitas.forEach((raio, idx) => {
+    grupoOrbitas.append("circle")
+      .attr("cx", centroX)
+      .attr("cy", centroY)
+      .attr("r", raio)
+      .attr("fill", "none")
+      .attr("stroke", "blue")
+      .attr("stroke-width", 1);
+
+    for (let i = 0; i < 3; i++) {
+      const ang = (i / 3) * 2 * Math.PI;
+      const el = grupoOrbitas.append("circle")
+        .attr("r", 4)
+        .attr("fill", "red");
+
+      animateElectron(el, raio, ang, idx);
+    }
+  });
+
+  function animateElectron(el, raio, anguloInicial, camada) {
+    const dur = 4000 + camada * 1000;
+    function mover(t) {
+      const ang = anguloInicial + 2 * Math.PI * t;
+      const x = centroX + raio * Math.cos(ang);
+      const y = centroY + raio * Math.sin(ang);
+      el.attr("cx", x).attr("cy", y);
+    }
+    d3.timer((elapsed) => {
+      mover((elapsed % dur) / dur);
+    });
+  }
+
+  const propriedades = {
+    alfa: { cor: "red", dur: 4000, texto: "Partícula α" },
+    beta: { cor: "blue", dur: 3500, texto: "Partícula β⁻" },
+    positron: { cor: "magenta", dur: 3200, texto: "Pósitron (β⁺)" },
+    neutron: { cor: "gray", dur: 4500, texto: "Nêutron" }
+  };
+
+  function emitir(tipo, atraso = 0) {
+    const { cor, dur, texto } = propriedades[tipo];
+
+    const angulo = Math.random() * 2 * Math.PI;
+    const distancia = 120 + Math.random() * 50;
+    const x2 = centroX + Math.cos(angulo) * distancia;
+    const y2 = centroY + Math.sin(angulo) * distancia;
+
+    const part = svg.append("circle")
+      .attr("cx", centroX)
+      .attr("cy", centroY)
+      .attr("r", 6)
+      .attr("fill", cor)
+      .attr("opacity", 1);
+
+    const seta = grupoSetas.append("line")
+      .attr("x1", centroX)
+      .attr("y1", centroY)
+      .attr("x2", centroX)
+      .attr("y2", centroY)
+      .attr("stroke", cor)
+      .attr("stroke-width", 2)
+      .attr("marker-end", "url(#arrow)");
+
+    const textoEl = grupoSetas.append("text")
+      .attr("x", centroX + 10)
+      .attr("y", centroY - 10)
+      .attr("fill", cor)
+      .style("font-size", "14px")
+      .text(texto);
+
+    svg.append("defs").append("marker")
+      .attr("id", "arrow")
+      .attr("viewBox", "0 0 10 10")
+      .attr("refX", 10)
+      .attr("refY", 5)
+      .attr("markerWidth", 6)
+      .attr("markerHeight", 6)
+      .attr("orient", "auto-start-reverse")
+      .append("path")
+      .attr("d", "M 0 0 L 10 5 L 0 10 z")
+      .attr("fill", cor);
+
+    part.transition()
+      .delay(atraso)
+      .duration(dur)
+      .attr("cx", x2)
+      .attr("cy", y2)
+      .attr("opacity", 0)
+      .remove();
+
+    seta.transition()
+      .delay(atraso)
+      .duration(dur)
+      .attr("x2", x2)
+      .attr("y2", y2)
+      .attr("opacity", 0)
+      .remove();
+
+    textoEl.transition()
+      .delay(atraso + dur / 2)
+      .duration(1000)
+      .attr("opacity", 0)
+      .remove();
+  }
+
+  let ciclo = 0;
+  function loopAnimacao() {
+    ciclo++;
+    const total = Object.entries(quantidades).reduce((acc, [tipo, qtd]) => acc + qtd, 0);
+    let atrasoAcumulado = 0;
+    Object.entries(quantidades).forEach(([tipo, qtd]) => {
+      for (let i = 0; i < qtd; i++) {
+        emitir(tipo, atrasoAcumulado);
+        atrasoAcumulado += 800;
+      }
+    });
+
+    setTimeout(loopAnimacao, atrasoAcumulado + 1000);
+  }
+
+  loopAnimacao();
+}
+
+
+  etapa1();
+});

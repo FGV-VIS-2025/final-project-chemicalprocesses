@@ -8,6 +8,47 @@
   <!-- Estilo global -->
   <link rel="stylesheet" href="../style.css" />
 
+  <!-- Estilo específico para a animação -->
+  <style>
+    #animacao {
+      width: 100%;
+      max-width: 800px;
+      height: 600px;
+      margin: 40px auto;
+      border: 2px solid #ccc;
+      border-radius: 12px;
+      background-color: #fafafa;
+    }
+
+    #chat, #options, #result {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 10px;
+    }
+
+    #chat p.bot-msg {
+      background: #eef;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 5px;
+    }
+
+    button {
+      margin: 5px;
+      padding: 8px 12px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    input[type="number"], input[type="text"], select {
+      padding: 6px;
+      font-size: 1rem;
+      margin-bottom: 10px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+  </style>
+
   <!-- Biblioteca D3.js -->
   <script src="https://d3js.org/d3.v7.min.js" defer></script>
 
@@ -31,15 +72,14 @@
     </nav>
 
     <main class="page" id="page5">
+      <h1>Simulador Interativo de Decaimento Radioativo</h1>
 
+      <div id="chat"></div>
+      <div id="options"></div>
+      <div id="result"></div>
 
-  <h1>Simulador Interativo de Decaimento Radioativo</h1>
-  <div id="chat"></div>
-  <div id="options"></div>
-  <div id="result"></div>
-
-
-  <div id="animacao" style="margin-top:20px;"></div>
-
+      <div id="animacao"></div>
+    </main>
+  </div>
 </body>
 </html>
