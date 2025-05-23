@@ -16,10 +16,11 @@
   const xScale = d3.scaleLinear().domain([0, tMax]).range([margin.left, width - margin.right]);
   $: yScale = d3.scaleLinear().domain([0, n0]).range([height - margin.bottom, margin.top]);
 
-  const fullData = d3.range(0, tMax + 0.1, 0.5).map(t => ({
+  $: fullData = d3.range(0, tMax + 0.1, 0.5).map(t => ({
     t,
     N: n0 * Math.exp(-lambda * t)
   }));
+
 
   onMount(() => {
     const svg = d3.select(svgEl);
