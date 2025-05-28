@@ -7,55 +7,78 @@
   export let T = 300;
 
   let svgElement;
+  let animationFrameId;
 
-  $: drawParticles();
+  const width = 400;
+  const height = 300;
+  let particles = [];
 
-  function drawParticles() {
-    if (!svgElement) return;
-
-    const svg = d3.select(svgElement);
-    svg.selectAll("*").remove();
-
-    const width = 400;
-    const height = 300;
-
-    svg.attr("width", width).attr("height", height);
-
-    const numParticles = 100;
-
-    const particles = d3.range(numParticles).map(() => ({
+  function initializeParticles() {
+    particles = d3.range(100).map(() => ({
       x: Math.random() * width,
       y: Math.random() * height,
-      vx: Math.random() * 2 - 1,
-      vy: Math.random() * 2 - 1,
       reacted: false
     }));
+  }
 
-    function step() {
-      svg.selectAll("circle")
-        .data(particles)
-        .join("circle")
-        .attr("r", 5)
-        .attr("fill", d => d.reacted ? "orange" : "blue")
-        .attr("cx", d => d.x)
-        .attr("cy", d => d.y);
+  function draw() {
+    const svg = d3.select(svgElement);
+    svg.selectAll("*").remove();
+    svg.attr("width", width).attr("height", height);
+  }
 
-      for (let p of particles) {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0 || p.x > width) p.vx *= -1;
-        if (p.y < 0 || p.y > height) p.vy *= -1;
+  function update() {
+    const svg = d3.select(svgElement);
 
-        if (!p.reacted && Math.random() < 0.01 * A * Math.exp(-Ea * 1000 / (8.314 * T))) {
-          p.reacted = true;
-        }
+    svg.selectAll("circle")
+      .data(particles)
+      .join("circle")
+      .attr("r", 5)
+      .attr("fill", d => d.reacted ? "orange" : "blue")
+      .attr("cx", d => d.x)
+      .attr("cy", d => d.y);
+
+    const sigma = Math.sqrt(T / 300) * 1.5;
+    const randX = d3.randomNormal(0, sigma);
+    const randY = d3.randomNormal(0, sigma);
+    const rate = 0.01 * A * Math.exp(-Ea * 1000 / (8.314 * T));
+
+    for (let p of particles) {
+      p.x += randX();
+      p.y += randY();
+
+      if (p.x < 0) p.x = 0;
+      if (p.x > width) p.x = width;
+      if (p.y < 0) p.y = 0;
+      if (p.y > height) p.y = height;
+
+      if (!p.reacted && Math.random() < rate) {
+        p.reacted = true;
       }
-
-      requestAnimationFrame(step);
     }
 
-    step();
+    animationFrameId = requestAnimationFrame(update);
   }
+
+  function restartAnimation() {
+    cancelAnimationFrame(animationFrameId);
+    initializeParticles();
+    draw();
+    update();
+  }
+
+  $: restartAnimation(); // Reage a mudanças de A, Ea, T
+
+  onMount(() => {
+    restartAnimation();
+  });
 </script>
 
 <svg bind:this={svgElement}></svg>
+
+<style>
+  svg {
+    border: 1px solid #ccc;
+    background: white;
+  }
+</style>
