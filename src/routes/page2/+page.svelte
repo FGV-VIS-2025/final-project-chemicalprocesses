@@ -25,138 +25,234 @@
   function handleRestart() {
     isRunning = true;
     triggerRestart = true;
-    // Reseta o trigger no próximo tick para permitir múltiplos restarts
     setTimeout(() => (triggerRestart = false), 0);
   }
-
 </script>
 
 <svelte:head>
   <title>Activation Energy</title>
 </svelte:head>
 
-<main class="activation-page">
-  <h2>Activation Energy</h2>
-
-  <p>
-    The <strong>Arrhenius equation</strong> describes the temperature dependence of reaction rates:
-  </p>
-
-  <p><code>k = A · e<sup>-Ea / RT</sup></code></p>
-
+<nav>
   <ul>
-    <li><strong>k</strong>: rate constant</li>
-    <li><strong>A</strong>: pre-exponential factor</li>
-    <li><strong>E<sub>a</sub></strong>: activation energy</li>
-    <li><strong>R</strong>: gas constant (8.314 J/mol·K)</li>
-    <li><strong>T</strong>: temperature in Kelvin</li>
+    <li><a href="/">Home</a></li>
+    <li><a href="/page0">Introduction</a></li>
+    <li><a href="/page1">Reaction Orders</a></li>
+    <li><a href="/page2">Activation Energy</a></li>
+    <li><a href="/page3">Reaction Mechanism</a></li>
+    <li><a href="/page4">Catalyst Effect</a></li>
+    <li><a href="/page5">Radioactivity</a></li>
   </ul>
+</nav>
 
-  <div class="sliders">
+<main class="page" id="page2">
+  <h1>
+    <span class="chem-icon">⚗️</span> Activation Energy
+  </h1>
+
+  <div class="content-section">
+    <p>
+      The <strong>Arrhenius equation</strong> describes the temperature dependence of reaction rates:
+    </p>
+
+    <p class="formula"><code>k = A · e<sup>-Ea / RT</sup></code></p>
+
+    <ul class="equation-vars">
+      <li><strong>k</strong>: rate constant</li>
+      <li><strong>A</strong>: pre-exponential factor</li>
+      <li><strong>E<sub>a</sub></strong>: activation energy</li>
+      <li><strong>R</strong>: gas constant (8.314 J/mol·K)</li>
+      <li><strong>T</strong>: temperature in Kelvin</li>
+    </ul>
+  </div>
+
+  <div class="controls">
     <label>
-      <strong>Activation Energy (Ea):</strong>
+      <span>Activation Energy (Ea):</span>
       <input type="range" min="20" max="100" bind:value={Ea} />
-      {Ea} kJ/mol
+      <span>{Ea} kJ/mol</span>
     </label>
 
     <label>
-      <strong>Pre-exponential Factor (A):</strong>
+      <span>Pre-exponential Factor (A):</span>
       <input type="range" min="1" max="10" step="0.1" bind:value={A_slider} />
-      {A_slider.toFixed(1)} × 10<sup>13</sup> s<sup>-1</sup>
+      <span>{A_slider.toFixed(1)} × 10<sup>13</sup> s<sup>-1</sup></span>
     </label>
 
     <label>
-      <strong>Temperature (T):</strong>
+      <span>Temperature (T):</span>
       <input type="range" min="200" max="500" bind:value={T} />
-      {T} K
+      <span>{T} K</span>
     </label>
 
-    <label>
-      <strong>Show Marker on Graph:</strong>
+    <label class="toggle-label">
+      <span>Show Marker on Graph:</span>
       <button on:click={() => showMarker = !showMarker}>
         {showMarker ? "Hide Marker" : "Show Marker"}
       </button>
     </label>
   </div>
 
-  <p>The graph below shows the relationship between the rate constant <strong>k</strong> and the reciprocal of temperature <strong>1/T</strong>, following the Arrhenius equation.</p>
-
-  <ArrheniusChart {Ea} {A} {T} {showMarker} />
-
-  <h3>Particle Animation</h3>
-
-  <div class="controls">
-    <button on:click={toggleRunning}>
-      {running ? "Pause Animation" : "Start/Resume Animation"}
-    </button>
-    <button on:click={restartSimulation}>
-      Restart Simulation
-    </button>
+  <div class="content-section">
+    <p>The graph below shows the relationship between the rate constant <strong>k</strong> and the reciprocal of temperature <strong>1/T</strong>, following the Arrhenius equation.</p>
   </div>
 
-  <ParticleAnimation {Ea} {A} {T} {running} triggerRestart={restartKey} />
+  <div class="chart-container">
+    <ArrheniusChart {Ea} {A} {T} {showMarker} />
+  </div>
+
+  <div class="content-section">
+    <h2>Particle Animation</h2>
+    
+    <div class="animation-controls">
+      <button on:click={toggleRunning} class="action-btn">
+        {running ? "Pause Animation" : "Start/Resume Animation"}
+      </button>
+      <button on:click={restartSimulation} class="action-btn">
+        Restart Simulation
+      </button>
+    </div>
+
+    <ParticleAnimation {Ea} {A} {T} {running} triggerRestart={restartKey} />
+  </div>
 </main>
 
 <style>
-  .activation-page {
-    padding: 2rem;
-    font-family: Arial, sans-serif;
-    background-color: #e9f3f7;
-    color: #222;
-    max-width: 900px;
-    margin: auto;
+
+  nav {
+    background: #003366;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-family: 'Inter', sans-serif;
   }
 
-  h2, h3 {
-    color: #123;
-    margin-top: 2rem;
-  }
-
-  .sliders label {
+  nav ul {
     display: flex;
-    flex-direction: column;
-    margin: 1rem 0;
-    font-weight: bold;
+    flex-wrap: wrap;
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    justify-content: center;
+  }
+
+  nav a {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: color 0.3s;
+    padding: 0.5rem 1rem;
+    display: inline-block;
+  }
+
+  nav a:hover {
+    color: #aad4ff;
+  }
+
+  .page {
+    padding: 2rem;
+    max-width: 900px;
+    margin: 2rem auto;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    position: relative;
+  }
+
+  .page h1 {
+    color: #003366;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .content-section {
+    margin-bottom: 2rem;
+  }
+
+  .formula {
+    text-align: center;
+    font-size: 1.2rem;
+    margin: 1.5rem 0;
+  }
+
+  .equation-vars {
+    background: #e3f2f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 1.5rem 0;
   }
 
   .controls {
+    background: #e3f2f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+  }
+
+  .controls label {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+
+  .controls input[type="range"] {
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+
+  .toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .chart-container {
+    margin: 2rem 0;
+  }
+
+  .animation-controls {
     display: flex;
     gap: 1rem;
     margin: 1rem 0;
   }
 
-  input[type="range"] {
-    width: 100%;
-    margin: 0.5rem 0;
-  }
-
-  button {
-    margin-top: 0.5rem;
-    padding: 0.4rem 0.8rem;
-    border: none;
-    background-color: #123;
+  .action-btn {
+    background: #003366;
     color: white;
+    border: none;
+    padding: 0.5rem 1rem;
     border-radius: 4px;
     cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: background-color 0.3s;
   }
 
-  button:hover {
-    background-color: #234;
+  .action-btn:hover {
+    background: #004080;
   }
 
-  svg {
-    border: 1px solid #ccc;
-    margin-top: 1rem;
-  }
-
-  ul {
-    margin-left: 1.5rem;
-  }
-
-  code {
-    font-size: 1.1rem;
-    background: #fff;
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
+  @media (max-width: 600px) {
+    nav ul {
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    
+    nav a {
+      padding: 0.5rem 0;
+      width: 100%;
+      text-align: center;
+    }
+    
+    .animation-controls {
+      flex-direction: column;
+    }
+    
+    .controls label {
+      flex-direction: column;
+    }
   }
 </style>
