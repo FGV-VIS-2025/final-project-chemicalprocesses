@@ -7,6 +7,17 @@
   $: A = A_slider * 1e13; // Scale to correct magnitude
   let T = 300;
   let showMarker = true;
+
+  let running = true;
+  let restartKey = 0;
+
+  function toggleRunning() {
+    running = !running;
+  }
+
+  function restartSimulation() {
+    restartKey += 1;
+  }
 </script>
 
 <svelte:head>
@@ -58,10 +69,21 @@
   </div>
 
   <p>The graph below shows the relationship between the rate constant <strong>k</strong> and the reciprocal of temperature <strong>1/T</strong>, following the Arrhenius equation.</p>
+
   <ArrheniusChart {Ea} {A} {T} {showMarker} />
 
   <h3>Particle Animation</h3>
-  <ParticleAnimation {Ea} {A} {T} />
+
+  <div class="controls">
+    <button on:click={toggleRunning}>
+      {running ? "Pause Animation" : "Resume Animation"}
+    </button>
+    <button on:click={restartSimulation}>
+      Restart Simulation
+    </button>
+  </div>
+
+  <ParticleAnimation {Ea} {A} {T} {running} triggerRestart={restartKey} />
 </main>
 
 <style>
@@ -84,6 +106,12 @@
     flex-direction: column;
     margin: 1rem 0;
     font-weight: bold;
+  }
+
+  .controls {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
   }
 
   input[type="range"] {
