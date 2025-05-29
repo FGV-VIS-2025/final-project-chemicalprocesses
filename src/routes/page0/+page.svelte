@@ -1,3 +1,45 @@
+<svelte:head>
+  <title>Page 0 - Summary</title>
+</svelte:head>
+
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/page0">Introduction</a></li>
+    <li><a href="/page1">Reaction Orders</a></li>
+    <li><a href="/page2">Activation Energy</a></li>
+    <li><a href="/page3">Reaction Mechanism</a></li>
+    <li><a href="/page4">Catalyst Effect</a></li>
+    <li><a href="/page5">Radioactivity</a></li>
+  </ul>
+</nav>
+
+<div class="page" id="page0">
+  <h1>
+    <span class="chem-icon">⚗️</span> Chemical Kinetics Visualizer
+  </h1>
+  <p><strong>Chemical kinetics</strong> is the branch of chemistry that studies the speed of chemical reactions,
+  how different conditions affect these rates, and what mechanisms underlie them. This tool provides a visualization of reaction progress over time.</p>
+
+  <div id="container3" style="margin-bottom: 40px;"></div>
+  <div id="container2"></div>
+
+  <ul>
+    <li><strong>First-order reactions:</strong> ...</li>
+    <li><strong>Second-order reactions:</strong> ...</li>
+    <li><strong>Third-order reactions:</strong> ...</li>
+  </ul>
+
+  <p>The rate constant, <code>k</code>, is unique to each reaction...</p>
+
+  <p style="text-align: center; font-size: 1.2em;">
+    <code style="font-size: 1.5em;">k = A · e<sup>−Eₐ/RT</sup></code>
+  </p>
+
+  <p>Reactions often proceed via a <strong>reaction mechanism</strong>...</p>
+  <p><strong>Catalysts</strong> accelerate chemical reactions...</p>
+</div>
+
 <script>
   import { onMount } from 'svelte';
   import * as d3 from 'd3';
@@ -5,85 +47,121 @@
   onMount(() => {
     const styleContent = `
       body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: 'Inter', sans-serif;
         background-color: #f4f4f9;
         color: #333;
-      }
-      nav {
-        background-color: #123455;
-        padding: 12px 20px;
-        border-radius: 0 0 10px 10px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      }
-      nav ul {
-        display: flex;
-        gap: 20px;
-        list-style: none;
         margin: 0;
         padding: 0;
+      }
+      
+      nav {
+        background: #003366;
+        padding: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        font-family: 'Inter', sans-serif;
+      }
+      
+      nav ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        list-style: none;
+        padding: 0;
+        margin: 0;
         justify-content: center;
       }
-      nav li a {
-        color: white;
+      
+      nav a {
         text-decoration: none;
-        font-weight: bold;
+        color: #ffffff;
+        font-weight: 500;
         font-size: 1rem;
         transition: color 0.3s;
+        padding: 0.5rem 1rem;
       }
-      nav li a:hover {
-        color: #ffdd57;
+      
+      nav a:hover {
+        color: #aad4ff;
       }
-
-      h1 {
-        text-align: center;
-        font-size: 2rem;
-        margin-bottom: 1rem;
-        color: #123455;
+      
+      #page0 {
+        padding: 2rem;
+        max-width: 900px;
+        margin: 2rem auto;
+        background: white;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        border-radius: 12px;
+        position: relative;
       }
-
-      p {
+      
+      #page0 h1 {
+        color: #003366;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+      }
+      
+      #page0 p {
         font-size: 1.1rem;
         line-height: 1.6;
         margin-bottom: 1rem;
-        text-align: justify;
       }
-
+      
+      #page0 ul {
+        padding-left: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      #page0 li {
+        margin-bottom: 0.5rem;
+      }
+      
+      #page0 code {
+        background: #e3f2f9;
+        padding: 0.2rem 0.4rem;
+        border-radius: 4px;
+        font-family: 'Inter', monospace;
+      }
+      
       svg {
         background: white;
         border-radius: 8px;
-        box-shadow: 0 0 15px #ccc;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
       }
-
+      
       .axis-label {
         font-weight: bold;
-        fill: #123455;
+        fill: #003366;
         font-size: 14px;
       }
-
+      
       .label-reactant {
         fill: #d62728;
         font-weight: bold;
       }
-
+      
       .label-product {
         fill: #1f77b4;
         font-weight: bold;
       }
-
+      
       .tube-label {
         font-size: 14px;
         fill: #333;
         text-anchor: middle;
       }
-
-      #page0 {
-        padding: 30px;
-        max-width: 900px;
-        margin: auto;
-        background-color: #ffffff;
-        border-radius: 12px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        margin-top: 30px;
+      
+      @media (max-width: 600px) {
+        nav ul {
+          flex-direction: column;
+          align-items: center;
+          gap: 0.5rem;
+        }
+        
+        nav a {
+          padding: 0.3rem 0;
+        }
       }
     `;
     const style = document.createElement("style");
@@ -156,14 +234,16 @@
       .attr("y", yScale(concB(12)) + 20)
       .text("Produto B");
 
-        // === Tubos de Ensaio ===
+    // === Tubos de Ensaio ===
     const tubeWidth = 100, tubeHeight = 250;
     const numTubes = 5;
     const maxBubbles = 50;
 
     const containerTubes = d3.select("#container2")
       .style("display", "flex")
-      .style("gap", "30px");
+      .style("gap", "30px")
+      .style("justify-content", "center")
+      .style("flex-wrap", "wrap");
 
     const tubesData = d3.range(numTubes).map((tubeIndex) => {
       const liquidX = tubeWidth * 0.18,
@@ -199,7 +279,7 @@
       .attr("height", tubeHeight)
       .style("background", "white")
       .style("border-radius", "8px")
-      .style("box-shadow", "0 0 15px #ccc");
+      .style("box-shadow", "0 0 15px rgba(0,0,0,0.1)");
 
     tubes.each(function(d) {
       const svgTube = d3.select(this);
@@ -277,16 +357,25 @@
       svgTube.selectAll(".bubbleB")
         .attr("visibility", (d, i) => i < visibleB ? "visible" : "hidden");
 
-      // animação vertical suave
+      // animação vertical suave com limites para não sair do frasco
       tubeData.bubblesA.forEach((b, i) => {
         b.y += 0.3 * (i % 2 ? 1 : -1);
-      });
-      tubeData.bubblesB.forEach((b, i) => {
-        b.y += 0.25 * (i % 2 ? -1 : 1);
+        // Limitar a posição Y dentro do líquido
+        b.y = Math.max(tubeData.liquidY, Math.min(tubeData.liquidY + tubeData.liquidHeight, b.y));
+        // Limitar a posição X dentro do líquido
+        b.x = Math.max(tubeData.liquidX, Math.min(tubeData.liquidX + tubeData.liquidWidth, b.x));
       });
 
-      svgTube.selectAll(".bubbleA").data(tubeData.bubblesA).attr("cy", d => d.y);
-      svgTube.selectAll(".bubbleB").data(tubeData.bubblesB).attr("cy", d => d.y);
+      tubeData.bubblesB.forEach((b, i) => {
+        b.y += 0.25 * (i % 2 ? -1 : 1);
+        // Limitar a posição Y dentro do líquido
+        b.y = Math.max(tubeData.liquidY, Math.min(tubeData.liquidY + tubeData.liquidHeight, b.y));
+        // Limitar a posição X dentro do líquido
+        b.x = Math.max(tubeData.liquidX, Math.min(tubeData.liquidX + tubeData.liquidWidth, b.x));
+      });
+
+      svgTube.selectAll(".bubbleA").data(tubeData.bubblesA).attr("cy", d => d.y).attr("cx", d => d.x);
+      svgTube.selectAll(".bubbleB").data(tubeData.bubblesB).attr("cy", d => d.y).attr("cx", d => d.x);
     };
 
     let currentStep = 0;
@@ -296,43 +385,3 @@
     }, 100);
   });
 </script>
-
-<svelte:head>
-  <title>Page 0 - Summary</title>
-</svelte:head>
-
-<nav>
-  <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/page0">Introduction</a></li>
-    <li><a href="/page1">Reaction Orders</a></li>
-    <li><a href="/page2">Activation Energy</a></li>
-    <li><a href="/page3">Reaction Mechanism</a></li>
-    <li><a href="/page4">Catalyst Effect</a></li>
-    <li><a href="/page5">Radioactivity</a></li>
-  </ul>
-</nav>
-
-<div class="page" id="page0">
-  <h1>Chemical Reaction Visualizer</h1>
-  <p><strong>Chemical kinetics</strong> is the branch of chemistry that studies the speed of chemical reactions,
-  how different conditions affect these rates, and what mechanisms underlie them. This tool provides a visualization of reaction progress over time.</p>
-
-  <div id="container3" style="margin-bottom: 40px;"></div>
-  <div id="container2"></div>
-
-  <ul>
-    <li><strong>First-order reactions:</strong> ...</li>
-    <li><strong>Second-order reactions:</strong> ...</li>
-    <li><strong>Third-order reactions:</strong> ...</li>
-  </ul>
-
-  <p>The rate constant, <code>k</code>, is unique to each reaction...</p>
-
-  <p style="text-align: center; font-size: 1.2em;">
-    <code style="font-size: 1.5em;">k = A · e<sup>−Eₐ/RT</sup></code>
-  </p>
-
-  <p>Reactions often proceed via a <strong>reaction mechanism</strong>...</p>
-  <p><strong>Catalysts</strong> accelerate chemical reactions...</p>
-</div>
