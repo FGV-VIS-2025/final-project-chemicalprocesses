@@ -1,6 +1,6 @@
 <svelte:head>
   <title>Chemical Reaction Visualizer</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </svelte:head>
 
@@ -141,16 +141,15 @@
   });
 </script>
 
-<svg id="molecule-bg"></svg>
-
 <style>
 
   nav {
     background: #003366;
     padding: 1rem;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-family: 'Inter', sans-serif;
   }
-
+  
   nav ul {
     display: flex;
     flex-wrap: wrap;
@@ -160,14 +159,16 @@
     margin: 0;
     justify-content: center;
   }
-
+  
   nav a {
     text-decoration: none;
     color: #ffffff;
     font-weight: 500;
+    font-size: 1rem;
     transition: color 0.3s;
+    padding: 0.5rem 1rem;
   }
-
+  
   nav a:hover {
     color: #aad4ff;
   }
@@ -186,6 +187,7 @@
   #content h1 {
     color: #003366;
     margin-bottom: 1rem;
+    font-family: 'Inter', sans-serif;
   }
 
   .team-info {
@@ -195,6 +197,7 @@
     margin: 2rem auto;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    font-family: 'Inter', sans-serif;
   }
 
   .team-info h2 {
@@ -227,91 +230,97 @@
     border-top: 1px solid #ccc;
     padding: 1rem;
     background-color: #f0f4f8;
+    font-family: 'Inter', sans-serif;
   }
 
   @media (max-width: 600px) {
     nav ul {
       flex-direction: column;
       align-items: center;
+      gap: 0.5rem;
+    }
+    
+    nav a {
+      padding: 0.3rem 0;
     }
   }
 
-.chem-section {
-  position: relative;
-  padding: 2.5rem;
-  background: #f9f9f9;
-  font-family: 'Inter', sans-serif;
-  border-left: 4px solid #0077cc;
-  border-radius: 12px;
-  overflow: hidden;
-}
+  .chem-section {
+    position: relative;
+    padding: 2.5rem;
+    background: #f9f9f9;
+    font-family: 'Inter', sans-serif;
+    border-left: 4px solid #0077cc;
+    border-radius: 12px;
+    overflow: hidden;
+  }
 
-.chem-section h1 {
-  font-size: 2.1rem;
-  color: #0077cc;
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-}
+  .chem-section h1 {
+    font-size: 2.1rem;
+    color: #0077cc;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
 
-.chem-formula {
-  position: absolute;
-  font-size: 0.9rem;
-  opacity: 0.3;
-  font-family: 'IBM Plex Mono', monospace;
-  pointer-events: none;
-  user-select: none;
-  color: #000;
-}
+  .chem-formula {
+    position: absolute;
+    font-size: 0.9rem;
+    opacity: 0.3;
+    font-family: 'IBM Plex Mono', monospace;
+    pointer-events: none;
+    user-select: none;
+    color: #000;
+  }
 
-.scribble1 {
-  top: 10%;
-  left: 5%;
-  transform: rotate(-18deg);
-}
+  .scribble1 {
+    top: 10%;
+    left: 5%;
+    transform: rotate(-18deg);
+  }
 
-.scribble2 {
-  bottom: 15%;
-  right: 10%;
-  transform: rotate(-15deg);
-}
+  .scribble2 {
+    bottom: 15%;
+    right: 10%;
+    transform: rotate(-15deg);
+  }
 
-.scribble3 {
-  top: 25%;
-  left: 55%;
-  transform: rotate(10deg);
-}
+  .scribble3 {
+    top: 25%;
+    left: 55%;
+    transform: rotate(10deg);
+  }
 
-.chem-floating {
-  position: absolute;
-  background-repeat: no-repeat;
-  background-size: contain;
-  opacity: 0.1;
-  animation: float 12s infinite linear;
-  pointer-events: none;
-  z-index: 0;
-}
+  .chem-floating {
+    position: absolute;
+    background-repeat: no-repeat;
+    background-size: contain;
+    opacity: 0.1;
+    animation: float 12s infinite linear;
+    pointer-events: none;
+    z-index: 0;
+  }
 
-/* Ícones com links diretos para imagens válidas */
-.chem-dna {
-  width: 40px;
-  height: 50px;
-  top: 20%;
-  left: 80%;
-  background-image: url('https://img.icons8.com/ios-filled/100/dna-helix.png');
-}
+  /* Ícones com links diretos para imagens válidas */
+  .chem-dna {
+    width: 40px;
+    height: 50px;
+    top: 20%;
+    left: 80%;
+    background-image: url('https://img.icons8.com/ios-filled/100/dna-helix.png');
+  }
 
-.chem-flask {
-  width: 50px;
-  height: 60px;
-  top: 80%;
-  left: 15%;
-  background-image: url('https://img.icons8.com/ios-filled/100/laboratory.png');
-}
+  .chem-flask {
+    width: 50px;
+    height: 60px;
+    top: 80%;
+    left: 15%;
+    background-image: url('https://img.icons8.com/ios-filled/100/laboratory.png');
+  }
 
-@keyframes float {
-  0%   { transform: translateY(0) rotate(0deg); }
-  50%  { transform: translateY(-10px) rotate(5deg); }
-  100% { transform: translateY(0) rotate(0deg); }
-}
+  @keyframes float {
+    0%   { transform: translateY(0) rotate(0deg); }
+    50%  { transform: translateY(-10px) rotate(5deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+  }
 </style>
