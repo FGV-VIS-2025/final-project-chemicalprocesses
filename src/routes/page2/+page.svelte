@@ -8,7 +8,7 @@
   let T = 300;
   let showMarker = true;
 
-  let running = true;
+  let running = false;
   let restartKey = 0;
 
   function toggleRunning() {
@@ -18,6 +18,17 @@
   function restartSimulation() {
     restartKey += 1;
   }
+  
+  let isRunning = false;
+  let triggerRestart = false;
+
+  function handleRestart() {
+    isRunning = true;
+    triggerRestart = true;
+    // Reseta o trigger no próximo tick para permitir múltiplos restarts
+    setTimeout(() => (triggerRestart = false), 0);
+  }
+
 </script>
 
 <svelte:head>
@@ -76,7 +87,7 @@
 
   <div class="controls">
     <button on:click={toggleRunning}>
-      {running ? "Pause Animation" : "Resume Animation"}
+      {running ? "Pause Animation" : "Start/Resume Animation"}
     </button>
     <button on:click={restartSimulation}>
       Restart Simulation
