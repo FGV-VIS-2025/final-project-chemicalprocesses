@@ -85,7 +85,7 @@
 
     const width = window.innerWidth;
     const height = window.innerHeight;
-    const numMolecules = 50;
+    const numMolecules = 150;
 
     const moleculeTypes = ['H2O', 'CO2', 'O2', 'NH3', 'CH4'];
 
@@ -144,13 +144,6 @@
 <svg id="molecule-bg"></svg>
 
 <style>
-  body {
-    font-family: 'Roboto', sans-serif;
-    margin: 0;
-    background-color: #f4f8fc;
-    color: #2b2b2b;
-    overflow-x: hidden;
-  }
 
   nav {
     background: #003366;

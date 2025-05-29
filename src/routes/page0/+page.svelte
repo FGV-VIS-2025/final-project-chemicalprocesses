@@ -3,25 +3,87 @@
   import * as d3 from 'd3';
 
   onMount(() => {
-    // === Estilo ===
     const styleContent = `
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+      }
+      nav {
+        background-color: #123455;
+        padding: 12px 20px;
+        border-radius: 0 0 10px 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      }
+      nav ul {
+        display: flex;
+        gap: 20px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        justify-content: center;
+      }
+      nav li a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1rem;
+        transition: color 0.3s;
+      }
+      nav li a:hover {
+        color: #ffdd57;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: #123455;
+      }
+
+      p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+        text-align: justify;
+      }
+
       svg {
         background: white;
         border-radius: 8px;
         box-shadow: 0 0 15px #ccc;
       }
+
       .axis-label {
         font-weight: bold;
         fill: #123455;
         font-size: 14px;
       }
+
       .label-reactant {
         fill: #d62728;
         font-weight: bold;
       }
+
       .label-product {
         fill: #1f77b4;
         font-weight: bold;
+      }
+
+      .tube-label {
+        font-size: 14px;
+        fill: #333;
+        text-anchor: middle;
+      }
+
+      #page0 {
+        padding: 30px;
+        max-width: 900px;
+        margin: auto;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-top: 30px;
       }
     `;
     const style = document.createElement("style");
@@ -251,13 +313,13 @@
   </ul>
 </nav>
 
-<div class="page" id="page0" style="font-family: Arial, sans-serif; padding: 20px; background-color: #f7f7f7;">
-  <h1 style="text-align: center;">Chemical Reaction Visualizer</h1>
+<div class="page" id="page0">
+  <h1>Chemical Reaction Visualizer</h1>
+  <p><strong>Chemical kinetics</strong> is the branch of chemistry that studies the speed of chemical reactions,
+  how different conditions affect these rates, and what mechanisms underlie them. This tool provides a visualization of reaction progress over time.</p>
 
-  <p><strong>Chemical kinetics</strong> is the branch of chemistry...</p>
-
+  <div id="container3" style="margin-bottom: 40px;"></div>
   <div id="container2"></div>
-  <div id="container3"></div>
 
   <ul>
     <li><strong>First-order reactions:</strong> ...</li>
