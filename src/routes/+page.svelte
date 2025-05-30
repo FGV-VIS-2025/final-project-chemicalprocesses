@@ -10,7 +10,7 @@
     <li><a href="/page0">Introduction</a></li>
     <li><a href="/page1">Reaction Orders</a></li>
     <li><a href="/page2">Activation Energy</a></li>
-    <li><a href="/page3">Reaction Mechanism</a></li>
+    <li><a href="/page3">Simulation</a></li>
     <li><a href="/page4">Catalyst Effect</a></li>
     <li><a href="/page5">Radioactivity</a></li>
   </ul>
@@ -23,7 +23,7 @@
     <span class="chem-icon">⚗️</span> Chemical Kinetics Visualizer
   </h1>
   <p>
-    Explore the fundamentals of chemical kinetics by visualizing reactions, mechanisms, and catalyst effects.
+    Explore the fundamentals of chemical kinetics by visualizing reactions, radioactivity, and catalyst effects.
     Adjust variables such as concentration, temperature, and the presence of catalysts to observe their influence on reaction rates.
   </p>
 

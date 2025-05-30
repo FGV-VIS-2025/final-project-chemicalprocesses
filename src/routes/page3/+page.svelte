@@ -64,16 +64,16 @@
     <li><a href="/page0">Introduction</a></li>
     <li><a href="/page1">Reaction Orders</a></li>
     <li><a href="/page2">Activation Energy</a></li>
-    <li><a href="/page3">Reaction Mechanism</a></li>
+    <li><a href="/page3">Simulation</a></li>
     <li><a href="/page4">Catalyst Effect</a></li>
     <li><a href="/page5">Radioactivity</a></li>
   </ul>
 </nav>
 
 <main class="page" id="page3">
-  <h2>Reaction Mechanism</h2>
+  <h2>Simulation</h2>
   <p>This graph represents a hypothetical energy diagram for a multi-step reaction mechanism with intermediates.</p>
-  <svg id="mechanismGraph" width="800" height="400"></svg>
+  <svg id="simulationGraph" width="800" height="400"></svg>
 </main>
 
 <style>
