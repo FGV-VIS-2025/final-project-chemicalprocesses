@@ -72,7 +72,7 @@
       .attr("y", height - margin.top - margin.bottom + 45)
       .attr("text-anchor", "middle")
       .attr("font-size", "14px")
-      .text(xMode === "invT" ? "1 / T [1/K]" : "Temperature [K]");
+      .text(xMode === "invT" ? "1 / Temperature [1/K]" : "Temperature [K]");
 
     g.append("text")
       .attr("class", "y-label")

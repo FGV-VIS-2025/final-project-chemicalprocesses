@@ -1,6 +1,7 @@
 <script>
   import ArrheniusChart from '$lib/components/ArrheniusChart.svelte';
   import ParticleAnimation from '$lib/components/ParticleAnimation.svelte';
+  import CollisionChart from '$lib/components/CollisionChart.svelte';
 
   let Ea = 50;
   let A_slider = 5; // Slider value from 1 to 10
@@ -11,6 +12,8 @@
   let running = false;
   let restartKey = 0;
 
+  let collisionHistory = [];
+
   function toggleRunning() {
     running = !running;
   }
@@ -18,7 +21,7 @@
   function restartSimulation() {
     restartKey += 1;
   }
-  
+
   let isRunning = false;
   let triggerRestart = false;
 
@@ -28,6 +31,7 @@
     setTimeout(() => (triggerRestart = false), 0);
   }
 </script>
+
 
 <svelte:head>
   <title>Activation Energy</title>
@@ -113,8 +117,14 @@
       </button>
     </div>
 
-    <ParticleAnimation {Ea} {A} {T} {running} triggerRestart={restartKey} />
+    <ParticleAnimation {Ea} {A} {T} {running} triggerRestart={restartKey} on:collisionUpdate={(e) => collisionHistory = [...collisionHistory, e.detail]}/>
   </div>
+
+  <div class="content-section">
+    <h2>Collision Count Over Time</h2>
+    <CollisionChart {collisionHistory} />
+  </div>
+
 </main>
 
 <style>
