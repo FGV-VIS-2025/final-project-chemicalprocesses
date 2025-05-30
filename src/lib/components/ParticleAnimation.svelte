@@ -101,7 +101,9 @@
 
     if (!startTime) startTime = currentTime;
     const elapsedTime = (currentTime - startTime) / 1000;
-    if (elapsedTime >= currentCollisionFrame * samplingInterval) {
+
+    // Limita o envio de dados para o gráfico, mas mantém a animação
+    if (elapsedTime <= 30 && elapsedTime >= currentCollisionFrame * samplingInterval) {
       const newCollisions = collisionCount - lastSampleCollisionCount;
       dispatch("collisionUpdate", {
         time: +elapsedTime.toFixed(1),

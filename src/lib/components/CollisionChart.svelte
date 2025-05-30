@@ -10,10 +10,11 @@
   const margin = { top: 20, right: 20, bottom: 30, left: 40 };
 
   function drawChart() {
-    if (!svg) return;
+    if (!svg || collisionHistory.length === 0) return;
+
+    svg.innerHTML = ''; // <-- garante que o gráfico anterior seja apagado
 
     const svgEl = d3.select(svg);
-    svgEl.selectAll('*').remove();
 
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
@@ -31,10 +32,10 @@
 
     g.append('g')
       .attr('transform', `translate(0,${innerHeight})`)
-      .call(d3.axisBottom(xScale));
+      .call(d3.axisBottom(xScale).ticks(5));
 
     g.append('g')
-      .call(d3.axisLeft(yScale));
+      .call(d3.axisLeft(yScale).ticks(5));
 
     const line = d3.line()
       .x(d => xScale(d.time))

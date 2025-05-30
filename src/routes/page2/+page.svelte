@@ -4,13 +4,14 @@
   import CollisionChart from '$lib/components/CollisionChart.svelte';
 
   let Ea = 50;
-  let A_slider = 5; // Slider value from 1 to 10
-  $: A = A_slider * 1e13; // Scale to correct magnitude
+  let A_slider = 5;
+  $: A = A_slider * 1e13;
   let T = 300;
   let showMarker = true;
 
   let running = false;
   let restartKey = 0;
+  let chartKey = 0;
 
   let collisionHistory = [];
 
@@ -20,15 +21,17 @@
 
   function restartSimulation() {
     restartKey += 1;
+    chartKey += 1;
+    collisionHistory = [];  // limpa o gráfico ao reiniciar
   }
 
-  let isRunning = false;
-  let triggerRestart = false;
+  // Resetar gráfico ao mudar sliders
+  let lastParams = { Ea: null, A: null, T: null };
 
-  function handleRestart() {
-    isRunning = true;
-    triggerRestart = true;
-    setTimeout(() => (triggerRestart = false), 0);
+  $: if (Ea !== lastParams.Ea || A !== lastParams.A || T !== lastParams.T) {
+    lastParams = { Ea, A, T };
+    chartKey += 1;
+    collisionHistory = [];
   }
 </script>
 
@@ -106,8 +109,8 @@
   </div>
 
   <div class="content-section">
-    <h2>Particle Animation</h2>
-    
+    <h2>Particle Animation & Collision Graph</h2>
+
     <div class="animation-controls">
       <button on:click={toggleRunning} class="action-btn">
         {running ? "Pause Animation" : "Start/Resume Animation"}
@@ -117,18 +120,24 @@
       </button>
     </div>
 
-    <ParticleAnimation {Ea} {A} {T} {running} triggerRestart={restartKey} on:collisionUpdate={(e) => collisionHistory = [...collisionHistory, e.detail]}/>
-  </div>
+    <div class="side-by-side">
+      <ParticleAnimation
+        {Ea}
+        {A}
+        {T}
+        {running}
+        triggerRestart={restartKey}
+        on:collisionUpdate={(e) => collisionHistory = [...collisionHistory, e.detail]}
+      />
+      {#key chartKey}
+        <CollisionChart {collisionHistory} />
+      {/key}
 
-  <div class="content-section">
-    <h2>Collision Count Over Time</h2>
-    <CollisionChart {collisionHistory} />
+    </div>
   </div>
-
 </main>
 
 <style>
-
   nav {
     background: #003366;
     padding: 1rem;
@@ -244,24 +253,35 @@
     background: #004080;
   }
 
+  .side-by-side {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    align-items: flex-start;
+  }
+
   @media (max-width: 600px) {
     nav ul {
       flex-direction: column;
       align-items: center;
       gap: 0.3rem;
     }
-    
+
     nav a {
       padding: 0.5rem 0;
       width: 100%;
       text-align: center;
     }
-    
+
     .animation-controls {
       flex-direction: column;
     }
-    
+
     .controls label {
+      flex-direction: column;
+    }
+
+    .side-by-side {
       flex-direction: column;
     }
   }
