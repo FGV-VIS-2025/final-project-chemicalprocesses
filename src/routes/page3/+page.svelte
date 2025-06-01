@@ -672,7 +672,7 @@ const seriesData = {
       .attr("transform", `translate(${largura - 280}, 30)`);
 
     infoPanel.append("rect")
-      .attr("width", 250)
+      .attr("width", 270)
       .attr("height", 120)
       .attr("fill", "white")
       .attr("stroke", "#1d3557")
