@@ -1,5 +1,5 @@
 <svelte:head>
-  <title>Page 5 - Radioactivity</title>
+  <title>Page 3 - Simulation</title>
 </svelte:head>
 
 <nav>
@@ -60,13 +60,15 @@
     </div>
   </div>
 
+  <div id="animacao" class="chart-container" style="width: 900px; height: 600px;"></div>
+
+
   {#if resultContent}
     <div id="result" class="rate-law">
       <pre>{resultContent}</pre>
     </div>
   {/if}
 
-<div id="animacao" class="chart-container" style="width: 900px; height: 600px;"></div>
 
 <!-- NEW SECTION: Natural Radioactive Series -->
   <div class="series-section">
@@ -593,7 +595,7 @@ const seriesData = {
     ];
   }
 
- function animarParticulas(quantidades) {
+   function animarParticulas(quantidades) {
     const largura = 900, altura = 600; // Format fixo conforme solicitado
     const centroX = largura / 2, centroY = altura / 2;
     let Z = estado.elementoSelecionado.Z;
@@ -665,58 +667,50 @@ const seriesData = {
     // Criar marcadores
     criarMarcadores(svg);
 
-    // Painel de informações ATUALIZADO
+    // Painel de informações
     const infoPanel = svg.append("g")
-      .attr("transform", `translate(${largura - 250}, 30)`);
+      .attr("transform", `translate(${largura - 280}, 30)`);
 
-    // Fundo do painel com borda mais definida
     infoPanel.append("rect")
-      .attr("width", 220)  // Largura reduzida para caber melhor
+      .attr("width", 250)
       .attr("height", 120)
       .attr("fill", "white")
       .attr("stroke", "#1d3557")
-      .attr("stroke-width", 1.5)
       .attr("rx", 5)
       .attr("ry", 5)
-      .attr("opacity", 0.95);  // Opacidade aumentada
+      .attr("opacity", 0.9);
 
-    // Título do painel
-    infoPanel.append("text")
-      .attr("x", 110)  // Centralizado
+    const infoTitle = infoPanel.append("text")
+      .attr("x", 125)
       .attr("y", 25)
       .attr("text-anchor", "middle")
-      .style("font-size", "14px")
       .style("font-weight", "bold")
-      .style("fill", "#1D3557")
+      .style("fill", "#1D3557") // Cor mais forte
       .text("Atomic Transformation");
 
-    // Textos com formatação melhorada
-    const texts = [
-      { label: "Element:", x: 15, y: 45, value: `${estado.elementoSelecionado.nome} (${estado.elementoSelecionado.simbolo}-${A})` },
-      { label: "Protons:", x: 15, y: 65, value: Z },
-      { label: "Neutrons:", x: 15, y: 85, value: A - Z },
-      { label: "Electrons:", x: 15, y: 105, value: Z }
-    ];
+    const infoElement = infoPanel.append("text")
+      .attr("x", 10)
+      .attr("y", 50)
+      .style("fill", "#1D3557") // Cor mais forte
+      .text(`Element: ${estado.elementoSelecionado.nome} (Z=${Z}, A=${A})`);
 
-    texts.forEach(item => {
-      // Label
-      infoPanel.append("text")
-        .attr("x", item.x)
-        .attr("y", item.y)
-        .style("font-size", "12px")
-        .style("font-weight", "bold")
-        .style("fill", "#1D3557")
-        .text(item.label);
-      
-      // Valor
-      infoPanel.append("text")
-        .attr("x", item.x + 70)  // Alinhamento fixo
-        .attr("y", item.y)
-        .style("font-size", "12px")
-        .style("fill", "#1D3557")
-        .text(item.value);
-    });
+    const infoProtons = infoPanel.append("text")
+      .attr("x", 10)
+      .attr("y", 70)
+      .style("fill", "#1D3557") // Cor mais forte
+      .text(`Protons: ${Z}`);
 
+    const infoNeutrons = infoPanel.append("text")
+      .attr("x", 10)
+      .attr("y", 90)
+      .style("fill", "#1D3557") // Cor mais forte
+      .text(`Neutrons: ${A - Z}`);
+
+    const infoEletrons = infoPanel.append("text")
+      .attr("x", 10)
+      .attr("y", 110)
+      .style("fill", "#1D3557") // Cor mais forte
+      .text(`Electrons: ${Z}`);
 
     // Função para atualizar o átomo
     function atualizarAtomo(dZ, dA) {
@@ -734,13 +728,13 @@ const seriesData = {
       elementoAtual.text(`${novoElemento.simbolo}-${A}`)
         .style("fill", "#1D3557");
       
-      infoElement.text(`Elemento: ${novoElemento.nome} (Z=${Z}, A=${A})`)
+      infoElement.text(`Element: ${novoElemento.nome} (Z=${Z}, A=${A})`)
         .style("fill", "#1D3557");
-      infoProtons.text(`Prótons: ${Z}`)
+      infoProtons.text(`Protons: ${Z}`)
         .style("fill", "#1D3557");
       infoNeutrons.text(`Nêutrons: ${A - Z}`)
         .style("fill", "#1D3557");
-      infoEletrons.text(`Elétrons: ${Z}`)
+      infoEletrons.text(`Electrons: ${Z}`)
         .style("fill", "#1D3557");
       
       grupoAtomo.selectAll("*").remove();
@@ -896,6 +890,36 @@ const seriesData = {
       .attr("opacity", 0)
       .remove();
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   function obterConfiguracaoEletronica(Z) {
     const ordemOrbitais = [
