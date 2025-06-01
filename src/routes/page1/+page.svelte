@@ -1,5 +1,9 @@
 <svelte:head>
   <title>Reaction Orders - Chemical Kinetics</title>
+ <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+  
+
 </svelte:head>
 
 <nav>
@@ -141,6 +145,191 @@
       </tbody>
     </table>
   </section>
+
+
+ <!-- 3D Potential Energy Surface Visualization -->
+  <section class="tool-section">
+    <h2>3D Potential Energy Surface</h2>
+    <div class="info-box">
+      <p>This visualization shows how potential energy changes along the reaction coordinate for different reaction orders.</p>
+    </div>
+    <div id="energy3d-container"></div>
+    <div class="controls">
+      <label>
+        Surface Type:
+        <select id="surface-type">
+          <option value="simple">Simple (1st Order)</option>
+          <option value="complex">Elementary Reaction</option>
+          <option value="catalyzed">Catalyzed Reaction</option>
+        </select>
+      </label>
+      <button id="rotate-btn">Auto Rotation</button>
+    </div>
+
+    <div class="info-box">
+      
+      <p>A <strong>3D Potential Energy Surface</strong> is a visual representation of how the potential energy of a chemical system changes as atoms move during a reaction.</p>
+    
+    <h3>Key Features:</h3>
+    <ul>
+      <li>The <span class="highlight">x and z axes</span> typically represent molecular coordinates or reaction progress</li>
+      <li>The <span class="highlight">y axis (vertical)</span> shows potential energy</li>
+      <li><span class="highlight">Reactants</span> appear at one end of the surface</li>
+      <li><span class="highlight">Products</span> appear at the other end</li>
+      <li>The <span class="highlight">highest point</span> represents the transition state (activation energy)</li>
+    </ul>
+    
+    <h3>What It Tells Us:</h3>
+    <p>This visualization helps chemists understand:
+      <ul>
+        <li>The energy pathway of reactions</li>
+        <li>Activation energy requirements</li>
+        <li>How catalysts lower energy barriers</li>
+        <li>Why some reactions occur faster than others</li>
+      </ul>
+    </div>
+
+
+
+
+  </section>
+
+  <!-- Reaction Time Calculator -->
+  <section class="tool-section">
+    <h2>Reaction Time Calculator</h2>
+    <div class="calculator-grid">
+      <div class="input-group">
+        <label>Initial [A]₀ (M):</label>
+        <input type="number" id="initial-conc" value="1.0" min="0.1" step="0.1">
+      </div>
+      <div class="input-group">
+        <label>Target [A] (M):</label>
+        <input type="number" id="final-conc" value="0.5" min="0" step="0.1">
+      </div>
+      <div class="input-group">
+        <label>Rate Constant (k):</label>
+        <input type="number" id="rate-const" value="0.1" min="0.01" step="0.01">
+      </div>
+      <div class="input-group">
+        <label>Reaction Order:</label>
+        <select id="reaction-order">
+          <option value="0">Zero Order</option>
+          <option value="1" selected>First Order</option>
+          <option value="2">Second Order</option>
+        </select>
+      </div>
+      <button id="calculate-btn">Calculate Time</button>
+      <div class="result-box">
+        <h3>Results:</h3>
+        <p id="calculated-time">Time required: --</p>
+        <p id="reaction-equation">Equation used: --</p>
+      </div>
+    </div>
+
+<p>This calculator determines <strong>how long a reaction takes</strong> to reach a specified concentration based on:</p>
+    
+    <ul>
+      <li>Initial concentration ([A]₀)</li>
+      <li>Target concentration ([A])</li>
+      <li>Rate constant (k)</li>
+      <li>Reaction order (n)</li>
+    </ul>
+    
+    <h3>What It Calculates:</h3>
+    <p>Using <strong>integrated rate laws</strong>, it computes the time required for the concentration to change from [A]₀ to [A]:</p>
+    
+    <div class="equation-box">
+      <h4>Zero Order (n=0):</h4>
+      <p class="equation">t = ([A]₀ - [A])/k</p>
+      <p>Time depends linearly on concentration change</p>
+    </div>
+    
+    <div class="equation-box">
+      <h4>First Order (n=1):</h4>
+      <p class="equation">t = (ln[A]₀ - ln[A])/k = ln([A]₀/[A])/k</p>
+      <p>Time depends on the ratio of concentrations</p>
+    </div>
+    
+    <div class="equation-box">
+      <h4>Second Order (n=2):</h4>
+      <p class="equation">t = (1/[A] - 1/[A]₀)/k</p>
+      <p>Time depends on inverse concentration differences</p>
+    </div>
+    
+    <h3>Practical Applications:</h3>
+    <ul>
+      <li>Determining reaction completion times</li>
+      <li>Designing chemical processes</li>
+      <li>Predicting shelf life of products</li>
+      <li>Optimizing laboratory experiments</li>
+    </ul>
+
+
+
+
+  </section>
+
+  <!-- Half-Life Comparison Graph -->
+  <section class="tool-section">
+    <h2>Half-Life Comparison</h2>
+    <div id="half-life-chart"></div>
+    <div class="controls">
+      <label>
+        [A]₀ Range (M):
+        <input type="range" id="conc-range" min="0.1" max="10" step="0.1" value="5">
+        <span id="conc-range-value">5.0</span>
+      </label>
+      <label>
+        k Value:
+        <input type="range" id="k-range" min="0.01" max="1" step="0.01" value="0.1">
+        <span id="k-range-value">0.10</span>
+      </label>
+    </div>
+
+
+ <div class="info-box">
+  <p>The <strong>half-life (t<sub>½</sub>)</strong> is the time required for the concentration of a reactant to decrease to half its initial value.</p>
+    
+    <h3>How It Varies by Reaction Order:</h3>
+    <table class="half-life-table">
+      <tr>
+        <th>Reaction Order</th>
+        <th>Half-Life Equation</th>
+        <th>Dependence on [A]₀</th>
+      </tr>
+      <tr>
+        <td>Zero Order</td>
+        <td>t<sub>½</sub> = [A]₀/(2k)</td>
+        <td>Directly proportional</td>
+      </tr>
+      <tr>
+        <td>First Order</td>
+        <td>t<sub>½</sub> = ln(2)/k</td>
+        <td>Independent</td>
+      </tr>
+      <tr>
+        <td>Second Order</td>
+        <td>t<sub>½</sub> = 1/(k[A]₀)</td>
+        <td>Inversely proportional</td>
+      </tr>
+    </table>
+    
+    <h3>Practical Importance:</h3>
+    <ul>
+      <li>Helps predict how long reactions take</li>
+      <li>Essential for drug dosage calculations</li>
+      <li>Used in radiocarbon dating</li>
+      <li>Important for chemical manufacturing</li>
+    </ul>
+    </div>
+
+
+  </section>
+
+
+
+
+  
 </main>
 
 <script>
@@ -387,11 +576,224 @@
     });
   });
 
+// 1. 3D Potential Energy Surface
+  function init3DVisualization() {
+    const container = document.getElementById('energy3d-container');
+    const width = container.clientWidth;
+    const height = Math.min(500, window.innerHeight * 0.6);
+    
+    // Scene setup
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(width, height);
+    container.appendChild(renderer.domElement);
+    
+    // Controls
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    camera.position.set(5, 5, 5);
+    
+    // Surface creation
+    const createSurface = (type) => {
+      let geometry;
+      if (type === 'simple') {
+        const pts = Array.from({length: 20}, (_, i) => 
+          new THREE.Vector2((i/20)*8, Math.exp(-i/5)*5));
+        geometry = new THREE.LatheGeometry(pts, 20);
+      } else {
+        geometry = new THREE.ParametricGeometry((u, v, target) => {
+          u = u*2 - 1;
+          target.x = u*5;
+          target.y = type === 'complex' 
+            ? Math.sin(u*Math.PI)*3 + Math.sin(v*2)*0.5
+            : Math.exp(-u*u*2)*4 + Math.sin(v*3)*0.3;
+          target.z = v*2;
+        }, 50, 50);
+      }
+      return new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({
+        color: 0x1f77b4, transparent: true, opacity: 0.9
+      }));
+    };
+    
+    let surface = createSurface('simple');
+    scene.add(surface);
+    scene.add(new THREE.AxesHelper(5));
+    scene.add(new THREE.DirectionalLight(0xffffff, 1));
+    scene.add(new THREE.AmbientLight(0x404040));
+    
+    // Event handlers
+    document.getElementById('surface-type').onchange = () => {
+      scene.remove(surface);
+      surface = createSurface(document.getElementById('surface-type').value);
+      scene.add(surface);
+    };
+    
+    let rotate = false;
+    document.getElementById('rotate-btn').onclick = () => {
+      rotate = !rotate;
+      document.getElementById('rotate-btn').textContent = 
+        rotate ? 'Stop Rotation' : 'Auto Rotation';
+    };
+    
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+      if (rotate) surface.rotation.y += 0.005;
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+  }
 
+  // 2. Reaction Time Calculator
+  function setupCalculator() {
+    document.getElementById('calculate-btn').onclick = () => {
+      const A0 = +document.getElementById('initial-conc').value;
+      const A = +document.getElementById('final-conc').value;
+      const k = +document.getElementById('rate-const').value;
+      const order = document.getElementById('reaction-order').value;
+      
+      let time, equation;
+      if (order === '0') {
+        time = (A0 - A)/k;
+        equation = `([A]₀ - [A])/k = (${A0} - ${A})/${k}`;
+      } else if (order === '1') {
+        time = Math.log(A0/A)/k;
+        equation = `ln([A]₀/[A])/k = ln(${A0}/${A})/${k}`;
+      } else {
+        time = (1/A - 1/A0)/k;
+        equation = `(1/[A] - 1/[A]₀)/k = (1/${A} - 1/${A0})/${k}`;
+      }
+      
+      document.getElementById('calculated-time').textContent = 
+        `Time required: ${time.toFixed(2)} s`;
+      document.getElementById('reaction-equation').textContent = 
+        `Equation: ${equation}`;
+    };
+  }
 
-  
+  // 3. Half-Life Comparison Chart
+  function setupHalfLifeChart() {
+    const margin = {top: 30, right: 30, bottom: 50, left: 60};
+    const width = 800 - margin.left - margin.right;
+    const height = 400 - margin.top - margin.bottom;
+    
+    const svg = d3.select("#half-life-chart")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+    
+    // Add axes
+    svg.append("g")
+      .attr("class", "x-axis")
+      .attr("transform", `translate(0,${height})`);
+    
+    svg.append("g")
+      .attr("class", "y-axis");
+    
+    // Add lines for each order
+    const lineColors = ['#e74c3c', '#3498db', '#2ecc71'];
+    const lines = lineColors.map((color, i) => {
+      return svg.append("path")
+        .attr("class", `line line-${i}`)
+        .attr("stroke", color)
+        .attr("fill", "none")
+        .attr("stroke-width", 2);
+    });
+    
+    // Add legend
+    const legend = svg.append("g")
+      .attr("transform", `translate(${width - 150},20)`);
+    
+    ['Zero Order', 'First Order', 'Second Order'].forEach((label, i) => {
+      legend.append("rect")
+        .attr("x", 0)
+        .attr("y", i * 20)
+        .attr("width", 10)
+        .attr("height", 10)
+        .attr("fill", lineColors[i]);
+      
+      legend.append("text")
+        .attr("x", 15)
+        .attr("y", i * 20 + 9)
+        .text(label)
+        .attr("font-size", "12px");
+    });
+    
+    // Update function
+    function updateChart() {
+      const maxConc = +document.getElementById('conc-range').value;
+      const k = +document.getElementById('k-range').value;
+      
+      document.getElementById('conc-range-value').textContent = maxConc.toFixed(1);
+      document.getElementById('k-range-value').textContent = k.toFixed(2);
+      
+      const x = d3.scaleLinear()
+        .domain([0.1, maxConc])
+        .range([0, width]);
+      
+      const data = d3.range(0.1, maxConc, 0.1).map(conc => ({
+        conc,
+        t12: [
+          conc/(2*k),      // Zero order
+          Math.log(2)/k,   // First order
+          1/(k*conc)       // Second order
+        ]
+      }));
+      
+      const maxT12 = d3.max(data, d => Math.max(...d.t12));
+      const y = d3.scaleLinear()
+        .domain([0, maxT12 * 1.1])
+        .range([height, 0]);
+      
+      // Update lines
+      lines.forEach((line, i) => {
+        line.datum(data)
+          .attr("d", d3.line()
+            .x(d => x(d.conc))
+            .y(d => y(d.t12[i]))
+          );
+      });
+      
+      // Update axes
+      svg.select(".x-axis").call(d3.axisBottom(x));
+      svg.select(".y-axis").call(d3.axisLeft(y));
+      
+      // Add axis labels
+      svg.select(".x-axis-label").remove();
+      svg.select(".y-axis-label").remove();
+      
+      svg.append("text")
+        .attr("class", "x-axis-label")
+        .attr("x", width)
+        .attr("y", height + 40)
+        .attr("text-anchor", "end")
+        .text("Initial Concentration [A]₀ (M)");
+      
+      svg.append("text")
+        .attr("class", "y-axis-label")
+        .attr("transform", "rotate(-90)")
+        .attr("y", -50)
+        .attr("text-anchor", "end")
+        .text("Half-Life (s)");
+    }
+    
+    // Set up event listeners
+    document.getElementById('conc-range').addEventListener('input', updateChart);
+    document.getElementById('k-range').addEventListener('input', updateChart);
+    
+    // Initial render
+    updateChart();
+  }
+
+  onMount(() => {
+    init3DVisualization();
+    setupCalculator();
+    setupHalfLifeChart();
+  });
 </script>
-
 <style>
   nav {
     background: #003366;
@@ -841,6 +1243,170 @@
     }
     
     .controls-chart {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    #energy3d-container {
+      height: 350px;
+    }
+  }
+
+
+  /* Base Styles */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f5f7fa;
+    color: #333;
+  }
+  
+  main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  /* Tool Section Styling */
+  .tool-section {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  h2 {
+    color: #2c3e50;
+    margin-top: 0;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 0.5rem;
+  }
+  
+  .info-box {
+    background: #f8f9fa;
+    border-left: 4px solid #3498db;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 0 4px 4px 0;
+  }
+  
+  /* 3D Visualization Styles */
+  #energy3d-container {
+    width: 100%;
+    height: 500px;
+    background: #f5f7fa;
+    border-radius: 4px;
+    margin: 1rem 0;
+  }
+  
+  /* Calculator Styles */
+  .calculator-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+  }
+  
+  .input-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .input-group label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  #calculate-btn {
+    grid-column: span 2;
+    background: #2ecc71;
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  #calculate-btn:hover {
+    background: #27ae60;
+  }
+  
+  .result-box {
+    grid-column: span 2;
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 4px;
+    border-left: 4px solid #2ecc71;
+  }
+  
+  /* Half-Life Chart Styles */
+  #half-life-chart svg {
+    display: block;
+    margin: 0 auto;
+    background: white;
+    border-radius: 4px;
+  }
+  
+  .line {
+    fill: none;
+    stroke-width: 2;
+  }
+  
+  .line.zero {
+    stroke: #e74c3c;
+  }
+  
+  .line.first {
+    stroke: #3498db;
+  }
+  
+  .line.second {
+    stroke: #2ecc71;
+  }
+  
+  .legend {
+    font-size: 0.9rem;
+  }
+  
+  .legend.zero {
+    fill: #e74c3c;
+  }
+  
+  .legend.first {
+    fill: #3498db;
+  }
+  
+  .legend.second {
+    fill: #2ecc71;
+  }
+  
+  /* Controls Styling */
+  .controls {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1rem;
+  }
+  
+  .controls label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .calculator-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    #calculate-btn, .result-box {
+      grid-column: span 1;
+    }
+    
+    .controls {
       flex-direction: column;
       gap: 1rem;
     }
