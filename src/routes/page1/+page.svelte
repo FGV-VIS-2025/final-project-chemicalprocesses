@@ -1,5 +1,5 @@
 <svelte:head>
-  <title>Page 1 - Reaction Orders</title>
+  <title>Reaction Orders - Chemical Kinetics</title>
 </svelte:head>
 
 <nav>
@@ -16,43 +16,155 @@
 
 <main class="page" id="page1">
   <h1>
-    <span class="chem-icon">⚗️</span> Reaction Orders
+    <span class="chem-icon">⚗️</span> Reaction Orders in Chemical Kinetics
   </h1>
 
-  <div class="controls">
-    <label>Initial [A]: <input bind:this={concAInput} type="range" min="1" max="100" value="50" /> <span bind:this={concAVal}></span></label>
-    <label>Rate constant k: <input bind:this={kInput} type="range" min="0.1" max="5" step="0.1" value="1" /> <span bind:this={kVal}></span></label>
-    <label>Order: <input bind:this={orderInput} type="number" min="0" max="3" value="1" /> <span bind:this={orderValue}></span></label>
-  </div>
+  <section class="theory-section">
+    <h2>Understanding Reaction Orders</h2>
+    <p>The <strong>order of a reaction</strong> is defined as the sum of the powers to which the concentration terms are raised in the rate law equation. It indicates how the rate of reaction depends on the concentration of reactants.</p>
+    
+    <div class="order-types">
+      <div class="order-card">
+        <h3>Zero-Order Reactions</h3>
+        <p>Rate is independent of reactant concentration. The rate law is:</p>
+        <div class="equation">rate = k</div>
+        <p>Example: <strong>Decomposition of ammonia on a platinum surface</strong> (2NH₃ → N₂ + 3H₂). The rate is constant until the catalyst surface is saturated.</p>
+      </div>
+      
+      <div class="order-card">
+        <h3>First-Order Reactions</h3>
+        <p>Rate is directly proportional to one reactant concentration. The rate law is:</p>
+        <div class="equation">rate = k[A]</div>
+        <p>Example: <strong>Radioactive decay</strong> (e.g., Carbon-14 decay). Also, the decomposition of hydrogen peroxide (2H₂O₂ → 2H₂O + O₂) in aqueous solution.</p>
+      </div>
+      
+      <div class="order-card">
+        <h3>Second-Order Reactions</h3>
+        <p>Rate depends on the square of one reactant concentration or the product of two concentrations. The rate law is:</p>
+        <div class="equation">rate = k[A]² or rate = k[A][B]</div>
+        <p>Example: <strong>Decomposition of nitrogen dioxide</strong> (2NO₂ → 2NO + O₂). Also common in many bimolecular elementary reactions.</p>
+      </div>
+    </div>
+  </section>
 
-  <div id="rateLawDescription" bind:this={rateLawDescription} class="rate-law"></div>
+  <section class="interactive-section">
+    <h2>Interactive Reaction Order Explorer</h2>
+    <p>Explore how different reaction orders affect concentration over time. Adjust the parameters below to see real-time changes in the reaction kinetics.</p>
 
-  <div class="charts-container">
-    <svg id="chart" width="800" height="500"></svg>
-    <svg id="animation" width="800" height="200"></svg>
-  </div>
+    <div class="controls">
+      <div class="control-group">
+        <label>Initial Concentration [A]₀: <span class="value-display" bind:this={concAVal}>50</span> M</label>
+        <input bind:this={concAInput} type="range" min="1" max="100" value="50" class="slider" />
+      </div>
+      
+      <div class="control-group">
+        <label>Rate Constant (k): <span class="value-display" bind:this={kVal}>1.0</span> </label>
+        <input bind:this={kInput} type="range" min="0.1" max="5" step="0.1" value="1" class="slider" />
+      </div>
+      
+      <div class="control-group">
+        <label>Reaction Order (n): 
+          <select bind:this={orderInput} class="order-select">
+            <option value="0">Zero Order</option>
+            <option value="1" selected>First Order</option>
+            <option value="2">Second Order</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div id="rateLawDescription" bind:this={rateLawDescription} class="rate-law">
+      <h3>Current Rate Law</h3>
+      <p>The selected reaction has an order of <strong>1</strong>. The rate law is: <code>rate = k[A]</code></p>
+    </div>
+
+    <div class="visualization-container">
+      <div class="chart-container">
+        <h3>Concentration vs. Time</h3>
+        <svg id="chart" width="800" height="400"></svg>
+      </div>
+      
+      <div class="chart-container">
+        <h3>Rate vs. Concentration</h3>
+        <svg id="rateChart" width="800" height="400"></svg>
+      </div>
+      
+      <div class="molecular-view">
+        <h3>Molecular Visualization</h3>
+        <svg id="animation" width="800" height="300"></svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="characteristics-section">
+    <h2>Key Characteristics by Order</h2>
+    <table class="order-table">
+      <thead>
+        <tr>
+          <th>Property</th>
+          <th>Zero Order</th>
+          <th>First Order</th>
+          <th>Second Order</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Rate Law</td>
+          <td>rate = k</td>
+          <td>rate = k[A]</td>
+          <td>rate = k[A]² or k[A][B]</td>
+        </tr>
+        <tr>
+          <td>Integrated Rate Law</td>
+          <td>[A] = [A]₀ - kt</td>
+          <td>ln[A] = ln[A]₀ - kt</td>
+          <td>1/[A] = 1/[A]₀ + kt</td>
+        </tr>
+        <tr>
+          <td>Half-life</td>
+          <td>t½ = [A]₀/2k</td>
+          <td>t½ = ln(2)/k</td>
+          <td>t½ = 1/(k[A]₀)</td>
+        </tr>
+        <tr>
+          <td>Linear Plot</td>
+          <td>[A] vs. t</td>
+          <td>ln[A] vs. t</td>
+          <td>1/[A] vs. t</td>
+        </tr>
+        <tr>
+          <td>Units of k</td>
+          <td>M·s⁻¹</td>
+          <td>s⁻¹</td>
+          <td>M⁻¹·s⁻¹</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
 </main>
 
 <script>
   import { onMount } from 'svelte';
   import * as d3 from 'd3';
 
-  let concAInput, concAVal, kInput, kVal, orderInput, orderValue, rateLawDescription;
+  let concAInput, concAVal, kInput, kVal, orderInput;
+  let rateLawDescription;
 
   onMount(() => {
+    // Main chart setup
     const svg = d3.select("#chart");
+    const rateSvg = d3.select("#rateChart");
     const animSvg = d3.select("#animation");
-    const svgWidth = +svg.attr("width");
-    const svgHeight = +svg.attr("height");
-    const margin = { top: 40, right: 50, bottom: 50, left: 80 };
+    
+    const margin = { top: 40, right: 50, bottom: 60, left: 80 };
     const width = 800 - margin.left - margin.right;
-    const height = 500 - margin.top - margin.bottom;
+    const height = 400 - margin.top - margin.bottom;
+    
+    // Concentration vs Time chart
     const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
-
     const xScale = d3.scaleLinear().domain([0, 10]).range([0, width]);
     const yScale = d3.scaleLinear().domain([0, 100]).range([height, 0]);
     
-    // Eixos com estilo consistente
     g.append("g")
       .attr("transform", `translate(0,${height})`)
       .call(d3.axisBottom(xScale).ticks(10))
@@ -61,7 +173,7 @@
       .attr("x", width)
       .attr("y", 30)
       .attr("text-anchor", "end")
-      .text("Time");
+      .text("Time (s)");
 
     g.append("g")
       .call(d3.axisLeft(yScale).ticks(8))
@@ -70,67 +182,217 @@
       .attr("transform", "rotate(-90)")
       .attr("y", -60)
       .attr("text-anchor", "end")
-      .text("Concentration");
+      .text("Concentration [A] (M)");
 
     const line = d3.line().x(d => xScale(d.time)).y(d => yScale(d.conc));
     const linePath = g.append("path")
       .attr("fill", "none")
-      .attr("stroke", "#1f77b4")
-      .attr("stroke-width", 4);
+      .attr("stroke", "#2c7bb6")
+      .attr("stroke-width", 3)
+      .attr("stroke-linejoin", "round");
 
-    function updateChart() {
+    // Rate vs Concentration chart
+    const rateG = rateSvg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+    const rateXScale = d3.scaleLinear().domain([0, 100]).range([0, width]);
+    const rateYScale = d3.scaleLinear().domain([0, 100]).range([height, 0]);
+    
+    rateG.append("g")
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(rateXScale).ticks(10))
+      .append("text")
+      .attr("class", "axis-label")
+      .attr("x", width)
+      .attr("y", 30)
+      .attr("text-anchor", "end")
+      .text("Concentration [A] (M)");
+
+    rateG.append("g")
+      .call(d3.axisLeft(rateYScale).ticks(8))
+      .append("text")
+      .attr("class", "axis-label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", -60)
+      .attr("text-anchor", "end")
+      .text("Reaction Rate (M/s)");
+
+    const rateLine = d3.line().x(d => rateXScale(d.conc)).y(d => rateYScale(d.rate));
+    const rateLinePath = rateG.append("path")
+      .attr("fill", "none")
+      .attr("stroke", "#d7191c")
+      .attr("stroke-width", 3)
+      .attr("stroke-linejoin", "round");
+
+    // Animation setup
+    const particleGroup = animSvg.append("g");
+    let particles = [];
+    const numParticles = 100;
+
+    function initializeParticles(A0) {
+      particles = d3.range(numParticles).map(() => ({
+        x: Math.random() * (800 - 40) + 20,
+        y: Math.random() * (300 - 40) + 20,
+        active: true,
+        opacity: 1
+      }));
+      
+      particleGroup.selectAll("circle").remove();
+      particleGroup.selectAll("circle")
+        .data(particles)
+        .enter()
+        .append("circle")
+        .attr("r", 5)
+        .attr("cx", d => d.x)
+        .attr("cy", d => d.y)
+        .attr("fill", "#2c7bb6")
+        .attr("opacity", d => d.opacity);
+    }
+
+    function updateCharts() {
       const A0 = +concAInput.value;
       const k = +kInput.value;
       const n = +orderInput.value;
+      
       concAVal.textContent = A0;
-      kVal.textContent = k;
-      orderValue.textContent = n;
-      const desc = n === 0 ? `rate = k` : n === 1 ? `rate = k[A]` : `rate = k[A]^${n}`;
-      rateLawDescription.innerHTML = `The selected reaction has an order of <strong>${n}</strong>. The rate law is: <code>${desc}</code>`;
+      kVal.textContent = k.toFixed(1);
+      
+      // Update rate law description
+      let rateLaw, units;
+      if (n == 0) {
+        rateLaw = "rate = k";
+        units = "M·s⁻¹";
+      } else if (n == 1) {
+        rateLaw = "rate = k[A]";
+        units = "s⁻¹";
+      } else {
+        rateLaw = "rate = k[A]²";
+        units = "M⁻¹·s⁻¹";
+      }
+      
+      rateLawDescription.innerHTML = `
+        <h3>Current Rate Law</h3>
+        <p>The selected reaction has an order of <strong>${n}</strong>. The rate law is: <code>${rateLaw}</code></p>
+        <p>Units of k: <code>${units}</code></p>
+      `;
+      
+      // Generate concentration vs time data
+      const timeData = [];
+      let A = A0;
+      for (let t = 0; t <= 10; t += 0.1) {
+        if (n == 0) {
+          A = Math.max(A0 - k * t, 0);
+        } else if (n == 1) {
+          A = A0 * Math.exp(-k * t);
+        } else {
+          A = A0 / (1 + A0 * k * t);
+        }
+        timeData.push({ time: t, conc: A });
+      }
+      
+      // Generate rate vs concentration data
+      const rateData = [];
+      for (let c = 0; c <= A0; c += A0/100) {
+        rateData.push({ 
+          conc: c, 
+          rate: k * Math.pow(c, n) 
+        });
+      }
+      
+      // Update charts
+      linePath.datum(timeData).attr("d", line);
+      rateLinePath.datum(rateData).attr("d", rateLine);
+      
+      // Add chart titles
+      svg.select(".chart-title").remove();
+      svg.append("text")
+        .attr("class", "chart-title")
+        .attr("x", width/2 + margin.left)
+        .attr("y", 30)
+        .attr("text-anchor", "middle")
+        .text(`Concentration vs. Time (${n}${n==1?'st':n==2?'nd':'th'} Order Reaction)`);
+        
+      rateSvg.select(".chart-title").remove();
+      rateSvg.append("text")
+        .attr("class", "chart-title")
+        .attr("x", width/2 + margin.left)
+        .attr("y", 30)
+        .attr("text-anchor", "middle")
+        .text(`Reaction Rate vs. Concentration (Order = ${n})`);
+      
+      // Initialize particles if not already done
+      if (particles.length === 0) {
+        initializeParticles(A0);
+      }
     }
 
-    function startCurveLoop() {
+    function startAnimation() {
       clearInterval(window.animationTimer);
-      animSvg.selectAll("*").remove();
+      
       const A0 = +concAInput.value;
       const k = +kInput.value;
       const n = +orderInput.value;
       let t = 0, A = A0, dt = 0.1;
-      const timeData = [];
-      const numParticles = Math.min(100, Math.floor(A0));
-      const particles = animSvg.selectAll("circle").data(d3.range(numParticles)).join("circle")
-        .attr("r", 5)
-        .attr("fill", "#1f77b4")
-        .attr("opacity", 1)
-        .attr("cx", () => Math.random() * +animSvg.attr("width"))
-        .attr("cy", () => Math.random() * +animSvg.attr("height"));
-
+      
+      // Initialize particles if needed
+      if (particles.length === 0) {
+        initializeParticles(A0);
+      }
+      
       window.animationTimer = setInterval(() => {
-        if (t > 10) { t = 0; A = A0; timeData.length = 0; particles.attr("fill", "#1f77b4").attr("opacity", 1); }
-        A = Math.max(A - k * Math.pow(A, n) * dt, 0);
-        timeData.push({ time: t, conc: A });
-        linePath.datum(timeData).attr("d", line);
-        const activeParticles = Math.floor((A / A0) * numParticles);
-        particles.each(function(_, i) {
-          d3.select(this).transition().duration(100)
-            .attr("opacity", i < activeParticles ? 1 : 0.6)
-            .attr("fill", i < activeParticles ? "#1f77b4" : "#d62728");
-        });
+        if (t > 10) { 
+          t = 0; 
+          A = A0; 
+          initializeParticles(A0);
+        }
+        
+        // Update concentration based on order
+        if (n == 0) {
+          A = Math.max(A - k * dt, 0);
+        } else if (n == 1) {
+          A = A * Math.exp(-k * dt);
+        } else {
+          A = A / (1 + A * k * dt);
+        }
+        
+        // Update particle visualization
+        const activeCount = Math.floor((A / A0) * numParticles);
+        
+        particleGroup.selectAll("circle")
+          .data(particles)
+          .attr("fill", (d, i) => i < activeCount ? "#2c7bb6" : "#d7191c")
+          .attr("opacity", (d, i) => i < activeCount ? 1 : 0.3);
+        
         t += dt;
-      }, 50);
+      }, 100);
     }
 
-    updateChart();
-    startCurveLoop();
-
-    concAInput.addEventListener("input", () => { updateChart(); startCurveLoop(); });
-    kInput.addEventListener("input", () => { updateChart(); startCurveLoop(); });
-    orderInput.addEventListener("input", () => { updateChart(); startCurveLoop(); });
+    // Initial setup
+    updateCharts();
+    startAnimation();
+    
+    // Event listeners
+    concAInput.addEventListener("input", () => { 
+      initializeParticles(+concAInput.value);
+      updateCharts(); 
+      startAnimation(); 
+    });
+    
+    kInput.addEventListener("input", () => { 
+      updateCharts(); 
+      startAnimation(); 
+    });
+    
+    orderInput.addEventListener("change", () => { 
+      updateCharts(); 
+      startAnimation(); 
+    });
   });
+
+
+
+  
 </script>
 
 <style>
-      
   nav {
     background: #003366;
     padding: 1rem;
@@ -155,20 +417,24 @@
     font-size: 1rem;
     transition: color 0.3s;
     padding: 0.5rem 1rem;
+    border-radius: 4px;
   }
   
   nav a:hover {
     color: #aad4ff;
+    background: rgba(255,255,255,0.1);
   }
 
   .page {
     padding: 2rem;
-    max-width: 900px;
+    max-width: 1000px;
     margin: 2rem auto;
     background: white;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     border-radius: 12px;
     position: relative;
+    font-family: 'Inter', sans-serif;
+    color: #333;
   }
 
   .page h1 {
@@ -177,6 +443,60 @@
     display: flex;
     align-items: center;
     gap: 0.7rem;
+    font-size: 2rem;
+    border-bottom: 2px solid #e3f2f9;
+    padding-bottom: 0.5rem;
+  }
+
+  .page h2 {
+    color: #005b9f;
+    margin: 2rem 0 1rem;
+    font-size: 1.5rem;
+  }
+
+  .page h3 {
+    color: #0077cc;
+    margin: 1.5rem 0 0.5rem;
+    font-size: 1.2rem;
+  }
+
+  .theory-section {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    border-left: 4px solid #0077cc;
+  }
+
+  .order-types {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .order-card {
+    background: white;
+    padding: 1.2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border-top: 3px solid #2c7bb6;
+  }
+
+  .order-card h3 {
+    margin-top: 0;
+    color: #2c7bb6;
+  }
+
+  .equation {
+    background: #f0f7ff;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    margin: 0.8rem 0;
+    display: inline-block;
+    color: #d35400;
   }
 
   .controls {
@@ -186,53 +506,348 @@
     margin-bottom: 2rem;
   }
 
-  .controls label {
-    display: block;
+  .control-group {
     margin-bottom: 1rem;
+  }
+
+  .control-group label {
+    display: block;
+    margin-bottom: 0.5rem;
     font-weight: 500;
+    color: #005b9f;
   }
 
-  .controls input[type="range"] {
-    width: 300px;
-    margin: 0 1rem;
+  .slider {
+    width: 100%;
+    max-width: 400px;
+    height: 8px;
+    border-radius: 4px;
+    background: #d1e3f6;
+    outline: none;
+    -webkit-appearance: none;
   }
 
-  .controls input[type="number"] {
-    width: 60px;
-    padding: 0.3rem;
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #0077cc;
+    cursor: pointer;
+  }
+
+  .order-select {
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #b3d7ff;
+    background: white;
+    font-size: 1rem;
     margin-left: 0.5rem;
   }
 
+  .value-display {
+    display: inline-block;
+    min-width: 40px;
+    font-weight: bold;
+    color: #003366;
+  }
+
   .rate-law {
-    background: #f9f9f9;
-    padding: 1rem;
+    background: #f0f7ff;
+    padding: 1.2rem;
     border-radius: 8px;
     border-left: 4px solid #0077cc;
     margin-bottom: 2rem;
-    font-size: 1.1rem;
   }
 
-  .charts-container {
+  .rate-law code {
+    background: #e3f2f9;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    color: #d35400;
+  }
+
+  .visualization-container {
     display: flex;
     flex-direction: column;
     gap: 2rem;
   }
 
-  svg {
+  .chart-container {
     background: white;
+    padding: 1rem;
     border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 15px rgba(0,0,0,0.05);
   }
 
-  @media (max-width: 600px) {
-    nav ul {
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
+  .chart-container h3 {
+    margin-top: 0;
+    text-align: center;
+  }
+
+  .molecular-view {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+  }
+
+  svg {
+    display: block;
+    margin: 0 auto;
+    background: white;
+    border-radius: 4px;
+  }
+
+  .axis-label {
+    fill: #555;
+    font-size: 0.9rem;
+  }
+
+  .chart-title {
+    fill: #003366;
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+
+  .characteristics-section {
+    margin-top: 3rem;
+  }
+
+  .order-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+  }
+
+  .order-table th, .order-table td {
+    padding: 0.8rem;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+
+  .order-table th {
+    background: #0077cc;
+    color: white;
+    font-weight: 500;
+  }
+
+  .order-table tr:nth-child(even) {
+    background: #f0f7ff;
+  }
+
+  .order-table tr:hover {
+    background: #e3f2f9;
+  }
+
+  @media (max-width: 768px) {
+    .page {
+      padding: 1rem;
     }
     
-    nav a {
-      padding: 0.3rem 0;
+    .order-types {
+      grid-template-columns: 1fr;
+    }
+    
+    svg {
+      width: 100%;
+      height: auto;
     }
   }
+
+ .advanced-tools {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+  }
+  
+  h1 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.2rem;
+  }
+  
+  h2 {
+    color: #3498db;
+    margin-top: 2.5rem;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 0.5rem;
+  }
+  
+  .tool-section {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .info-box {
+    background: #f8f9fa;
+    border-left: 4px solid #3498db;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 0 4px 4px 0;
+  }
+  
+  /* Estilos para a visualização 3D */
+  #energy3d-container {
+    width: 100%;
+    height: 500px;
+    background: #f5f7fa;
+    border-radius: 4px;
+    margin: 1rem 0;
+    position: relative;
+  }
+  
+  .controls-3d {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    align-items: center;
+  }
+  
+  .controls-3d select, .controls-3d button {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background: white;
+  }
+  
+  .controls-3d button {
+    background: #3498db;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .controls-3d button:hover {
+    background: #2980b9;
+  }
+  
+  /* Estilos para a calculadora */
+  .calculator-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+  }
+  
+  .input-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .input-group label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #2c3e50;
+  }
+  
+  .input-group input, .input-group select {
+    padding: 0.7rem;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+  
+  #calculate-btn {
+    grid-column: span 2;
+    padding: 0.8rem;
+    background: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  #calculate-btn:hover {
+    background: #27ae60;
+  }
+  
+  .result-box {
+    grid-column: span 2;
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 4px;
+    border-left: 4px solid #2ecc71;
+  }
+  
+  .result-box h3 {
+    margin-top: 0;
+    color: #2c3e50;
+  }
+  
+  #calculated-time {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #e74c3c;
+  }
+  
+  /* Estilos para o gráfico de meia-vida */
+  #half-life-chart {
+    margin: 1.5rem 0;
+  }
+  
+  .controls-chart {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1rem;
+  }
+  
+  .controls-chart label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .controls-chart input[type="range"] {
+    flex-grow: 1;
+    max-width: 200px;
+  }
+  
+  .line {
+    fill: none;
+    stroke-width: 2px;
+  }
+  
+  .line0 {
+    stroke: #e74c3c;
+  }
+  
+  .line1 {
+    stroke: #3498db;
+  }
+  
+  .line2 {
+    stroke: #2ecc71;
+  }
+  
+  @media (max-width: 768px) {
+    .calculator-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    #calculate-btn, .result-box {
+      grid-column: span 1;
+    }
+    
+    .controls-chart {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    #energy3d-container {
+      height: 350px;
+    }
+  }
+
 </style>

@@ -66,12 +66,203 @@
     </div>
   {/if}
 
-  <div id="animacao" class="chart-container"></div>
+<div id="animacao" class="chart-container" style="width: 900px; height: 600px;"></div>
+
+<!-- NEW SECTION: Natural Radioactive Series -->
+  <div class="series-section">
+    <h2>Natural Radioactive Decay Series</h2>
+    <p>
+      These are chains of unstable isotopes that decay through alpha (α) and beta (β) emissions 
+      until reaching a stable lead (Pb) isotope. They occur in nature and are key to understanding 
+      nuclear chemistry and geology.
+    </p>
+    
+     <div class="series-controls">
+    <select bind:value={selectedSeries}>
+      {#each Object.keys(seriesData) as serie}
+        <option value={serie}>{serie}</option>
+      {/each}
+    </select>
+    
+    <div class="animation-controls">
+      <button on:click={prevStep} disabled={currentStep === 0}>
+        ⏪ Previous
+      </button>
+      <button on:click={playPause}>
+        {isPlaying ? '⏸ Pause' : '▶ Play'}
+      </button>
+      <button on:click={nextStep} disabled={currentStep === seriesData[selectedSeries].length - 1}>
+        ⏩ Next
+      </button>
+      <button on:click={reset}>
+        🔄 Restart
+      </button>
+    </div>
+  </div>
+
+  <div class="series-animation">
+    {#each seriesData[selectedSeries] as step, i}
+      {#if i <= currentStep}
+        <div class="atom" in:fade={{ duration: 300 }}>
+          <span class="symbol">{step.symbol}</span>
+          <span class="name">{step.name}</span>
+          {#if i < currentStep && step.decay}
+            <div class="decay-particle {step.decay}">
+              {step.decay === 'α' ? 'α' : 'β'}
+            </div>
+          {/if}
+        </div>
+      {/if}
+    {/each}
+  </div>
+
+  <!-- Lista detalhada dos elementos -->
+  <!-- Substitua a tabela atual por esta versão simplificada -->
+<div class="decay-path">
+  <h3>Decay Path Details:</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Isotope</th>
+        <th>Decay</th>
+        <th>Half-life</th>
+      </tr>
+    </thead>
+    <tbody>
+      {#each decayPath as step, i}
+        <tr>
+          <td>
+            <strong>{step.symbol}</strong><br>
+            {step.name}
+          </td>
+          <td class={step.decay || 'stable'}>
+            {step.decay ? 
+              (step.decay === 'α' ? 'Alpha (α)' : 'Beta (β)') : 
+              'Stable'}
+          </td>
+          <td>{step.halfLife}</td>
+        </tr>
+      {/each}
+    </tbody>
+  </table>
+</div>
+
+
 </main>
 
 <script>
   import { onMount } from 'svelte';
   import * as d3 from 'd3';
+  import { fade } from 'svelte/transition';
+
+// Natural radioactive series data
+const seriesData = {
+  "Uranium-238 (→ Pb-206)": [
+    { symbol: "²³⁸U", name: "Uranium-238", decay: null, halfLife: "4.5 billion years" },
+    { symbol: "²³⁴Th", name: "Thorium-234", decay: "α", halfLife: "24.1 days" },
+    { symbol: "²³⁴Pa", name: "Protactinium-234", decay: "β", halfLife: "6.7 hours" },
+    { symbol: "²³⁴U", name: "Uranium-234", decay: "α", halfLife: "245,500 years" },
+    { symbol: "²³⁰Th", name: "Thorium-230", decay: "α", halfLife: "75,400 years" },
+    { symbol: "²²⁶Ra", name: "Radium-226", decay: "α", halfLife: "1,600 years" },
+    { symbol: "²²²Rn", name: "Radon-222", decay: "α", halfLife: "3.8 days" },
+    { symbol: "²¹⁸Po", name: "Polonium-218", decay: "α", halfLife: "3.1 minutes" },
+    { symbol: "²¹⁴Pb", name: "Lead-214", decay: "β", halfLife: "26.8 minutes" },
+    { symbol: "²¹⁴Bi", name: "Bismuth-214", decay: "β", halfLife: "19.9 minutes" },
+    { symbol: "²¹⁴Po", name: "Polonium-214", decay: "α", halfLife: "0.16 milliseconds" },
+    { symbol: "²¹⁰Pb", name: "Lead-210", decay: "β", halfLife: "22.3 years" },
+    { symbol: "²¹⁰Bi", name: "Bismuth-210", decay: "β", halfLife: "5.01 days" },
+    { symbol: "²¹⁰Po", name: "Polonium-210", decay: "α", halfLife: "138 days" },
+    { symbol: "²⁰⁶Pb", name: "Lead-206", decay: null, halfLife: "Stable" }
+  ],
+  "Thorium-232 (→ Pb-208)": [
+    { symbol: "²³²Th", name: "Thorium-232", decay: null, halfLife: "14 billion years" },
+    { symbol: "²²⁸Ra", name: "Radium-228", decay: "α", halfLife: "5.75 years" },
+    { symbol: "²²⁸Ac", name: "Actinium-228", decay: "β", halfLife: "6.15 hours" },
+    { symbol: "²²⁸Th", name: "Thorium-228", decay: "α", halfLife: "1.91 years" },
+    { symbol: "²²⁴Ra", name: "Radium-224", decay: "α", halfLife: "3.66 days" },
+    { symbol: "²²⁰Rn", name: "Radon-220", decay: "α", halfLife: "55.6 seconds" },
+    { symbol: "²¹⁶Po", name: "Polonium-216", decay: "α", halfLife: "0.15 seconds" },
+    { symbol: "²¹²Pb", name: "Lead-212", decay: "β", halfLife: "10.64 hours" },
+    { symbol: "²¹²Bi", name: "Bismuth-212", decay: "β", halfLife: "60.6 minutes" },
+    { symbol: "²¹²Po", name: "Polonium-212", decay: "α", halfLife: "0.3 µs" },
+    { symbol: "²⁰⁸Pb", name: "Lead-208", decay: null, halfLife: "Stable" }
+  ],
+  "Uranium-235 (→ Pb-207)": [
+    { symbol: "²³⁵U", name: "Uranium-235", decay: null, halfLife: "704 million years" },
+    { symbol: "²³¹Th", name: "Thorium-231", decay: "α", halfLife: "25.5 hours" },
+    { symbol: "²³¹Pa", name: "Protactinium-231", decay: "β", halfLife: "32,760 years" },
+    { symbol: "²²⁷Ac", name: "Actinium-227", decay: "α", halfLife: "21.8 years" },
+    { symbol: "²²⁷Th", name: "Thorium-227", decay: "α", halfLife: "18.7 days" },
+    { symbol: "²²³Ra", name: "Radium-223", decay: "α", halfLife: "11.4 days" },
+    { symbol: "²¹⁹Rn", name: "Radon-219", decay: "α", halfLife: "3.96 seconds" },
+    { symbol: "²¹⁵Po", name: "Polonium-215", decay: "α", halfLife: "1.78 ms" },
+    { symbol: "²¹¹Pb", name: "Lead-211", decay: "β", halfLife: "36.1 minutes" },
+    { symbol: "²¹¹Bi", name: "Bismuth-211", decay: "α", halfLife: "2.14 minutes" },
+    { symbol: "²⁰⁷Tl", name: "Thallium-207", decay: "β", halfLife: "4.77 minutes" },
+    { symbol: "²⁰⁷Pb", name: "Lead-207", decay: null, halfLife: "Stable" }
+  ]
+};
+
+// Animation logic
+// Estados da animação
+  let selectedSeries = Object.keys(seriesData)[0];
+  let currentStep = 0;
+  let isPlaying = false;
+  let intervalId;
+  let animationSpeed = 1000;
+  let decayPath = [];
+
+  // Controles da animação
+  function playPause() {
+    isPlaying = !isPlaying;
+    if (isPlaying) {
+      intervalId = setInterval(() => {
+        if (currentStep < seriesData[selectedSeries].length - 1) {
+          nextStep();
+        } else {
+          clearInterval(intervalId);
+          isPlaying = false;
+        }
+      }, animationSpeed);
+    } else {
+      clearInterval(intervalId);
+    }
+  }
+
+  function nextStep() {
+    if (currentStep < seriesData[selectedSeries].length - 1) {
+      currentStep += 1;
+      updateDecayPath();
+    }
+  }
+
+  function prevStep() {
+    if (currentStep > 0) {
+      currentStep -= 1;
+      updateDecayPath();
+    }
+  }
+
+  function reset() {
+    currentStep = 0;
+    decayPath = [];
+    if (isPlaying) {
+      clearInterval(intervalId);
+      isPlaying = false;
+    }
+  }
+
+  function updateDecayPath() {
+    decayPath = seriesData[selectedSeries].slice(0, currentStep + 1);
+  }
+
+  // Atualiza o caminho quando a série muda
+  $: if (selectedSeries) {
+    reset();
+    updateDecayPath();
+  }
+
+
 
   // Dados básicos da tabela periódica (Z, símbolo, nome)
   const tabelaPeriodica = [
@@ -402,158 +593,457 @@
     ];
   }
 
-  function animarParticulas(quantidades) {
-    const largura = 800, altura = 400;
+ function animarParticulas(quantidades) {
+    const largura = 900, altura = 600; // Format fixo conforme solicitado
     const centroX = largura / 2, centroY = altura / 2;
+    let Z = estado.elementoSelecionado.Z;
+    let A = estado.isotopoSelecionado.A;
 
     const svg = d3.select("#animacao")
       .html("")
       .append("svg")
       .attr("width", largura)
-      .attr("height", altura);
+      .attr("height", altura)
+      .style("background", "radial-gradient(circle, #f8f9fa 0%, #e9ecef 100%)")
+      .style("border-radius", "8px")
+      .style("box-shadow", "0 4px 20px rgba(0, 0, 0, 0.1)");
 
-    const grupoNucleo = svg.append("g").attr("id", "nucleo");
-    const grupoOrbitas = svg.append("g").attr("id", "orbitas");
-    const grupoSetas = svg.append("g").attr("id", "setas");
+    // Elemento atual (texto grande)
+    const elementoAtual = svg.append("text")
+      .attr("x", 80)
+      .attr("y", 50)
+      .attr("text-anchor", "left")
+      .style("font-size", "24px")
+      .style("font-weight", "bold")
+      .style("fill", "#1D3557") // Cor mais forte
+      .text(`${estado.elementoSelecionado.simbolo}-${A}`);
 
-    // Núcleo
-    grupoNucleo.append("circle")
-      .attr("cx", centroX)
-      .attr("cy", centroY)
-      .attr("r", 15)
-      .attr("fill", "orange");
+    // Configuração inicial
+    const configInicial = obterConfiguracaoEletronica(Z);
+    let configAtual = JSON.parse(JSON.stringify(configInicial));
 
-    // Orbitas e elétrons
-    const orbitas = [40, 70, 100];
-    orbitas.forEach((raio, idx) => {
-      grupoOrbitas.append("circle")
-        .attr("cx", centroX)
-        .attr("cy", centroY)
-        .attr("r", raio)
-        .attr("fill", "none")
-        .attr("stroke", "blue")
-        .attr("stroke-width", 1);
+    // Desenhar átomo inicial
+    const grupoAtomo = svg.append("g").attr("class", "atomo-container");
+    desenharAtomo(grupoAtomo, centroX, centroY, Z, A, configAtual);
 
-      for (let i = 0; i < 3; i++) {
-        const ang = (i / 3) * 2 * Math.PI;
-        const el = grupoOrbitas.append("circle")
-          .attr("r", 4)
-          .attr("fill", "red");
-
-        animateElectron(el, raio, ang, idx);
-      }
-    });
-
-    function animateElectron(el, raio, anguloInicial, camada) {
-      const dur = 4000 + camada * 1000;
-      function mover(t) {
-        const ang = anguloInicial + 2 * Math.PI * t;
-        const x = centroX + raio * Math.cos(ang);
-        const y = centroY + raio * Math.sin(ang);
-        el.attr("cx", x).attr("cy", y);
-      }
-      d3.timer((elapsed) => {
-        mover((elapsed % dur) / dur);
-      });
-    }
-
+    // Propriedades das partículas (aumentei os tamanhos)
     const propriedades = {
-      alfa: { cor: "red", dur: 4000, texto: "α particle" },
-      beta: { cor: "blue", dur: 3500, texto: "β⁻ particle" },
-      positron: { cor: "magenta", dur: 3200, texto: "Positron (β⁺)" },
-      neutron: { cor: "gray", dur: 4500, texto: "Neutron" }
+      alfa: { 
+        cor: "#E63946", 
+        texto: "α", 
+        desc: "Partícula Alfa (⁴He²⁺)", 
+        size: 14, // Aumentado
+        dZ: -2,
+        dA: -4
+      },
+      beta: { 
+        cor: "#457B9D", 
+        texto: "β⁻", 
+        desc: "Partícula Beta (e⁻)", 
+        size: 10, // Aumentado
+        dZ: 1,
+        dA: 0
+      },
+      positron: { 
+        cor: "#A8DADC", 
+        texto: "β⁺", 
+        desc: "Pósitron (e⁺)", 
+        size: 10, // Aumentado
+        dZ: -1,
+        dA: 0
+      },
+      neutron: { 
+        cor: "#1D3557", 
+        texto: "n", 
+        desc: "Nêutron", 
+        size: 12, // Aumentado
+        dZ: 0,
+        dA: -1
+      }
     };
 
-    function emitir(tipo, atraso = 0) {
-      const { cor, dur, texto } = propriedades[tipo];
+    // Criar marcadores
+    criarMarcadores(svg);
 
-      const angulo = Math.random() * 2 * Math.PI;
-      const distancia = 120 + Math.random() * 50;
-      const x2 = centroX + Math.cos(angulo) * distancia;
-      const y2 = centroY + Math.sin(angulo) * distancia;
+    // Painel de informações ATUALIZADO
+    const infoPanel = svg.append("g")
+      .attr("transform", `translate(${largura - 250}, 30)`);
 
-      const part = svg.append("circle")
-        .attr("cx", centroX)
-        .attr("cy", centroY)
-        .attr("r", 6)
-        .attr("fill", cor)
-        .attr("opacity", 1);
+    // Fundo do painel com borda mais definida
+    infoPanel.append("rect")
+      .attr("width", 220)  // Largura reduzida para caber melhor
+      .attr("height", 120)
+      .attr("fill", "white")
+      .attr("stroke", "#1d3557")
+      .attr("stroke-width", 1.5)
+      .attr("rx", 5)
+      .attr("ry", 5)
+      .attr("opacity", 0.95);  // Opacidade aumentada
 
-      const seta = grupoSetas.append("line")
-        .attr("x1", centroX)
-        .attr("y1", centroY)
-        .attr("x2", centroX)
-        .attr("y2", centroY)
-        .attr("stroke", cor)
-        .attr("stroke-width", 2)
-        .attr("marker-end", "url(#arrow)");
+    // Título do painel
+    infoPanel.append("text")
+      .attr("x", 110)  // Centralizado
+      .attr("y", 25)
+      .attr("text-anchor", "middle")
+      .style("font-size", "14px")
+      .style("font-weight", "bold")
+      .style("fill", "#1D3557")
+      .text("Atomic Transformation");
 
-      const textoEl = grupoSetas.append("text")
-        .attr("x", centroX + 10)
-        .attr("y", centroY - 10)
-        .attr("fill", cor)
-        .style("font-size", "14px")
-        .text(texto);
+    // Textos com formatação melhorada
+    const texts = [
+      { label: "Element:", x: 15, y: 45, value: `${estado.elementoSelecionado.nome} (${estado.elementoSelecionado.simbolo}-${A})` },
+      { label: "Protons:", x: 15, y: 65, value: Z },
+      { label: "Neutrons:", x: 15, y: 85, value: A - Z },
+      { label: "Electrons:", x: 15, y: 105, value: Z }
+    ];
 
-      svg.append("defs").append("marker")
-        .attr("id", "arrow")
-        .attr("viewBox", "0 0 10 10")
-        .attr("refX", 10)
-        .attr("refY", 5)
-        .attr("markerWidth", 6)
-        .attr("markerHeight", 6)
-        .attr("orient", "auto-start-reverse")
-        .append("path")
-        .attr("d", "M 0 0 L 10 5 L 0 10 z")
-        .attr("fill", cor);
+    texts.forEach(item => {
+      // Label
+      infoPanel.append("text")
+        .attr("x", item.x)
+        .attr("y", item.y)
+        .style("font-size", "12px")
+        .style("font-weight", "bold")
+        .style("fill", "#1D3557")
+        .text(item.label);
+      
+      // Valor
+      infoPanel.append("text")
+        .attr("x", item.x + 70)  // Alinhamento fixo
+        .attr("y", item.y)
+        .style("font-size", "12px")
+        .style("fill", "#1D3557")
+        .text(item.value);
+    });
 
-      part.transition()
-        .delay(atraso)
-        .duration(dur)
-        .attr("cx", x2)
-        .attr("cy", y2)
-        .attr("opacity", 0)
-        .remove();
 
-      seta.transition()
-        .delay(atraso)
-        .duration(dur)
-        .attr("x2", x2)
-        .attr("y2", y2)
-        .attr("opacity", 0)
-        .remove();
-
-      textoEl.transition()
-        .delay(atraso + dur / 2)
-        .duration(1000)
-        .attr("opacity", 0)
-        .remove();
+    // Função para atualizar o átomo
+    function atualizarAtomo(dZ, dA) {
+      Z += dZ;
+      A += dA;
+      
+      const novoElemento = tabelaPeriodica.find(e => e.Z === Z) || {
+        simbolo: `X${Z}`,
+        nome: `Elemento ${Z}`
+      };
+      
+      configAtual = obterConfiguracaoEletronica(Z);
+      
+      // Atualizar displays com cores fortes
+      elementoAtual.text(`${novoElemento.simbolo}-${A}`)
+        .style("fill", "#1D3557");
+      
+      infoElement.text(`Elemento: ${novoElemento.nome} (Z=${Z}, A=${A})`)
+        .style("fill", "#1D3557");
+      infoProtons.text(`Prótons: ${Z}`)
+        .style("fill", "#1D3557");
+      infoNeutrons.text(`Nêutrons: ${A - Z}`)
+        .style("fill", "#1D3557");
+      infoEletrons.text(`Elétrons: ${Z}`)
+        .style("fill", "#1D3557");
+      
+      grupoAtomo.selectAll("*").remove();
+      desenharAtomo(grupoAtomo, centroX, centroY, Z, A, configAtual);
+      
+      return novoElemento;
     }
 
-    let ciclo = 0;
-    function loopAnimacao() {
-      ciclo++;
-      const total = Object.entries(quantidades).reduce((acc, [tipo, qtd]) => acc + qtd, 0);
-      let atrasoAcumulado = 0;
-      Object.entries(quantidades).forEach(([tipo, qtd]) => {
-        for (let i = 0; i < qtd; i++) {
-          emitir(tipo, atrasoAcumulado);
-          atrasoAcumulado += 800;
-        }
-      });
-
-      setTimeout(loopAnimacao, atrasoAcumulado + 1000);
-    }
-
-    loopAnimacao();
+    // Animação de decaimento
+    let delay = 0;
+    Object.entries(quantidades).forEach(([tipo, qtd]) => {
+      for (let i = 0; i < qtd; i++) {
+        setTimeout(() => {
+          const props = propriedades[tipo];
+          const novoElemento = atualizarAtomo(props.dZ, props.dA);
+          
+          chatMessages = [...chatMessages, {
+            text: `Emitida 1 partícula ${props.desc}. Novo elemento: ${novoElemento.nome} (${novoElemento.simbolo}-${A})`,
+            type: 'bot'
+          }];
+          
+          setTimeout(() => {
+            const chatDiv = document.getElementById('chat');
+            if (chatDiv) chatDiv.scrollTop = chatDiv.scrollHeight;
+          }, 100);
+          
+          emitirParticula(
+            svg.append("g"),
+            centroX,
+            centroY,
+            props,
+            grupoAtomo.select("g.nucleo").node().getBBox().width/2
+          );
+        }, delay);
+        
+        delay += 1500;
+      }
+    });
   }
 
+  function desenharAtomo(grupo, cx, cy, Z, A, config) {
+    const grupoNucleo = grupo.append("g").attr("class", "nucleo");
+    const raioBase = 15 + Math.sqrt(A) * 1.5;
+    
+    // Núcleo com gradiente mais contrastante
+    grupoNucleo.append("circle")
+      .attr("cx", cx)
+      .attr("cy", cy)
+      .attr("r", raioBase)
+      .attr("fill", `url(#nucleo-gradient-${Z})`)
+      .attr("stroke", "#1d3557")
+      .attr("stroke-width", 2);
+    
+    // Texto no núcleo - cor mais forte e contraste
+    const elemento = tabelaPeriodica.find(e => e.Z === Z) || { simbolo: `X${Z}` };
+    grupoNucleo.append("text")
+      .attr("x", cx)
+      .attr("y", cy)
+      .attr("text-anchor", "middle")
+      .attr("dy", ".3em")
+      .style("font-size", `${Math.min(24, 14 + raioBase/3)}px`)
+      .style("font-weight", "bold")
+      .style("fill", "#1D3557") // Mudei para azul escuro
+      .text(`${elemento.simbolo}-${A}`);
+    
+    // Elétrons
+    const grupoEletrons = grupo.append("g").attr("class", "eletrons");
+    config.forEach(orbital => {
+      grupoEletrons.append("circle")
+        .attr("cx", cx)
+        .attr("cy", cy)
+        .attr("r", orbital.raio)
+        .attr("fill", "none")
+        .attr("stroke", `rgba(69, 123, 157, ${0.2 + 0.1*orbital.camada})`)
+        .attr("stroke-width", 1)
+        .attr("stroke-dasharray", orbital.tipo === 's' ? "none" : "2,2");
+      
+      for (let i = 0; i < orbital.eletrons; i++) {
+        const ang = (i / orbital.eletrons) * Math.PI * 2;
+        const el = grupoEletrons.append("g");
+        
+        el.append("circle")
+          .attr("r", 7)
+          .attr("fill", "#a8dadc")
+          .attr("stroke", "#457b9d")
+          .attr("stroke-width", 1);
+        
+        el.append("circle")
+          .attr("r", 3)
+          .attr("fill", "#f1faee");
+        
+        animateElectron(el, cx, cy, orbital.raio, ang, orbital.camada);
+      }
+    });
+  }
+
+  function emitirParticula(grupo, cx, cy, props, raioNucleo) {
+    const angle = Math.random() * Math.PI * 2;
+    const distance = 200 + Math.random() * 100;
+    const targetX = cx + Math.cos(angle) * distance;
+    const targetY = cy + Math.sin(angle) * distance;
+    
+    // Partícula maior (tamanhos já ajustados nas propriedades)
+    const particula = grupo.append("g")
+      .attr("transform", `translate(${cx},${cy})`)
+      .attr("opacity", 0);
+    
+    particula.append("circle")
+      .attr("r", props.size)
+      .attr("fill", props.cor)
+      .attr("stroke", d3.color(props.cor).darker(0.5))
+      .attr("stroke-width", 2); // Borda mais grossa
+    
+    particula.append("text")
+      .attr("text-anchor", "middle")
+      .attr("dy", ".3em")
+      .attr("fill", "white")
+      .style("font-size", `${props.size * 1.5}px`) // Texto maior
+      .style("font-weight", "bold")
+      .text(props.texto);
+    
+    // Linha de trajetória mais visível
+    const trajetoria = grupo.append("line")
+      .attr("x1", cx)
+      .attr("y1", cy)
+      .attr("x2", cx)
+      .attr("y2", cy)
+      .attr("stroke", props.cor)
+      .attr("stroke-width", 2) // Mais grossa
+      .attr("stroke-dasharray", "3,2")
+      .attr("opacity", 0)
+      .attr("marker-end", `url(#arrow-${props.texto.includes("α") ? "alfa" : "beta"})`);
+    
+    // Animação
+    particula.transition()
+      .duration(300)
+      .attr("opacity", 1)
+      .attr("transform", `translate(${cx + Math.cos(angle)*raioNucleo}, ${cy + Math.sin(angle)*raioNucleo})`)
+      .transition()
+      .duration(2000)
+      .attr("transform", `translate(${targetX},${targetY})`)
+      .attr("opacity", 0)
+      .remove();
+    
+    trajetoria.transition()
+      .delay(300)
+      .duration(2000)
+      .attr("x2", targetX)
+      .attr("y2", targetY)
+      .attr("opacity", 0.9) // Mais visível
+      .transition()
+      .duration(300)
+      .attr("opacity", 0)
+      .remove();
+  }
+
+  function obterConfiguracaoEletronica(Z) {
+    const ordemOrbitais = [
+      '1s', '2s', '2p', '3s', '3p', '4s', '3d', '4p', '5s', '4d', 
+      '5p', '6s', '4f', '5d', '6p', '7s', '5f', '6d', '7p'
+    ];
+    
+    const capacidades = { s: 2, p: 6, d: 10, f: 14 };
+    let config = [];
+    let eRestantes = Z;
+    
+    for (const orbital of ordemOrbitais) {
+      if (eRestantes <= 0) break;
+      
+      const [n, tipo] = orbital.split('');
+      const capacidade = capacidades[tipo];
+      const eOrbital = Math.min(capacidade, eRestantes);
+      
+      if (eOrbital > 0) {
+        config.push({
+          camada: parseInt(n),
+          tipo,
+          eletrons: eOrbital,
+          raio: 60 + (parseInt(n) * 50 + (tipo === 'p' ? 20 : tipo === 'd' ? 40 : tipo === 'f' ? 60 : 0))
+        });
+        eRestantes -= eOrbital;
+      }
+    }
+    
+    return config;
+  }
+
+  
+
+  function animateElectron(group, cx, cy, radius, initialAngle, layer) {
+    const duration = 3000 + layer * 1000;
+    const variation = 0.1 * layer;
+    
+    function update(t) {
+      const currentVariation = Math.sin(t * Math.PI * 4) * variation;
+      const angle = initialAngle + 2 * Math.PI * t + currentVariation;
+      const x = cx + radius * Math.cos(angle);
+      const y = cy + radius * Math.sin(angle);
+      group.attr("transform", `translate(${x},${y})`);
+      
+      // Efeito de spin
+      group.select("circle:first-child")
+        .attr("transform", `rotate(${t * 720})`);
+    }
+    
+    d3.timer((elapsed) => {
+      update((elapsed % duration) / duration);
+    });
+  }
+
+  function criarMarcadores(svg) {
+    const defs = svg.append("defs");
+    
+    // Gradiente para o núcleo
+    const grad = defs.append("radialGradient")
+      .attr("id", "nucleo-gradient")
+      .attr("cx", "50%")
+      .attr("cy", "50%")
+      .attr("r", "50%")
+      .attr("fx", "30%")
+      .attr("fy", "30%");
+    
+    grad.append("stop").attr("offset", "0%").attr("stop-color", "#f1faee");
+    grad.append("stop").attr("offset", "100%").attr("stop-color", "#a8dadc");
+    
+    // Marcadores de seta
+    defs.append("marker")
+      .attr("id", "arrow-alfa")
+      .attr("viewBox", "0 0 10 10")
+      .attr("refX", 9)
+      .attr("refY", 5)
+      .attr("markerWidth", 8)
+      .attr("markerHeight", 8)
+      .attr("orient", "auto")
+      .append("path")
+      .attr("d", "M 0 0 L 10 5 L 0 10 z")
+      .attr("fill", "#E63946");
+    
+    defs.append("marker")
+      .attr("id", "arrow-beta")
+      .attr("viewBox", "0 0 10 10")
+      .attr("refX", 9)
+      .attr("refY", 5)
+      .attr("markerWidth", 6)
+      .attr("markerHeight", 6)
+      .attr("orient", "auto")
+      .append("path")
+      .attr("d", "M 0 0 L 10 5 L 0 10 z")
+      .attr("fill", "#457B9D");
+  }
   onMount(() => {
     etapa1();
   });
 </script>
 
 <style>
+
+  /* Estilos adicionais para melhorar a aparência */
+  
+#animacao {
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin: 1rem 0;
+    overflow: hidden;
+    background: white;
+  }
+
+  .nucleo {
+    filter: drop-shadow(0 0 4px rgba(69, 123, 157, 0.5));
+  }
+
+  .eletrons circle:first-child {
+    transition: fill 0.3s ease;
+  }
+
+  .eletrons circle:first-child:hover {
+    fill: #ffd166;
+  }
+
+  #chat {
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 10px;
+  }
+
+  #chat p {
+    margin: 0.5rem 0;
+    padding: 0.8rem;
+    background: #f5f5f5;
+    border-radius: 6px;
+    transition: background 0.3s;
+  }
+
+  #chat p.bot-msg {
+    background: #e3f2fd;
+    border-left: 4px solid #0077cc;
+  }
+
+  #chat p:hover {
+    background: #e9ecef;
+  }
+
+
   nav {
     background: #003366;
     padding: 1rem;
@@ -711,4 +1201,139 @@
       padding: 1rem;
     }
   }
+
+.series-section {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #4CAF50;
+  }
+
+  .series-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .animation-controls {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  button {
+    padding: 0.5rem 1rem;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  button:hover {
+    background: #3e8e41;
+  }
+
+  button:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+  }
+
+  select {
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+
+  .series-animation {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin: 2rem 0;
+    min-height: 120px;
+  }
+
+  .atom {
+    position: relative;
+    padding: 1rem;
+    border: 2px solid #333;
+    border-radius: 8px;
+    background: white;
+    text-align: center;
+    min-width: 80px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .symbol {
+    font-weight: bold;
+    font-size: 1.2rem;
+    display: block;
+  }
+
+  .name {
+    font-size: 0.8rem;
+    color: #666;
+    display: block;
+  }
+
+  .decay-particle {
+    position: absolute;
+    font-weight: bold;
+    animation: emit 1s ease-out forwards;
+    font-size: 1.2rem;
+  }
+
+  .decay-particle.α { color: #e63946; }
+  .decay-particle.β { color: #457b9d; }
+
+  @keyframes emit {
+    from { transform: translate(0, 0); opacity: 1; }
+    to { transform: translate(50px, -50px); opacity: 0; }
+  }
+
+  .decay-path {
+    margin-top: 2rem;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+
+  th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+
+  tr:hover {
+    background-color: #f5f5f5;
+  }
+
+  .α {
+    color: #e63946;
+    font-weight: bold;
+  }
+
+  .β {
+    color: #457b9d;
+    font-weight: bold;
+  }
+
+  .stable {
+    color: #2a9d8f;
+    font-weight: bold;
+  }
+
 </style>

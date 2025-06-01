@@ -18,41 +18,77 @@
   <h1>
     <span class="chem-icon">⚗️</span> Chemical Kinetics Visualizer
   </h1>
+    <div id="container2"></div>
+
   <p><strong>Chemical kinetics</strong> is the branch of chemistry that studies the speed or rate of chemical reactions and how various factors,
   like reactant concentration, temperature, and the presence of catalysts, influence this rate. 
   This knowledge is vital for optimizing chemical processes in a variety of applications, ranging from industrial production to biological systems.</p>
 
-  <p>A fundamental concept in kinetics is the <strong>rate law</strong>, which defines how the rate of a reaction is related to the concentrations of the reactants.
-  The rate law varies based on the order of the reaction, which is determined experimentally. Below are explanations for the most common types of reaction orders:</p>
-  
   <div id="container3" style="margin-bottom: 40px;"></div>
-  <div id="container2"></div>
 
-  <ul>
-    <li><strong>First-order reactions:</strong> In a first-order reaction, the rate is directly proportional to the concentration of one reactant. For example, for the reaction <em>A → B</em>, the rate law is: <code>rate = k[A]</code>. Here, doubling the concentration of A will double the reaction rate.</li>
-    <li><strong>Second-order reactions:</strong> In a second-order reaction, the rate is proportional to the square of the concentration of the reactant, or to the product of the concentrations of two reactants. For example, <em>2A → B</em> would have the rate law: 
-      <code>rate = k[A]<sup>2</sup></code>. If the concentration of A is doubled, the rate increases by a factor of four.</li>
-    <li><strong>Third-order reactions:</strong> In a third-order reaction, the rate depends on the concentration of a reactant raised to the third power or a combination of three reactants. For example, the rate law for a reaction involving three molecules of A might be: <code>rate = k[A]<sup>3</sup></code>. If the concentration of A is doubled, the rate increases by a factor of eight.</li>
-  </ul>
+  <p>
+  The graph illustrates how the concentrations of a reactant (<strong>Reagent A</strong>) and a product (<strong>Product B</strong>) change over time during a chemical reaction.
+</p>
 
-  <p>The rate constant, <code>k</code>, is unique to each reaction and depends on factors such as temperature and the presence of a catalyst.</p>
+<p>
+  The <span style="color: red;"><strong>red curve</strong></span> represents <strong>Reagent A</strong>, whose concentration decreases exponentially as the reaction proceeds. This indicates that Reagent A is being consumed over time.
+</p>
 
-  <p>The <strong>Arrhenius equation</strong> describes how the rate constant <code>k</code> changes with temperature:</p>
+<p>
+  The <span style="color: #1f77b4;"><strong>blue curve</strong></span> shows <strong>Product B</strong>, whose concentration increases as Reagent A is converted into the product.
+</p>
 
-  <p style="text-align: center; font-size: 1.2em;">
-    <code style="font-size: 1.5em;">k = A · e<sup>−Eₐ/RT</sup></code>
+<p>
+  The two curves intersect at around <strong>time = 4.5 units</strong>, suggesting the point where the concentrations of the reactant and product are equal.
+</p>
+
+<p>
+  The <strong>y-axis</strong> represents <strong>concentration</strong>, and the <strong>x-axis</strong> represents <strong>time</strong>.
+</p>
+
+<p>
+  Both axes are labeled in bold, with “<strong>CONCENTRATION</strong>” and “<strong>TIME</strong>” clearly indicated.
+</p>
+
+<p>
+  This is a typical kinetic profile of a <strong>first-order or pseudo-first-order reaction</strong>, where one reactant is converted into one product over time.
+</p>
+
+
+
+
+  <h1>Order of Reaction</h1>
+
+  <p>
+    A fundamental concept in kinetics is the <strong>rate law</strong>, which defines how the rate of a reaction is related to the concentrations of the reactants.
+    The rate law varies based on the order of the reaction, which is determined experimentally. Below are explanations for the most common types of reaction orders:
   </p>
 
-  <p>In the Arrhenius equation:</p>
-    <ul>
-      <li><code>A</code> is the frequency factor, related to the number of collisions between molecules,</li>
-      <li><code>Eₐ</code> is the activation energy, which represents the minimum energy needed to initiate the reaction,</li>
-      <li><code>R</code> is the gas constant, and</li>
-      <li><code>T</code> is the temperature in kelvins.</li>
-    </ul>
-  <p>As temperature increases, the rate constant <code>k</code> increases exponentially, leading to faster reactions.</p>
+  <ul>
+    <li>
+      <strong>First-order reactions:</strong> In a first-order reaction, the rate is directly proportional to the concentration of one reactant.
+      For example, for the reaction <em>A → B</em>, the rate law is: <code>rate = k[A]</code>.
+      Here, doubling the concentration of A will double the reaction rate.
+    </li>
+    <li>
+      <strong>Second-order reactions:</strong> In a second-order reaction, the rate is proportional to the square of the concentration of the reactant,
+      or to the product of the concentrations of two reactants. For example, <em>2A → B</em> would have the rate law:
+      <code>rate = k[A]<sup>2</sup></code>. If the concentration of A is doubled, the rate increases by a factor of four.
+    </li>
+    <li>
+      <strong>Third-order reactions:</strong> In a third-order reaction, the rate depends on the concentration of a reactant raised to the third power
+      or a combination of three reactants. For example, the rate law for a reaction involving three molecules of A might be:
+      <code>rate = k[A]<sup>3</sup></code>. If the concentration of A is doubled, the rate increases by a factor of eight.
+    </li>
+  </ul>
 
-  <p>Reactions often proceed via a series of elementary steps, each with its own rate law. These steps form the <strong>reaction mechanism</strong>, which provides insight into the detailed process of a reaction. For example, the <strong>SN2 reaction</strong> involves a single, concerted step where a nucleophile attacks the substrate, displacing the leaving group.</p>
+  <p>
+    The rate constant, <code>k</code>, is unique to each reaction and depends on factors such as temperature and the presence of a catalyst.
+  </p>
+
+ <h2>Catalysis</h2>
+
+
   
   <p><strong>Catalysts</strong> are substances that accelerate chemical reactions without being consumed. They work by offering an alternative reaction pathway with a lower activation energy, making the reaction occur more easily.</p>
 
@@ -60,7 +96,6 @@
     <ul>
       <li><strong>Kinetics:</strong> Adjust reactant concentrations and rate constants to observe how the reaction rate changes over time.</li>
       <li><strong>Activation Energy:</strong> Visualize the Arrhenius equation and see how changes in temperature affect the reaction rate.</li>
-      <li><strong>Reaction Mechanism:</strong> Explore animations of complex mechanisms, such as SN2, showing each step in detail.</li>
       <li><strong>Catalyst Effect:</strong> Compare reaction profiles with and without a catalyst to understand its impact.</li>
     </ul>
   <p>Dive into this interactive project to gain a deeper understanding of chemical reactions and the factors that govern them!</p>
@@ -230,7 +265,7 @@
     document.head.appendChild(style);
 
     // === Configurações do Gráfico ===
-    const width = 450, height = 350, margin = { top: 40, right: 30, bottom: 40, left: 50 };
+    const width = 800, height = 500, margin = { top: 40, right: 30, bottom: 40, left: 50 };
     
     // Cria SVG para o gráfico de linhas
     const svg = d3.select("#container3")
@@ -269,20 +304,20 @@
       .call(xAxis)
       .append("text")
       .attr("class", "axis-label")
-      .attr("x", width - margin.right)
-      .attr("y", 35)
+      .attr("x", -margin.left+400)
+      .attr("y", margin.top - 20)
       .attr("text-anchor", "end")
-      .text("Tempo");
+      .text("TIME");
 
     svg.append("g")
       .attr("transform", `translate(${margin.left},0)`)
       .call(yAxis)
       .append("text")
       .attr("class", "axis-label")
-      .attr("x", -margin.left)
+      .attr("x", -margin.left+300)
       .attr("y", margin.top - 20)
       .attr("text-anchor", "start")
-      .text("Concentração");
+      .text("CONCENTRATION");
 
     // Linha reagente A (vermelho)
     const lineA = d3.line()
@@ -310,13 +345,13 @@
       .attr("class", "label-reactant")
       .attr("x", xScale(8))
       .attr("y", yScale(concA(8)) - 10)
-      .text("Reagente A");
+      .text("Reagent A");
 
     svg.append("text")
       .attr("class", "label-product")
       .attr("x", xScale(12))
       .attr("y", yScale(concB(12)) + 20)
-      .text("Produto B");
+      .text("Product B");
 
     // --- Tubos de ensaio animados ---
     // Configurações dos tubos
@@ -433,7 +468,7 @@
       svgTube.append("text")
         .attr("class", "tube-label")
         .attr("x", tubeWidth / 2)
-        .attr("y", tubeHeight * 0.95)
+        .attr("y", tubeHeight * 0.99)
         .text(`Passo ${d.tubeIndex}`);
     });
 
