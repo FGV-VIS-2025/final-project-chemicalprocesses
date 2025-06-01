@@ -132,7 +132,7 @@
         .attr("stroke-width", 1.5);
     }
 
-    // 🔴 Tooltip por hover
+    // Tooltip por hover
     const tooltip = g.append("g")
       .attr("class", "tooltip-group")
       .style("display", "none");

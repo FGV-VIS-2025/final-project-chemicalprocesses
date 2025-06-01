@@ -7,13 +7,16 @@
   let A_slider = 5;
   $: A = A_slider * 1e13;
   let T = 300;
+  let T1 = 300;
+  let T2 = 400;
   let showMarker = true;
 
   let running = false;
   let restartKey = 0;
   let chartKey = 0;
 
-  let collisionHistory = [];
+  let collisionHistory1 = [];
+  let collisionHistory2 = [];
 
   function toggleRunning() {
     running = !running;
@@ -22,19 +25,10 @@
   function restartSimulation() {
     restartKey += 1;
     chartKey += 1;
-    collisionHistory = [];  // limpa o gráfico ao reiniciar
-  }
-
-  // Resetar gráfico ao mudar sliders
-  let lastParams = { Ea: null, A: null, T: null };
-
-  $: if (Ea !== lastParams.Ea || A !== lastParams.A || T !== lastParams.T) {
-    lastParams = { Ea, A, T };
-    chartKey += 1;
-    collisionHistory = [];
+    collisionHistory1 = [];
+    collisionHistory2 = [];
   }
 </script>
-
 
 <svelte:head>
   <title>Activation Energy</title>
@@ -57,22 +51,6 @@
     <span class="chem-icon">⚗️</span> Activation Energy
   </h1>
 
-  <div class="content-section">
-    <p>
-      The <strong>Arrhenius equation</strong> describes the temperature dependence of reaction rates:
-    </p>
-
-    <p class="formula"><code>k = A · e<sup>-Ea / RT</sup></code></p>
-
-    <ul class="equation-vars">
-      <li><strong>k</strong>: rate constant</li>
-      <li><strong>A</strong>: pre-exponential factor</li>
-      <li><strong>E<sub>a</sub></strong>: activation energy</li>
-      <li><strong>R</strong>: gas constant (8.314 J/mol·K)</li>
-      <li><strong>T</strong>: temperature in Kelvin</li>
-    </ul>
-  </div>
-
   <div class="controls">
     <label>
       <span>Activation Energy (Ea):</span>
@@ -87,21 +65,10 @@
     </label>
 
     <label>
-      <span>Temperature (T):</span>
+      <span>Temperature for Arrhenius Chart (T):</span>
       <input type="range" min="200" max="500" bind:value={T} />
       <span>{T} K</span>
     </label>
-
-    <label class="toggle-label">
-      <span>Show Marker on Graph:</span>
-      <button on:click={() => showMarker = !showMarker}>
-        {showMarker ? "Hide Marker" : "Show Marker"}
-      </button>
-    </label>
-  </div>
-
-  <div class="content-section">
-    <p>The graph below shows the relationship between the rate constant <strong>k</strong> and the reciprocal of temperature <strong>1/T</strong>, following the Arrhenius equation.</p>
   </div>
 
   <div class="chart-container">
@@ -111,28 +78,69 @@
   <div class="content-section">
     <h2>Particle Animation & Collision Graph</h2>
 
-    <div class="animation-controls">
-      <button on:click={toggleRunning} class="action-btn">
-        {running ? "Pause Animation" : "Start/Resume Animation"}
-      </button>
-      <button on:click={restartSimulation} class="action-btn">
-        Restart Simulation
-      </button>
+    <div class="controls">
+      <label>
+        <span>Temperature T₁:</span>
+        <input type="range" min="200" max="500" bind:value={T1} />
+        <span>{T1} K</span>
+      </label>
+
+      <label>
+        <span>Temperature T₂:</span>
+        <input type="range" min="200" max="500" bind:value={T2} />
+        <span>{T2} K</span>
+      </label>
+
+      <div class="animation-controls">
+        <button on:click={toggleRunning} class="action-btn">
+          {running ? "Pause Animation" : "Start/Resume Animation"}
+        </button>
+        <button on:click={restartSimulation} class="action-btn">
+          Restart Simulation
+        </button>
+      </div>
     </div>
 
-    <div class="side-by-side">
-      <ParticleAnimation
-        {Ea}
-        {A}
-        {T}
-        {running}
-        triggerRestart={restartKey}
-        on:collisionUpdate={(e) => collisionHistory = [...collisionHistory, e.detail]}
-      />
-      {#key chartKey}
-        <CollisionChart {collisionHistory} />
-      {/key}
+    <div class="side-by-side" style="margin-top: -1rem">
+      
+  <div class="sim-header">
+    <h4>Simulation T₁ = {T1} K</h4>
+    <div class="color-legend">
+      <div><span class="color-box blue"></span> Not yet activated</div>
+      <div><span class="color-box orange"></span> Activated</div>
+    </div>
+        <ParticleAnimation
+          {Ea}
+          {A}
+          T={T1}
+          {running}
+          triggerRestart={restartKey}
+          on:collisionUpdate={(e) => collisionHistory1 = [...collisionHistory1, e.detail]}
+        />
+      </div>
+      <div>
+  <div class="sim-header">
+    <h4>Simulation T₂ = {T2} K</h4>
+    <div class="color-legend">
+      <div><span class="color-box blue"></span> Not yet activated</div>
+      <div><span class="color-box orange"></span> Activated</div>
+    </div>
+        <ParticleAnimation
+          {Ea}
+          {A}
+          T={T2}
+          {running}
+          triggerRestart={restartKey}
+          on:collisionUpdate={(e) => collisionHistory2 = [...collisionHistory2, e.detail]}
+        />
+      </div>
+    </div>
+    </div>
 
+    <div style="margin-top: 3rem; display: flex; justify-content: center;">
+      {#key chartKey}
+        <CollisionChart history1={collisionHistory1} history2={collisionHistory2} />
+      {/key}
     </div>
   </div>
 </main>
@@ -141,7 +149,6 @@
   nav {
     background: #003366;
     padding: 1rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     font-family: 'Inter', sans-serif;
   }
 
@@ -150,19 +157,17 @@
     flex-wrap: wrap;
     gap: 1rem;
     list-style: none;
+    justify-content: center;
     padding: 0;
     margin: 0;
-    justify-content: center;
   }
 
   nav a {
     text-decoration: none;
-    color: #ffffff;
+    color: #fff;
     font-weight: 500;
-    font-size: 1rem;
-    transition: color 0.3s;
     padding: 0.5rem 1rem;
-    display: inline-block;
+    transition: 0.3s;
   }
 
   nav a:hover {
@@ -176,32 +181,14 @@
     background: white;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     border-radius: 12px;
-    position: relative;
   }
 
-  .page h1 {
+  h1 {
     color: #003366;
     margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
     gap: 0.7rem;
-  }
-
-  .content-section {
-    margin-bottom: 2rem;
-  }
-
-  .formula {
-    text-align: center;
-    font-size: 1.2rem;
-    margin: 1.5rem 0;
-  }
-
-  .equation-vars {
-    background: #e3f2f9;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin: 1.5rem 0;
   }
 
   .controls {
@@ -222,20 +209,15 @@
     margin: 0.5rem 0;
   }
 
-  .toggle-label {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
   .chart-container {
     margin: 2rem 0;
   }
 
   .animation-controls {
     display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
-    margin: 1rem 0;
+    margin-top: 1rem;
   }
 
   .action-btn {
@@ -247,6 +229,7 @@
     cursor: pointer;
     font-family: 'Inter', sans-serif;
     transition: background-color 0.3s;
+    min-width: 180px;
   }
 
   .action-btn:hover {
@@ -260,29 +243,63 @@
     align-items: flex-start;
   }
 
-  @media (max-width: 600px) {
-    nav ul {
-      flex-direction: column;
-      align-items: center;
-      gap: 0.3rem;
-    }
+  .animation-legend {
+    font-size: 0.85rem;
+    color: #333;
+    margin-top: 0.5rem;
+  }
 
-    nav a {
-      padding: 0.5rem 0;
-      width: 100%;
-      text-align: center;
+  @media (max-width: 600px) {
+    .side-by-side {
+      flex-direction: column;
     }
 
     .animation-controls {
       flex-direction: column;
     }
 
-    .controls label {
+    nav ul {
       flex-direction: column;
+      gap: 0.5rem;
     }
 
-    .side-by-side {
-      flex-direction: column;
+    nav a {
+      width: 100%;
+      text-align: center;
     }
   }
+
+    .sim-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.color-legend {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.color-box {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  margin-right: 0.3rem;
+  vertical-align: middle;
+}
+
+.color-box.blue {
+  background-color: steelblue;
+}
+
+.color-box.orange {
+  background-color: orange;
+}
 </style>
