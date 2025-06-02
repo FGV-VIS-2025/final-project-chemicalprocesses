@@ -51,6 +51,13 @@
     <span class="chem-icon">⚗️</span> Activation Energy
   </h1>
 
+  <p>
+  This page illustrates the concept of <strong>activation energy</strong> using the Arrhenius equation
+  and dynamic simulations. You can explore how temperature affects the likelihood of particles gaining
+  enough energy to react.
+</p>
+
+
   <div class="controls">
     <label>
       <span>Activation Energy (Ea):</span>
@@ -62,7 +69,7 @@
       <span>Pre-exponential Factor (A):</span>
       <input type="range" min="1" max="10" step="0.1" bind:value={A_slider} />
       <span>{A_slider.toFixed(1)} × 10<sup>13</sup> s<sup>-1</sup></span>
-    </label>
+    </label>    
 
     <label>
       <span>Temperature for Arrhenius Chart (T):</span>
@@ -71,12 +78,26 @@
     </label>
   </div>
 
+  <p>
+  The chart below shows the <strong>Arrhenius equation</strong>, which models the rate constant k
+  as a function of temperature and activation energy. The marker highlights the current value of k
+  for the selected temperature T.
+</p>
+
+
   <div class="chart-container">
     <ArrheniusChart {Ea} {A} {T} {showMarker} />
   </div>
 
   <div class="content-section">
     <h2>Particle Animation & Collision Graph</h2>
+
+<p>
+  The following animations simulate particles at two different temperatures. Each particle has a chance
+  to overcome the activation energy barrier and become "activated". You can adjust T_1 and T_2
+  to observe how increasing temperature affects activation.
+</p>
+
 
     <div class="controls">
       <label>
@@ -136,6 +157,12 @@
       </div>
     </div>
     </div>
+
+<p>
+  The graph below compares the number of activated collisions over time for both simulations. You can
+  hover over the lines to inspect the number of collisions at each moment.
+</p>
+
 
     <div style="margin-top: 3rem; display: flex; justify-content: center;">
       {#key chartKey}
