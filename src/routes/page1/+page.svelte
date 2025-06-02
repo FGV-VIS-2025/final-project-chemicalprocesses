@@ -6,16 +6,14 @@
 
 </svelte:head>
 
-<nav>
-  <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/page0">Introduction</a></li>
-    <li><a href="/page1">Reaction Orders</a></li>
-    <li><a href="/page2">Activation Energy</a></li>
-    <li><a href="/page3">Simulation</a></li>
-    <li><a href="/page4">Catalyst Effect</a></li>
-    <li><a href="/page5">Radioactivity</a></li>
-  </ul>
+<nav class="main-nav">
+  <a href="/" class={currentPage === '/' ? 'active' : ''}>Home</a>
+  <a href="/page0" class={currentPage === '/page0' ? 'active' : ''}>Introduction</a>
+  <a href="/page1" class={currentPage === '/page1' ? 'active' : ''}>Reaction Orders</a>
+  <a href="/page2" class={currentPage === '/page2' ? 'active' : ''}>Activation Energy</a>
+  <a href="/page3" class={currentPage === '/page3' ? 'active' : ''}>Simulation</a>
+  <a href="/page4" class={currentPage === '/page4' ? 'active' : ''}>Catalyst Effect</a>
+  <a href="/page5" class={currentPage === '/page5' ? 'active' : ''}>Radioactivity</a>
 </nav>
 
 <main class="page" id="page1">
@@ -57,13 +55,15 @@
 
     <div class="controls">
       <div class="control-group">
-        <label>Initial Concentration [A]₀: <span class="value-display" bind:this={concAVal}>50</span> M</label>
-        <input bind:this={concAInput} type="range" min="1" max="100" value="50" class="slider" />
+        <label>Initial Concentration [A]₀: <span class="value-display" bind:this={concAVal}>50</span> M
+          <input bind:this={concAInput} type="range" min="1" max="100" value="50" class="slider" />
+        </label>
       </div>
       
       <div class="control-group">
-        <label>Rate Constant (k): <span class="value-display" bind:this={kVal}>1.0</span> </label>
-        <input bind:this={kInput} type="range" min="0.1" max="5" step="0.1" value="1" class="slider" />
+        <label>Rate Constant (k): <span class="value-display" bind:this={kVal}>1.0</span> 
+          <input bind:this={kInput} type="range" min="0.1" max="5" step="0.1" value="1" class="slider" />
+        </label>
       </div>
       
       <div class="control-group">
@@ -199,16 +199,19 @@
     <h2>Reaction Time Calculator</h2>
     <div class="calculator-grid">
       <div class="input-group">
-        <label>Initial [A]₀ (M):</label>
-        <input type="number" id="initial-conc" value="1.0" min="0.1" step="0.1">
+        <label>Initial [A]₀ (M):
+          <input type="number" id="initial-conc" value="1.0" min="0.1" step="0.1">
+        </label>
       </div>
       <div class="input-group">
-        <label>Target [A] (M):</label>
-        <input type="number" id="final-conc" value="0.5" min="0" step="0.1">
+        <label>Target [A] (M):
+          <input type="number" id="final-conc" value="0.5" min="0" step="0.1">
+        </label>
       </div>
       <div class="input-group">
-        <label>Rate Constant (k):</label>
+        <label>Rate Constant (k):
         <input type="number" id="rate-const" value="0.1" min="0.01" step="0.01">
+        </label>
       </div>
       <div class="input-group">
         <label>Reaction Order:</label>
@@ -335,7 +338,9 @@
 <script>
   import { onMount } from 'svelte';
   import * as d3 from 'd3';
+  import { page } from '$app/stores';
 
+  let currentPage = $page.url.pathname;
   let concAInput, concAVal, kInput, kVal, orderInput;
   let rateLawDescription;
 
@@ -795,36 +800,33 @@
   });
 </script>
 <style>
-  nav {
-    background: #003366;
-    padding: 1rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    font-family: 'Inter', sans-serif;
-  }
-  
-  nav ul {
+  .main-nav {
+    background-color: #2c3e50;
+    padding: 1rem 2rem;
     display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    list-style: none;
-    padding: 0;
-    margin: 0;
     justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
   }
-  
-  nav a {
+
+  .main-nav a {
+    color: white;
     text-decoration: none;
-    color: #ffffff;
     font-weight: 500;
-    font-size: 1rem;
-    transition: color 0.3s;
     padding: 0.5rem 1rem;
     border-radius: 4px;
+    transition: background-color 0.2s;
   }
-  
-  nav a:hover {
-    color: #aad4ff;
-    background: rgba(255,255,255,0.1);
+
+  .main-nav a:hover {
+    background-color: #34495e;
+  }
+
+  .main-nav a.active {
+    background-color: #3498db;
   }
 
   .page {
@@ -926,7 +928,6 @@
     border-radius: 4px;
     background: #d1e3f6;
     outline: none;
-    -webkit-appearance: none;
   }
 
   .slider::-webkit-slider-thumb {
@@ -1002,17 +1003,6 @@
     border-radius: 4px;
   }
 
-  .axis-label {
-    fill: #555;
-    font-size: 0.9rem;
-  }
-
-  .chart-title {
-    fill: #003366;
-    font-size: 1.1rem;
-    font-weight: bold;
-  }
-
   .characteristics-section {
     margin-top: 3rem;
   }
@@ -1058,14 +1048,6 @@
       height: auto;
     }
   }
-
- .advanced-tools {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 2rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #333;
-  }
   
   h1 {
     color: #2c3e50;
@@ -1105,32 +1087,6 @@
     border-radius: 4px;
     margin: 1rem 0;
     position: relative;
-  }
-  
-  .controls-3d {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-    align-items: center;
-  }
-  
-  .controls-3d select, .controls-3d button {
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-    background: white;
-  }
-  
-  .controls-3d button {
-    background: #3498db;
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  
-  .controls-3d button:hover {
-    background: #2980b9;
   }
   
   /* Estilos para a calculadora */
@@ -1198,41 +1154,6 @@
     margin: 1.5rem 0;
   }
   
-  .controls-chart {
-    display: flex;
-    gap: 2rem;
-    margin-top: 1rem;
-  }
-  
-  .controls-chart label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-  }
-  
-  .controls-chart input[type="range"] {
-    flex-grow: 1;
-    max-width: 200px;
-  }
-  
-  .line {
-    fill: none;
-    stroke-width: 2px;
-  }
-  
-  .line0 {
-    stroke: #e74c3c;
-  }
-  
-  .line1 {
-    stroke: #3498db;
-  }
-  
-  .line2 {
-    stroke: #2ecc71;
-  }
-  
   @media (max-width: 768px) {
     .calculator-grid {
       grid-template-columns: 1fr;
@@ -1242,24 +1163,9 @@
       grid-column: span 1;
     }
     
-    .controls-chart {
-      flex-direction: column;
-      gap: 1rem;
-    }
-    
     #energy3d-container {
       height: 350px;
     }
-  }
-
-
-  /* Base Styles */
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: #f5f7fa;
-    color: #333;
   }
   
   main {

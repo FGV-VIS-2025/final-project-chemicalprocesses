@@ -2,7 +2,9 @@
   import ArrheniusChart from '$lib/components/ArrheniusChart.svelte';
   import ParticleAnimation from '$lib/components/ParticleAnimation.svelte';
   import CollisionChart from '$lib/components/CollisionChart.svelte';
+  import { page } from '$app/stores';
 
+  let currentPage = $page.url.pathname; 
   let Ea = 50;
   let A_slider = 5;
   $: A = A_slider * 1e13;
@@ -34,16 +36,14 @@
   <title>Activation Energy</title>
 </svelte:head>
 
-<nav>
-  <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/page0">Introduction</a></li>
-    <li><a href="/page1">Reaction Orders</a></li>
-    <li><a href="/page2">Activation Energy</a></li>
-    <li><a href="/page3">Simulation</a></li>
-    <li><a href="/page4">Catalyst Effect</a></li>
-    <li><a href="/page5">Radioactivity</a></li>
-  </ul>
+<nav class="main-nav">
+  <a href="/" class={currentPage === '/' ? 'active' : ''}>Home</a>
+  <a href="/page0" class={currentPage === '/page0' ? 'active' : ''}>Introduction</a>
+  <a href="/page1" class={currentPage === '/page1' ? 'active' : ''}>Reaction Orders</a>
+  <a href="/page2" class={currentPage === '/page2' ? 'active' : ''}>Activation Energy</a>
+  <a href="/page3" class={currentPage === '/page3' ? 'active' : ''}>Simulation</a>
+  <a href="/page4" class={currentPage === '/page4' ? 'active' : ''}>Catalyst Effect</a>
+  <a href="/page5" class={currentPage === '/page5' ? 'active' : ''}>Radioactivity</a>
 </nav>
 
 <main class="page" id="page2">
@@ -173,32 +173,33 @@
 </main>
 
 <style>
-  nav {
-    background: #003366;
-    padding: 1rem;
-    font-family: 'Inter', sans-serif;
-  }
-
-  nav ul {
+  .main-nav {
+    background-color: #2c3e50;
+    padding: 1rem 2rem;
     display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    list-style: none;
     justify-content: center;
-    padding: 0;
-    margin: 0;
+    gap: 2rem;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
   }
 
-  nav a {
+  .main-nav a {
+    color: white;
     text-decoration: none;
-    color: #fff;
     font-weight: 500;
     padding: 0.5rem 1rem;
-    transition: 0.3s;
+    border-radius: 4px;
+    transition: background-color 0.2s;
   }
 
-  nav a:hover {
-    color: #aad4ff;
+  .main-nav a:hover {
+    background-color: #34495e;
+  }
+
+  .main-nav a.active {
+    background-color: #3498db;
   }
 
   .page {

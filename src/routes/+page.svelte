@@ -4,16 +4,14 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </svelte:head>
 
-<nav>
-  <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/page0">Introduction</a></li>
-    <li><a href="/page1">Reaction Orders</a></li>
-    <li><a href="/page2">Activation Energy</a></li>
-    <li><a href="/page3">Simulation</a></li>
-    <li><a href="/page4">Catalyst Effect</a></li>
-    <li><a href="/page5">Radioactivity</a></li>
-  </ul>
+<nav class="main-nav">
+  <a href="/" class={currentPage === '/' ? 'active' : ''}>Home</a>
+  <a href="/page0" class={currentPage === '/page0' ? 'active' : ''}>Introduction</a>
+  <a href="/page1" class={currentPage === '/page1' ? 'active' : ''}>Reaction Orders</a>
+  <a href="/page2" class={currentPage === '/page2' ? 'active' : ''}>Activation Energy</a>
+  <a href="/page3" class={currentPage === '/page3' ? 'active' : ''}>Simulation</a>
+  <a href="/page4" class={currentPage === '/page4' ? 'active' : ''}>Catalyst Effect</a>
+  <a href="/page5" class={currentPage === '/page5' ? 'active' : ''}>Radioactivity</a>
 </nav>
 
 <svg id="molecule-bg"></svg>
@@ -72,6 +70,8 @@
 <script>
   import { onMount } from 'svelte';
   import * as d3 from 'd3';
+  import { page } from '$app/stores';
+  let currentPage = $page.url.pathname; // Isso identifica a página atual
 
   onMount(() => {
     const svg = d3.select("#molecule-bg")
@@ -142,35 +142,33 @@
 </script>
 
 <style>
-
-  nav {
-    background: #003366;
-    padding: 1rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    font-family: 'Inter', sans-serif;
-  }
-  
-  nav ul {
+  .main-nav {
+    background-color: #2c3e50;
+    padding: 1rem 2rem;
     display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    list-style: none;
-    padding: 0;
-    margin: 0;
     justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
   }
-  
-  nav a {
+
+  .main-nav a {
+    color: white;
     text-decoration: none;
-    color: #ffffff;
     font-weight: 500;
-    font-size: 1rem;
-    transition: color 0.3s;
     padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.2s;
   }
-  
-  nav a:hover {
-    color: #aad4ff;
+
+  .main-nav a:hover {
+    background-color: #34495e;
+  }
+
+  .main-nav a.active {
+    background-color: #3498db;
   }
 
   #content {
@@ -231,18 +229,6 @@
     padding: 1rem;
     background-color: #f0f4f8;
     font-family: 'Inter', sans-serif;
-  }
-
-  @media (max-width: 600px) {
-    nav ul {
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    nav a {
-      padding: 0.3rem 0;
-    }
   }
 
   .chem-section {
