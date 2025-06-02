@@ -6,7 +6,8 @@
   export let history2 = [];
 
   let svg;
-  let container;
+  let tooltip;
+
   const width = 600;
   const height = 250;
   const margin = { top: 20, right: 40, bottom: 40, left: 40 };
@@ -32,11 +33,15 @@
       .attr('transform', `translate(0,${innerHeight})`)
       .call(d3.axisBottom(xScale).ticks(6));
 
-    g.append('g')
-      .call(d3.axisLeft(yScale).ticks(5));
+    g.append('g').call(d3.axisLeft(yScale).ticks(5));
 
-    const line1 = d3.line().x(d => xScale(d.time)).y(d => yScale(d.count));
-    const line2 = d3.line().x(d => xScale(d.time)).y(d => yScale(d.count));
+    const line1 = d3.line()
+      .x(d => xScale(d.time))
+      .y(d => yScale(d.count));
+
+    const line2 = d3.line()
+      .x(d => xScale(d.time))
+      .y(d => yScale(d.count));
 
     g.append('path')
       .datum(history1)
@@ -67,20 +72,8 @@
       .attr('fill', '#333')
       .text('Collisions');
 
-    const tooltip = d3.select(container)
-      .append('div')
-      .attr('class', 'tooltip')
-      .style('position', 'absolute')
-      .style('pointer-events', 'none')
-      .style('background', 'rgba(0,0,0,0.85)')
-      .style('color', 'white')
-      .style('padding', '6px 8px')
-      .style('border-radius', '4px')
-      .style('font-size', '13px')
-      .style('display', 'none');
-
-    const pointMarker = g.append('circle')
-      .attr('r', 5)
+    const marker = g.append('circle')
+      .attr('r', 4)
       .attr('fill', 'black')
       .style('display', 'none');
 
@@ -90,44 +83,45 @@
       .attr('fill', 'none')
       .attr('pointer-events', 'all')
       .on('mousemove', function (event) {
-        const [x] = d3.pointer(event);
+        const [x] = d3.pointer(event, this);
         const time = xScale.invert(x);
 
         let point1 = history1.reduce((a, b) =>
           Math.abs(b.time - time) < Math.abs(a.time - time) ? b : a, history1[0]);
+
         let point2 = history2.reduce((a, b) =>
           Math.abs(b.time - time) < Math.abs(a.time - time) ? b : a, history2[0]);
 
         if (Math.abs(point1.time - time) > 0.5) point1 = null;
         if (Math.abs(point2.time - time) > 0.5) point2 = null;
 
-        const focusPoint = point1 || point2;
-
-        if (focusPoint) {
-          pointMarker
-            .attr('cx', xScale(focusPoint.time))
-            .attr('cy', yScale(focusPoint.count))
-            .style('display', 'block');
-        } else {
-          pointMarker.style('display', 'none');
+        const nearest = point1 || point2;
+        if (!nearest) {
+          marker.style('display', 'none');
+          tooltip.style.display = 'none';
+          return;
         }
 
+        const cx = xScale(nearest.time);
+        const cy = yScale(nearest.count);
+
+        marker
+          .attr('cx', cx)
+          .attr('cy', cy)
+          .style('display', 'block');
+
         let text = '';
-        if (point1) text += `<div style="color:#5dade2">T₁: ${point1.count} at ${point1.time.toFixed(1)}s</div>`;
-        if (point2) text += `<div style="color:#e74c3c">T₂: ${point2.count} at ${point2.time.toFixed(1)}s</div>`;
+        if (point1) text += `<div style="color:#5dade2">T₁: ${point1.count} collisions at ${point1.time.toFixed(1)}s</div>`;
+        if (point2) text += `<div style="color:#e74c3c">T₂: ${point2.count} collisions at ${point2.time.toFixed(1)}s</div>`;
 
-        tooltip.html(text).style('display', text ? 'block' : 'none');
-
-        const offsetX = xScale(focusPoint?.time);
-        const offsetY = yScale(focusPoint?.count);
-
-        tooltip
-          .style('left', `${offsetX + margin.left - 30}px`)
-          .style('top', `${offsetY + margin.top - 40}px`);
+        tooltip.innerHTML = text;
+        tooltip.style.display = 'block';
+        tooltip.style.left = `${cx + margin.left + 10}px`;
+        tooltip.style.top = `${cy + margin.top - 40}px`;
       })
       .on('mouseleave', () => {
-        tooltip.style('display', 'none');
-        pointMarker.style('display', 'none');
+        marker.style('display', 'none');
+        tooltip.style.display = 'none';
       });
   }
 
@@ -135,8 +129,9 @@
   afterUpdate(drawChart);
 </script>
 
-<div bind:this={container} class="chart-wrapper">
+<div class="chart-wrapper">
   <svg bind:this={svg} width={width} height={height}></svg>
+  <div bind:this={tooltip} class="tooltip"></div>
 </div>
 
 <style>
@@ -150,6 +145,15 @@
   }
 
   .tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    display: none;
     z-index: 10;
+    max-width: 200px;
   }
 </style>
