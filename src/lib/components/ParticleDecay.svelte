@@ -86,7 +86,7 @@
       fill={p.active ? "darkgreen" : "lightgreen"}
       opacity={p.active ? 1 : 0.3}
     >
-      <title>Decaimento em: {p.decayTime.toFixed(1)}s</title>
+      <title>Decay in: {p.decayTime.toFixed(1)}s</title>
     </circle>
   {/each}
 </svg>
@@ -94,9 +94,9 @@
 <div style="font-size: 0.85rem; margin-top: 0.4rem; font-weight: bold;">
   <p>
     <span style="display: inline-block; width: 12px; height: 12px; background: darkgreen; border-radius: 50%;"></span>
-    &nbsp; Partícula ativa
+    &nbsp; Active particle
     &nbsp;&nbsp;
     <span style="display: inline-block; width: 12px; height: 12px; background: lightgreen; border-radius: 50%; opacity: 0.3;"></span>
-    &nbsp; Partícula decaída
+    &nbsp; Decayed particle
   </p>
 </div>

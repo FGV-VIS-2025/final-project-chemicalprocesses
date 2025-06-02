@@ -126,8 +126,8 @@
 <!-- Legenda -->
 <div style="font-size: 0.85rem; margin-top: 0.4rem; font-weight: bold;">
   <p>
-    <span style="color: darkgreen;">━</span> Partículas já decaídas &nbsp;&nbsp;
-    <span style="color: lightgreen;">━</span> Partículas restantes &nbsp;&nbsp;
-    <span style="display: inline-block; width: 10px; height: 10px; background: green; border-radius: 50%;"></span> Tempo atual
+    <span style="color: darkgreen;">━</span> Particle already decayed &nbsp;&nbsp;
+    <span style="color: lightgreen;">━</span> Remaining particles &nbsp;&nbsp;
+    <span style="display: inline-block; width: 10px; height: 10px; background: green; border-radius: 50%;"></span> Time
   </p>
 </div>

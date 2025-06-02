@@ -76,6 +76,6 @@
 <div style="font-size: 0.85rem; margin-top: 0.4rem; font-weight: bold;">
   <p>
     <span style="display: inline-block; width: 12px; height: 12px; background: steelblue;"></span>
-    &nbsp; Frequência de partículas por intervalo de tempo de decaimento
+    &nbsp; Frequency of particles per decay time interval
   </p>
 </div>

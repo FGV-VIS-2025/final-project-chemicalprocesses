@@ -57,15 +57,28 @@
   }
 
   :global(body) {
-    background-color: #424242; 
+    background-color: #424242;
     margin: 0;
     font-family: sans-serif;
     font-weight: bold;
   }
+
+  .info-text {
+    background: #f5f5f5;
+    padding: 1rem;
+    border-left: 4px solid #003366;
+    border-radius: 6px;
+    color: #333;
+    font-weight: normal;
+  }
 </style>
 
 <div class="container">
-  <h1>Simulador de Decaimento Radioativo</h1>
+  <h1>Radioactive Decay Simulator</h1>
+
+  <p class="info-text">
+    This simulator models the <strong>radioactive decay</strong> of unstable particles. At each moment in time, every particle has a chance of decaying, governed by the rate constant λ (lambda).
+  </p>
 
   <section class="controls-section">
     <label>N₀:
@@ -75,38 +88,44 @@
       <input type="range" bind:value={lambda} min="0.01" max="1" step="0.01" />
       {lambda}
     </label>
-    <p>Meia-vida (T₁/₂): {(Math.log(2)/lambda).toFixed(2)} s</p>
+    <p>Half-life (T₁/₂): {(Math.log(2)/lambda).toFixed(2)} s</p>
 
     <div style="margin-left: auto;">
       <div class="button-row">
-        <button on:click={() => decayRef?.start()}>▶️ Iniciar</button>
-        <button on:click={() => decayRef?.pause()}>⏸️ Pausar</button>
+        <button on:click={() => decayRef?.start()}>▶️ Start</button>
+        <button on:click={() => decayRef?.pause()}>⏸️ Pause</button>
         <button on:click={() => {
           decayRef?.reset();
           simulationFinished = false;
           simulatedTime = 0;
-        }}>🔄 Resetar</button>
+        }}>🔄 Reset</button>
       </div>
     </div>
   </section>
 
+  <p class="info-text">
+    The left panel shows the function <strong>N(t)</strong>, representing the number of remaining particles over time.
+    Below it, the histogram displays the distribution of decay times. The right panel animates the particles:
+    blue for active particles and orange for decayed ones.
+  </p>
+
   <section class="graph-section">
     <div class="left-column">
       <div class="section-header">
-        <h2>Gráfico de N(t)</h2>
+        <h2>Graph of N(t)</h2>
       </div>
       <DecayGraph {n0} {lambda} currentTime={simulatedTime} />
 
       <div class="section-header">
-        <h2>Histograma de decaimento</h2>
+        <h2>Decay Histogram</h2>
       </div>
       <DecayHistogram {lifetimes} currentTime={simulatedTime} {n0} />
     </div>
 
     <div class="right-column">
       <div class="section-header">
-        <h2>Decaimento de partículas</h2>
-        <p>{simulatedTime.toFixed(1)} segundos</p>
+        <h2>Particle Animation</h2>
+        <p>{simulatedTime.toFixed(1)} seconds</p>
       </div>
 
       <ParticleDecay
@@ -122,7 +141,7 @@
 
       {#if simulationFinished}
         <p style="color: darkred; font-weight: bold; margin-top: 0.5rem;">
-          ⚠️ A simulação foi finalizada. Todas as partículas decaíram ou o tempo máximo foi atingido.
+          ⚠️ Simulation finished. All particles have decayed or the time limit was reached.
         </p>
       {/if}
     </div>
