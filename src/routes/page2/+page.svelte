@@ -233,7 +233,7 @@
   }
 
   .action-btn:hover {
-    background: #004080;
+    background: #003366;
   }
 
   .side-by-side {
@@ -296,7 +296,7 @@
 }
 
 .color-box.blue {
-  background-color: steelblue;
+  background-color: #003366;
 }
 
 .color-box.orange {
