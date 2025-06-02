@@ -7,8 +7,8 @@
   let A_slider = 5;
   $: A = A_slider * 1e13;
   let T = 300;
-  let T1 = 300;
-  let T2 = 400;
+  let T1 = 200;
+  let T2 = 500;
   let showMarker = true;
 
   let running = false;

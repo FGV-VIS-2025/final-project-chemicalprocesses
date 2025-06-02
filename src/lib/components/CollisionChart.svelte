@@ -6,9 +6,10 @@
   export let history2 = [];
 
   let svg;
-  const width = 500;
-  const height = 200;
-  const margin = { top: 20, right: 40, bottom: 40, left: 45 };
+  let container;
+  const width = 600;
+  const height = 250;
+  const margin = { top: 20, right: 40, bottom: 40, left: 40 };
 
   const fixedTimeLimit = 30;
   const fixedCountLimit = 70;
@@ -22,18 +23,11 @@
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
-    const xScale = d3.scaleLinear()
-      .domain([0, fixedTimeLimit])
-      .range([0, innerWidth]);
+    const xScale = d3.scaleLinear().domain([0, fixedTimeLimit]).range([0, innerWidth]);
+    const yScale = d3.scaleLinear().domain([0, fixedCountLimit]).range([innerHeight, 0]);
 
-    const yScale = d3.scaleLinear()
-      .domain([0, fixedCountLimit])
-      .range([innerHeight, 0]);
+    const g = svgEl.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
-    const g = svgEl.append('g')
-      .attr('transform', `translate(${margin.left},${margin.top})`);
-
-    // Eixos
     g.append('g')
       .attr('transform', `translate(0,${innerHeight})`)
       .call(d3.axisBottom(xScale).ticks(6));
@@ -41,30 +35,26 @@
     g.append('g')
       .call(d3.axisLeft(yScale).ticks(5));
 
-    const line = d3.line()
-      .x(d => xScale(d.time))
-      .y(d => yScale(d.count));
+    const line1 = d3.line().x(d => xScale(d.time)).y(d => yScale(d.count));
+    const line2 = d3.line().x(d => xScale(d.time)).y(d => yScale(d.count));
 
-    // Linha para T₁ (azul)
     g.append('path')
-      .datum(history1.filter(d => d.time <= fixedTimeLimit))
+      .datum(history1)
       .attr('fill', 'none')
-      .attr('stroke', 'steelblue')
+      .attr('stroke', '#5dade2')
       .attr('stroke-width', 2)
-      .attr('d', line);
+      .attr('d', line1);
 
-    // Linha para T₂ (vermelha)
     g.append('path')
-      .datum(history2.filter(d => d.time <= fixedTimeLimit))
+      .datum(history2)
       .attr('fill', 'none')
-      .attr('stroke', 'tomato')
+      .attr('stroke', '#e74c3c')
       .attr('stroke-width', 2)
-      .attr('d', line);
+      .attr('d', line2);
 
-    // Rótulos dos eixos
     g.append('text')
       .attr('x', innerWidth / 2)
-      .attr('y', innerHeight + 30)
+      .attr('y', innerHeight + 35)
       .attr('text-anchor', 'middle')
       .attr('fill', '#333')
       .text('Time (s)');
@@ -77,41 +67,89 @@
       .attr('fill', '#333')
       .text('Collisions');
 
-    // Legenda
-    g.append('circle')
-      .attr('cx', innerWidth - 110)
-      .attr('cy', -5)
-      .attr('r', 5)
-      .attr('fill', 'steelblue');
-    g.append('text')
-      .attr('x', innerWidth - 100)
-      .attr('y', -2)
-      .text('T₁')
-      .attr('font-size', '12px')
-      .attr('fill', '#333');
+    const tooltip = d3.select(container)
+      .append('div')
+      .attr('class', 'tooltip')
+      .style('position', 'absolute')
+      .style('pointer-events', 'none')
+      .style('background', 'rgba(0,0,0,0.85)')
+      .style('color', 'white')
+      .style('padding', '6px 8px')
+      .style('border-radius', '4px')
+      .style('font-size', '13px')
+      .style('display', 'none');
 
-    g.append('circle')
-      .attr('cx', innerWidth - 60)
-      .attr('cy', -5)
+    const pointMarker = g.append('circle')
       .attr('r', 5)
-      .attr('fill', 'tomato');
-    g.append('text')
-      .attr('x', innerWidth - 50)
-      .attr('y', -2)
-      .text('T₂')
-      .attr('font-size', '12px')
-      .attr('fill', '#333');
+      .attr('fill', 'black')
+      .style('display', 'none');
+
+    g.append('rect')
+      .attr('width', innerWidth)
+      .attr('height', innerHeight)
+      .attr('fill', 'none')
+      .attr('pointer-events', 'all')
+      .on('mousemove', function (event) {
+        const [x] = d3.pointer(event);
+        const time = xScale.invert(x);
+
+        let point1 = history1.reduce((a, b) =>
+          Math.abs(b.time - time) < Math.abs(a.time - time) ? b : a, history1[0]);
+        let point2 = history2.reduce((a, b) =>
+          Math.abs(b.time - time) < Math.abs(a.time - time) ? b : a, history2[0]);
+
+        if (Math.abs(point1.time - time) > 0.5) point1 = null;
+        if (Math.abs(point2.time - time) > 0.5) point2 = null;
+
+        const focusPoint = point1 || point2;
+
+        if (focusPoint) {
+          pointMarker
+            .attr('cx', xScale(focusPoint.time))
+            .attr('cy', yScale(focusPoint.count))
+            .style('display', 'block');
+        } else {
+          pointMarker.style('display', 'none');
+        }
+
+        let text = '';
+        if (point1) text += `<div style="color:#5dade2">T₁: ${point1.count} at ${point1.time.toFixed(1)}s</div>`;
+        if (point2) text += `<div style="color:#e74c3c">T₂: ${point2.count} at ${point2.time.toFixed(1)}s</div>`;
+
+        tooltip.html(text).style('display', text ? 'block' : 'none');
+
+        const offsetX = xScale(focusPoint?.time);
+        const offsetY = yScale(focusPoint?.count);
+
+        tooltip
+          .style('left', `${offsetX + margin.left - 30}px`)
+          .style('top', `${offsetY + margin.top - 40}px`);
+      })
+      .on('mouseleave', () => {
+        tooltip.style('display', 'none');
+        pointMarker.style('display', 'none');
+      });
   }
 
-  afterUpdate(drawChart);
   onMount(drawChart);
+  afterUpdate(drawChart);
 </script>
 
-<svg bind:this={svg} width={width} height={height}></svg>
+<div bind:this={container} class="chart-wrapper">
+  <svg bind:this={svg} width={width} height={height}></svg>
+</div>
 
 <style>
+  .chart-wrapper {
+    position: relative;
+  }
+
   svg {
     border: 1px solid #ccc;
     background-color: #fafafa;
+  }
+
+  .tooltip {
+    z-index: 10;
   }
 </style>
