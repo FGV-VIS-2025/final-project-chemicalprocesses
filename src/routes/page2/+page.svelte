@@ -3,6 +3,7 @@
   import ParticleAnimation from '$lib/components/ParticleAnimation.svelte';
   import CollisionChart from '$lib/components/CollisionChart.svelte';
   import { page } from '$app/stores';
+  import { base } from '$app/paths';
 
   let currentPage = $page.url.pathname; 
   let Ea = 50;
@@ -37,14 +38,15 @@
 </svelte:head>
 
 <nav class="main-nav">
-  <a href="/" class={currentPage === '/' ? 'active' : ''}>Home</a>
-  <a href="/page0" class={currentPage === '/page0' ? 'active' : ''}>Introduction</a>
-  <a href="/page1" class={currentPage === '/page1' ? 'active' : ''}>Reaction Orders</a>
-  <a href="/page2" class={currentPage === '/page2' ? 'active' : ''}>Activation Energy</a>
-  <a href="/page3" class={currentPage === '/page3' ? 'active' : ''}>Simulation</a>
-  <a href="/page4" class={currentPage === '/page4' ? 'active' : ''}>Catalyst Effect</a>
-  <a href="/page5" class={currentPage === '/page5' ? 'active' : ''}>Radioactivity</a>
+  <a href="{base}/" class={currentPage === `${base}/` ? 'active' : ''}>Home</a>
+  <a href="{base}/page0" class={currentPage === `${base}/page0` ? 'active' : ''}>Introduction</a>
+  <a href="{base}/page1" class={currentPage === `${base}/page1` ? 'active' : ''}>Reaction Orders</a>
+  <a href="{base}/page2" class={currentPage === `${base}/page2` ? 'active' : ''}>Activation Energy</a>
+  <a href="{base}/page3" class={currentPage === `${base}/page3` ? 'active' : ''}>Simulation</a>
+  <a href="{base}/page4" class={currentPage === `${base}/page4` ? 'active' : ''}>Catalyst Effect</a>
+  <a href="{base}/page5" class={currentPage === `${base}/page5` ? 'active' : ''}>Radioactivity</a>
 </nav>
+
 
 <main class="page" id="page2">
   <h1>
