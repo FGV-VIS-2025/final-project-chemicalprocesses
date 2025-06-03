@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="./favicon.png" />
+		<meta name="viewport" content="width=device-width" />
+		
+		<link rel="modulepreload" href="./_app/immutable/entry/start.b97412fb.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/scheduler.9ab3a914.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/singletons.14603120.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.b814e035.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index.44647d34.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/0.9d1704dc.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/3.28c5e641.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/globals.7f7f1b26.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/transform.ac05f830.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/stores.ff3a8835.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/range.6bc2a9a0.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/line.9d9e981b.js"><title>Page 0 - Summary</title><!-- HEAD_svelte-19nn5rp_START --><!-- HEAD_svelte-19nn5rp_END -->
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">   <nav class="main-nav"><a href="/" class="">Home</a> <a href="/page0" class="active">Introduction</a> <a href="/page1" class="">Reaction Orders</a> <a href="/page2" class="">Activation Energy</a> <a href="/page3" class="">Simulation</a> <a href="/page4" class="">Catalyst Effect</a> <a href="/page5" class="">Radioactivity</a></nav> <div class="page" id="page0" data-svelte-h="svelte-1l7hcj8"><h1><span class="chem-icon">⚗️</span> Chemical Kinetics Visualizer</h1> <div id="container2"></div> <p><strong>Chemical kinetics</strong> is the branch of chemistry that studies the speed or rate of chemical reactions and how various factors,
+  like reactant concentration, temperature, and the presence of catalysts, influence this rate. 
+  This knowledge is vital for optimizing chemical processes in a variety of applications, ranging from industrial production to biological systems.</p> <div id="container3" style="margin-bottom: 40px;"></div> <p>The graph illustrates how the concentrations of a reactant (<strong>Reagent A</strong>) and a product (<strong>Product B</strong>) change over time during a chemical reaction.</p> <p>The <span style="color: red;"><strong>red curve</strong></span> represents <strong>Reagent A</strong>, whose concentration decreases exponentially as the reaction proceeds. This indicates that Reagent A is being consumed over time.</p> <p>The <span style="color: #1f77b4;"><strong>blue curve</strong></span> shows <strong>Product B</strong>, whose concentration increases as Reagent A is converted into the product.</p> <p>The two curves intersect at around <strong>time = 4.5 units</strong>, suggesting the point where the concentrations of the reactant and product are equal.</p> <p>The <strong>y-axis</strong> represents <strong>concentration</strong>, and the <strong>x-axis</strong> represents <strong>time</strong>.</p> <p>Both axes are labeled in bold, with “<strong>CONCENTRATION</strong>” and “<strong>TIME</strong>” clearly indicated.</p> <p>This is a typical kinetic profile of a <strong>first-order or pseudo-first-order reaction</strong>, where one reactant is converted into one product over time.</p> <h1>Order of Reaction</h1> <p>A fundamental concept in kinetics is the <strong>rate law</strong>, which defines how the rate of a reaction is related to the concentrations of the reactants.
+    The rate law varies based on the order of the reaction, which is determined experimentally. Below are explanations for the most common types of reaction orders:</p> <ul><li><strong>First-order reactions:</strong> In a first-order reaction, the rate is directly proportional to the concentration of one reactant.
+      For example, for the reaction <em>A → B</em>, the rate law is: <code>rate = k[A]</code>.
+      Here, doubling the concentration of A will double the reaction rate.</li> <li><strong>Second-order reactions:</strong> In a second-order reaction, the rate is proportional to the square of the concentration of the reactant,
+      or to the product of the concentrations of two reactants. For example, <em>2A → B</em> would have the rate law:
+      <code>rate = k[A]<sup>2</sup></code>. If the concentration of A is doubled, the rate increases by a factor of four.</li> <li><strong>Third-order reactions:</strong> In a third-order reaction, the rate depends on the concentration of a reactant raised to the third power
+      or a combination of three reactants. For example, the rate law for a reaction involving three molecules of A might be:
+      <code>rate = k[A]<sup>3</sup></code>. If the concentration of A is doubled, the rate increases by a factor of eight.</li></ul> <p>The rate constant, <code>k</code>, is unique to each reaction and depends on factors such as temperature and the presence of a catalyst.</p> <h2>Catalysis</h2> <p><strong>Catalysts</strong> are substances that accelerate chemical reactions without being consumed. They work by offering an alternative reaction pathway with a lower activation energy, making the reaction occur more easily.</p> <p>This interactive tool allows you to explore these principles visually and intuitively:</p> <ul><li><strong>Kinetics:</strong> Adjust reactant concentrations and rate constants to observe how the reaction rate changes over time.</li> <li><strong>Activation Energy:</strong> Visualize the Arrhenius equation and see how changes in temperature affect the reaction rate.</li> <li><strong>Catalyst Effect:</strong> Compare reaction profiles with and without a catalyst to understand its impact.</li></ul> <p>Dive into this interactive project to gain a deeper understanding of chemical reactions and the factors that govern them!</p> </div> 
+			
+			<script>
+				{
+					__sveltekit_g1wkd6 = {
+						base: new URL(".", location).pathname.slice(0, -1),
+						env: {}
+					};
+
+					const element = document.currentScript.parentElement;
+
+					const data = [null,null];
+
+					Promise.all([
+						import("./_app/immutable/entry/start.b97412fb.js"),
+						import("./_app/immutable/entry/app.b814e035.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 3],
+							data,
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="./favicon.png" />
+		<meta name="viewport" content="width=device-width" />
+		
+		<link href="./_app/immutable/assets/6.41aa364a.css" rel="stylesheet">
+		<link rel="modulepreload" href="./_app/immutable/entry/start.b97412fb.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/scheduler.9ab3a914.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/singletons.14603120.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.b814e035.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index.44647d34.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/0.9d1704dc.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/6.9fdc1a90.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/globals.7f7f1b26.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/each.98612a0c.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/transform.ac05f830.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/stores.ff3a8835.js"><title>Page 3 - Simulation</title><!-- HEAD_svelte-1y2y19x_START --><!-- HEAD_svelte-1y2y19x_END -->
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">   <nav class="main-nav svelte-1m5jorj"><a href="/" class=" svelte-1m5jorj">Home</a> <a href="/page0" class=" svelte-1m5jorj">Introduction</a> <a href="/page1" class=" svelte-1m5jorj">Reaction Orders</a> <a href="/page2" class=" svelte-1m5jorj">Activation Energy</a> <a href="/page3" class="active svelte-1m5jorj">Simulation</a> <a href="/page4" class=" svelte-1m5jorj">Catalyst Effect</a> <a href="/page5" class=" svelte-1m5jorj">Radioactivity</a></nav> <main class="page svelte-1m5jorj" id="page5"><h1 class="svelte-1m5jorj" data-svelte-h="svelte-1aj030b"><span class="chem-icon svelte-1m5jorj">☢️</span> Interactive Radioactive Decay Simulator</h1> <div class="controls svelte-1m5jorj"><div id="chat" class="svelte-1m5jorj"></div> <div id="options"></div></div> <div id="animacao" class="chart-container svelte-1m5jorj" style="width: 900px; height: 600px;"></div>   <div class="series-section svelte-1m5jorj"><h2 data-svelte-h="svelte-1666bjx">Natural Radioactive Decay Series</h2> <p data-svelte-h="svelte-19puix3">These are chains of unstable isotopes that decay through alpha (α) and beta (β) emissions 
+      until reaching a stable lead (Pb) isotope. They occur in nature and are key to understanding 
+      nuclear chemistry and geology.</p> <div class="series-controls svelte-1m5jorj"><select class="svelte-1m5jorj"><option value="Uranium-238 (→ Pb-206)">Uranium-238 (→ Pb-206)</option><option value="Thorium-232 (→ Pb-208)">Thorium-232 (→ Pb-208)</option><option value="Uranium-235 (→ Pb-207)">Uranium-235 (→ Pb-207)</option></select> <div class="animation-controls svelte-1m5jorj"><button disabled class="svelte-1m5jorj">⏪ Previous</button> <button class="svelte-1m5jorj">▶ Play</button> <button  class="svelte-1m5jorj">⏩ Next</button> <button class="svelte-1m5jorj" data-svelte-h="svelte-3homa5">🔄 Restart</button></div></div> <div class="series-animation svelte-1m5jorj"><div class="atom svelte-1m5jorj"><span class="symbol svelte-1m5jorj">²³⁸U</span> <span class="name svelte-1m5jorj">Uranium-238</span>  </div></div>   <div class="decay-path svelte-1m5jorj"><h3 data-svelte-h="svelte-p5bfrz">Decay Path Details:</h3> <table class="svelte-1m5jorj"><thead data-svelte-h="svelte-18kfevd"><tr class="svelte-1m5jorj"><th class="svelte-1m5jorj">Isotope</th> <th class="svelte-1m5jorj">Decay</th> <th class="svelte-1m5jorj">Half-life</th></tr></thead> <tbody><tr class="svelte-1m5jorj"><td class="svelte-1m5jorj"><strong>²³⁸U</strong><br> Uranium-238</td> <td class="stable svelte-1m5jorj">Stable</td> <td class="svelte-1m5jorj">4.5 billion years</td> </tr></tbody></table></div></div></main> 
+			
+			<script>
+				{
+					__sveltekit_g1wkd6 = {
+						base: new URL(".", location).pathname.slice(0, -1),
+						env: {}
+					};
+
+					const element = document.currentScript.parentElement;
+
+					const data = [null,null];
+
+					Promise.all([
+						import("./_app/immutable/entry/start.b97412fb.js"),
+						import("./_app/immutable/entry/app.b814e035.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 6],
+							data,
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+	</body>
+</html>

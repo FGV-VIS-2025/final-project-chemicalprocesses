@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="./favicon.png" />
+		<meta name="viewport" content="width=device-width" />
+		
+		<link href="./_app/immutable/assets/5.ea8cbdbc.css" rel="stylesheet">
+		<link rel="modulepreload" href="./_app/immutable/entry/start.b97412fb.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/scheduler.9ab3a914.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/singletons.14603120.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.b814e035.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index.44647d34.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/0.9d1704dc.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/5.0279cb9b.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/transform.ac05f830.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/line.9d9e981b.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/range.6bc2a9a0.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/extent.4cf1c809.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/max.adfc8a60.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/stores.ff3a8835.js"><title>Activation Energy</title><!-- HEAD_svelte-dgi391_START --><!-- HEAD_svelte-dgi391_END -->
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">   <nav class="main-nav svelte-1i6ztk5"><a href="/" class=" svelte-1i6ztk5">Home</a> <a href="/page0" class=" svelte-1i6ztk5">Introduction</a> <a href="/page1" class=" svelte-1i6ztk5">Reaction Orders</a> <a href="/page2" class="active svelte-1i6ztk5">Activation Energy</a> <a href="/page3" class=" svelte-1i6ztk5">Simulation</a> <a href="/page4" class=" svelte-1i6ztk5">Catalyst Effect</a> <a href="/page5" class=" svelte-1i6ztk5">Radioactivity</a></nav> <main class="page svelte-1i6ztk5" id="page2"><h1 class="svelte-1i6ztk5" data-svelte-h="svelte-u657bx"><span class="chem-icon">⚗️</span> Activation Energy</h1> <p data-svelte-h="svelte-t0mtyk">This page illustrates the concept of <strong>activation energy</strong> using the Arrhenius equation
+  and dynamic simulations. You can explore how temperature affects the likelihood of particles gaining
+  enough energy to react.</p> <div class="controls svelte-1i6ztk5"><label class="svelte-1i6ztk5"><span data-svelte-h="svelte-hqm23x">Activation Energy (Ea):</span> <input type="range" min="20" max="100" class="svelte-1i6ztk5" value="50"> <span>50 kJ/mol</span></label> <label class="svelte-1i6ztk5"><span data-svelte-h="svelte-pzwekw">Pre-exponential Factor (A):</span> <input type="range" min="1" max="10" step="0.1" class="svelte-1i6ztk5" value="5"> <span>5.0 × 10<sup data-svelte-h="svelte-1krzimc">13</sup> s<sup data-svelte-h="svelte-t4akky">-1</sup></span></label> <label class="svelte-1i6ztk5"><span data-svelte-h="svelte-11wpfd">Temperature for Arrhenius Chart (T):</span> <input type="range" min="200" max="500" class="svelte-1i6ztk5" value="300"> <span>300 K</span></label></div> <p data-svelte-h="svelte-1p6nu3h">The chart below shows the <strong>Arrhenius equation</strong>, which models the rate constant k
+  as a function of temperature and activation energy. The marker highlights the current value of k
+  for the selected temperature T.</p> <div class="chart-container svelte-1i6ztk5"> <button style="margin-bottom: 10px">Toggle X Axis (Currently: 1/T)</button> <svg width="100%" height="400" class="svelte-f7kad4"></svg></div> <div class="content-section"><h2 data-svelte-h="svelte-1be9n84">Particle Animation &amp; Collision Graph</h2> <p data-svelte-h="svelte-o28in1">The following animations simulate particles at two different temperatures. Each particle has a chance
+  to overcome the activation energy barrier and become &quot;activated&quot;. You can adjust T_1 and T_2
+  to observe how increasing temperature affects activation.</p> <div class="controls svelte-1i6ztk5"><label class="svelte-1i6ztk5"><span data-svelte-h="svelte-ix3u79">Temperature T₁:</span> <input type="range" min="200" max="500" class="svelte-1i6ztk5" value="200"> <span>200 K</span></label> <label class="svelte-1i6ztk5"><span data-svelte-h="svelte-116wyb0">Temperature T₂:</span> <input type="range" min="200" max="500" class="svelte-1i6ztk5" value="500"> <span>500 K</span></label> <div class="animation-controls svelte-1i6ztk5"><button class="action-btn svelte-1i6ztk5">Start/Resume Animation</button> <button class="action-btn svelte-1i6ztk5" data-svelte-h="svelte-ujp2i6">Restart Simulation</button></div></div> <div class="side-by-side svelte-1i6ztk5" style="margin-top: -1rem"><div class="sim-header svelte-1i6ztk5"><h4>Simulation T₁ = 200 K</h4> <div class="color-legend svelte-1i6ztk5" data-svelte-h="svelte-1nv14i1"><div><span class="color-box blue svelte-1i6ztk5"></span> Not yet activated</div> <div><span class="color-box orange svelte-1i6ztk5"></span> Activated</div></div> <svg class="svelte-1bj2ny0"></svg></div> <div><div class="sim-header svelte-1i6ztk5"><h4>Simulation T₂ = 500 K</h4> <div class="color-legend svelte-1i6ztk5" data-svelte-h="svelte-1nv14i1"><div><span class="color-box blue svelte-1i6ztk5"></span> Not yet activated</div> <div><span class="color-box orange svelte-1i6ztk5"></span> Activated</div></div> <svg class="svelte-1bj2ny0"></svg></div></div></div> <p data-svelte-h="svelte-m76wje">The graph below compares the number of activated collisions over time for both simulations. You can
+  hover over the lines to inspect the number of collisions at each moment.</p> <div style="margin-top: 3rem; display: flex; justify-content: center;"><div class="chart-wrapper svelte-1vxc2fe"><svg width="600" height="250" class="svelte-1vxc2fe"></svg> <div class="tooltip svelte-1vxc2fe"></div> </div></div></div> </main> 
+			
+			<script>
+				{
+					__sveltekit_g1wkd6 = {
+						base: new URL(".", location).pathname.slice(0, -1),
+						env: {}
+					};
+
+					const element = document.currentScript.parentElement;
+
+					const data = [null,null];
+
+					Promise.all([
+						import("./_app/immutable/entry/start.b97412fb.js"),
+						import("./_app/immutable/entry/app.b814e035.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 5],
+							data,
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+	</body>
+</html>
