@@ -71,20 +71,27 @@
   });
 
   $: if (n0 && lambda) generateParticles();
+
+  $: totalParticleWidth = (particlesPerRow - 1) * spacing;
+  $: offsetX = (svgWidth - totalParticleWidth) / 2 - padding;
+  $: totalParticleHeight = (Math.ceil(n0 / particlesPerRow) - 1) * spacing;
+  $: offsetY = (svgHeight - totalParticleHeight) / 2 - padding;
+
+
 </script>
 
 <svg
   viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-  style="width: 100%; height: auto; max-width: 100%; background-color: #424242;"
+  style="width: 100%; height: auto; max-width: 100%; background-color: #eeeeee; border: 2px solid black;"
   preserveAspectRatio="xMidYMin meet"
 >
   {#each particles as p, i (p.decayTime)}
     <circle
-      cx={padding + (i % particlesPerRow) * spacing}
-      cy={padding + Math.floor(i / particlesPerRow) * spacing}
+      cx={padding + offsetX + (i % particlesPerRow) * spacing}
+      cy={padding + offsetY + Math.floor(i / particlesPerRow) * spacing}
       r={radius}
-      fill={p.active ? "darkgreen" : "lightgreen"}
-      opacity={p.active ? 1 : 0.3}
+      fill={p.active ? "#4169E1" : "#8B0000"}
+
     >
       <title>Decay in: {p.decayTime.toFixed(1)}s</title>
     </circle>
@@ -93,10 +100,10 @@
 <!-- Legenda -->
 <div style="font-size: 0.85rem; margin-top: 0.4rem; font-weight: bold;">
   <p>
-    <span style="display: inline-block; width: 12px; height: 12px; background: darkgreen; border-radius: 50%;"></span>
+    <span style="display: inline-block; width: 12px; height: 12px; background: #4169E1; border-radius: 50%;"></span>
     &nbsp; Active particle
     &nbsp;&nbsp;
-    <span style="display: inline-block; width: 12px; height: 12px; background: lightgreen; border-radius: 50%; opacity: 0.3;"></span>
+    <span style="display: inline-block; width: 12px; height: 12px; background: #8B0000; border-radius: 50%;"></span>
     &nbsp; Decayed particle
   </p>
 </div>

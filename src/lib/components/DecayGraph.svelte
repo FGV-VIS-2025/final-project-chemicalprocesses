@@ -9,9 +9,9 @@
   let svgEl;
   const tMax = 120;
 
-  const width = 600;
-  const height = 300;
-  const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+  const width = 450;
+  const height = 250;
+  const margin = { top: 10, right: 50, bottom: 30, left: 40 };
 
   const xScale = d3.scaleLinear().domain([0, tMax]).range([margin.left, width - margin.right]);
   $: yScale = d3.scaleLinear().domain([0, n0]).range([height - margin.bottom, margin.top]);
@@ -41,20 +41,20 @@
     svg.append('path')
       .attr('class', 'past-line')
       .attr('fill', 'none')
-      .attr('stroke', 'lightgreen')
+      .attr('stroke', '#8B0000')
       .attr('stroke-width', 2);
 
     svg.append('path')
       .attr('class', 'future-line')
       .attr('fill', 'none')
-      .attr('stroke', 'darkgreen')
+      .attr('stroke', '#4169E1')
       .attr('stroke-width', 2);
 
     // Ponto animado
     svg.append('circle')
       .attr('class', 'moving-point')
       .attr('r', 5)
-      .attr('fill', 'green')
+      .attr('fill', '#8B0000')
       .attr('stroke', 'black');
 
     // Tooltip flutuante (inicialmente oculta)
@@ -118,16 +118,37 @@
         <strong>t:</strong> ${currentPoint.t.toFixed(1)}s<br/>
         <strong>N(t):</strong> ${currentPoint.N.toFixed(0)}
       `);
+          // Eixo X - legenda
+    svg.append('text')
+      .attr('text-anchor', 'middle')
+      .attr('x', width / 2)
+      .attr('y', height - 5)
+      .text('Time (s)')
+      .style('font-weight', 'bold')
+      .style('font-size', '11px')
+      .style('fill', '#333');
+
+    // Eixo Y - legenda
+    svg.append('text')
+      .attr('text-anchor', 'middle')
+      .attr('transform', `rotate(-90)`)
+      .attr('x', -height / 2)
+      .attr('y', 12)
+      .text('Particles')
+      .style('font-weight', 'bold')
+      .style('font-size', '11px')
+      .style('fill', '#333');
+
   }
 </script>
 
-<svg bind:this={svgEl} width={width} height={height} style="border: 2px solid red; background-color: #424242;" />
+<svg bind:this={svgEl} width={width} height={height} style="border: 2px solid black; background-color: #eeeeee;" />
 
 <!-- Legenda -->
 <div style="font-size: 0.85rem; margin-top: 0.4rem; font-weight: bold;">
   <p>
-    <span style="color: darkgreen;">━</span> Particle already decayed &nbsp;&nbsp;
-    <span style="color: lightgreen;">━</span> Remaining particles &nbsp;&nbsp;
-    <span style="display: inline-block; width: 10px; height: 10px; background: green; border-radius: 50%;"></span> Time
+    <span style="color: #4169E1;">━</span> Remaining particles &nbsp;&nbsp;
+    <span style="color: #8B0000;">━</span> Particles already decayed &nbsp;&nbsp;
+    <span style="display: inline-block; width: 10px; height: 10px; background: #8B0000; border-radius: 50%;"></span> Time
   </p>
 </div>
