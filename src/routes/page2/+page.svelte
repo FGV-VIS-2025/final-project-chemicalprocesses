@@ -124,6 +124,16 @@
       </div>
     </div>
 
+    <p>
+
+  The particles are initialized with random positions and velocities, and they collide with each other.
+  When a particle's energy exceeds the activation energy (Ea), it is marked as "activated" and changes color.
+  In the animations below, the particles do not follow straight paths. Instead, they move in a random, jittery way, simulating
+  what is known as <strong>Brownian motion</strong>. This phenomenon occurs when small particles are constantly bombarded by
+  molecules in a fluid, causing erratic movement. It helps illustrate how thermal energy translates into microscopic motion,
+  and how higher temperatures increase the chances of particles overcoming the activation barrier.
+</p>
+
     <div class="side-by-side" style="margin-top: -1rem">
       
   <div class="sim-header">
