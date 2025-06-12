@@ -14,7 +14,7 @@
 
 <section class="visualization">
   <h2>3. Examples of catalysis</h2>
-  <svg id="reactionRateChart" width="800" height="800" bind:this={svgRef}></svg>
+  <svg id="reactionRateChart" width="800" height="1500" bind:this={svgRef}></svg>
   
   {#if showExplanation}
     <div class="explanation">
