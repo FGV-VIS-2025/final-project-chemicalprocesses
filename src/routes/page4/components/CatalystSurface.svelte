@@ -11,7 +11,7 @@
 
 <section class="visualization">
   <h2>2. Catalyst Surface Mechanism</h2>
-  <svg id="catalystSurface" width="800" height="300" bind:this={svgRef}></svg>
+  <svg id="catalystSurface" width="800" height="400" bind:this={svgRef}></svg>
   <div class="explanation">
     <p>
       Heterogeneous catalysts provide a surface with active sites where reactant molecules can adsorb, 
