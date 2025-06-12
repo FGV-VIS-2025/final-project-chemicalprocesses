@@ -6,7 +6,7 @@ export function drawEnergyProfile(svgRef) {
 
   const width = +svg.attr("width"),
         height = +svg.attr("height");
-  const margin = { top: 60, right: 40, bottom: 60, left: 80 };
+  const margin = { top: 60, right: 40, bottom: 60, left: 110 };
   const plotWidth = width - margin.left - margin.right;
   const plotHeight = height - margin.top - margin.bottom;
 
@@ -56,7 +56,7 @@ export function drawEnergyProfile(svgRef) {
     .attr("text-anchor", "middle")
     .attr("transform", "rotate(-90)")
     .attr("x", -plotHeight / 2)
-    .attr("y", -60)
+    .attr("y", -90)
     .text("Potential Energy (kJ/mol)")
     .style("font-size", "16px");
 
@@ -73,7 +73,6 @@ export function drawEnergyProfile(svgRef) {
     .y(d => y(d.y))
     .curve(d3.curveBasis);
 
-  // Linhas principais
   const uncatalyzedPath = g.append("path")
     .datum(uncatalyzed)
     .attr("fill", "none")
@@ -88,67 +87,6 @@ export function drawEnergyProfile(svgRef) {
     .attr("stroke-width", 4)
     .attr("stroke-dasharray", "5,4")
     .attr("d", line);
-
-  // Animação das linhas
-  [uncatalyzedPath, catalyzedPath].forEach((path, i) => {
-    const totalLength = path.node().getTotalLength();
-    path
-      .attr("stroke-dasharray", totalLength + " " + totalLength)
-      .attr("stroke-dashoffset", totalLength)
-      .transition()
-      .duration(2000)
-      .delay(i * 1000)
-      .ease(d3.easeCubic)
-      .attr("stroke-dashoffset", 0);
-  });
-
-  // ΔEa após animação
-  setTimeout(() => {
-    g.append("line")
-      .attr("x1", x(1))
-      .attr("y1", y(uncatalyzed[1].y))
-      .attr("x2", x(1))
-      .attr("y2", y(catalyzed[3].y))
-      .attr("stroke", "#333")
-      .attr("stroke-dasharray", "4,3");
-
-    g.append("text")
-      .attr("x", x(1) + 8)
-      .attr("y", y((uncatalyzed[1].y + catalyzed[3].y) / 2) - 5)
-      .text("ΔEa")
-      .style("font-size", "15px")
-      .style("font-weight", "bold");
-  }, 2500);
-
-  // Pontos e valores (evitar sobreposição)
-  setTimeout(() => {
-    uncatalyzed.forEach((point, i) => {
-      g.append("circle")
-        .attr("cx", x(point.x))
-        .attr("cy", y(point.y))
-        .attr("r", 5)
-        .attr("fill", "#e41a1c");
-
-      g.append("text")
-        .attr("x", x(point.x) + (i === 1 ? -40 : 10))
-        .attr("y", y(point.y) - 12)
-        .text(`${point.y} kJ/mol`)
-        .style("font-size", "13px");
-    });
-
-    const catPeak = catalyzed[3];
-    g.append("circle")
-      .attr("cx", x(catPeak.x))
-      .attr("cy", y(catPeak.y))
-      .attr("r", 5)
-      .attr("fill", "#377eb8");
-
-    g.append("text")
-      .attr("x", x(catPeak.x) - 40)
-      .attr("y", y(catPeak.y) - 12)
-      .text(`${catPeak.y} kJ/mol`)
-      .style("font-size", "13px");
-  }, 2700);
 
   // Legenda
   const legend = svg.append("g")
@@ -174,4 +112,95 @@ export function drawEnergyProfile(svgRef) {
     .attr("x", 35).attr("y", 30)
     .text("Catalyzed")
     .style("font-size", "13px");
+
+  // Controle de animação
+  let isPlaying = false;
+  let animationInProgress = false;
+
+  const playPauseBtn = document.getElementById("playPauseBtn");
+  if (playPauseBtn) {
+    playPauseBtn.addEventListener("click", () => {
+      if (animationInProgress) return;
+
+      isPlaying = !isPlaying;
+      playPauseBtn.textContent = isPlaying ? "Pause" : "Play";
+
+      if (isPlaying) {
+        startAnimation();
+      }
+    });
+  }
+
+  function startAnimation() {
+    animationInProgress = true;
+    g.selectAll(".dynamic").remove();
+
+    [uncatalyzedPath, catalyzedPath].forEach((path, i) => {
+      const totalLength = path.node().getTotalLength();
+      path
+        .attr("stroke-dasharray", totalLength + " " + totalLength)
+        .attr("stroke-dashoffset", totalLength)
+        .transition()
+        .duration(2000)
+        .delay(i * 1000)
+        .ease(d3.easeCubic)
+        .attr("stroke-dashoffset", 0);
+    });
+
+    setTimeout(() => {
+      g.append("line")
+        .attr("class", "dynamic")
+        .attr("x1", x(1))
+        .attr("y1", y(uncatalyzed[1].y))
+        .attr("x2", x(1))
+        .attr("y2", y(catalyzed[3].y))
+        .attr("stroke", "#333")
+        .attr("stroke-dasharray", "4,3");
+
+      g.append("text")
+        .attr("class", "dynamic")
+        .attr("x", x(1) + 8)
+        .attr("y", y((uncatalyzed[1].y + catalyzed[3].y) / 2) - 5)
+        .text("ΔEa")
+        .style("font-size", "15px")
+        .style("font-weight", "bold");
+    }, 2500);
+
+    setTimeout(() => {
+      uncatalyzed.forEach((point, i) => {
+        g.append("circle")
+          .attr("class", "dynamic")
+          .attr("cx", x(point.x))
+          .attr("cy", y(point.y))
+          .attr("r", 5)
+          .attr("fill", "#e41a1c");
+
+        g.append("text")
+          .attr("class", "dynamic")
+          .attr("x", x(point.x) + (i === 1 ? -40 : 10))
+          .attr("y", y(point.y) - 12)
+          .text(`${point.y} kJ/mol`)
+          .style("font-size", "13px");
+      });
+
+      const catPeak = catalyzed[3];
+      g.append("circle")
+        .attr("class", "dynamic")
+        .attr("cx", x(catPeak.x))
+        .attr("cy", y(catPeak.y))
+        .attr("r", 5)
+        .attr("fill", "#377eb8");
+
+      g.append("text")
+        .attr("class", "dynamic")
+        .attr("x", x(catPeak.x) - 40)
+        .attr("y", y(catPeak.y) - 12)
+        .text(`${catPeak.y} kJ/mol`)
+        .style("font-size", "13px");
+
+      animationInProgress = false;
+      isPlaying = false;
+      if (playPauseBtn) playPauseBtn.textContent = "Play";
+    }, 2700);
+  }
 }
