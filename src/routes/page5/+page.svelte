@@ -254,12 +254,12 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     border-radius: 12px;
     position: relative;
-    font-family: 'Inter', sans-serif;
+    font-family: sans-serif;
     color: #333;
   }
 
   .page h1 {
-    font-family: Arial, sans-serif;
+    font-family: sans-serif;
     color: #003366;
     margin-bottom: 1.5rem;
     display: flex;
@@ -271,7 +271,7 @@
   }
 
   .theory-section {
-    font-family: Arial, sans-serif;
+    font-family: sans-serif;
     background: #f8fafc;
     padding: 1.5rem;
     border-radius: 8px;
@@ -298,7 +298,7 @@
     background: #f0f7ff;
     padding: 0.5rem 1rem;
     border-radius: 4px;
-    font-family: Arial, sans-serif;
+    font-family: sans-serif;
     font-weight: bold;
     margin: 0.8rem 0;
     display: inline-block;
@@ -362,7 +362,7 @@
   }
 
   .sim-button {
-    font-family: Arial, sans-serif;
+    font-family: sans-serif;
     background: #0077cc;
     color: white;
     border: none;
@@ -396,7 +396,7 @@
     border-collapse: collapse;
     margin: 1.5rem 0;
     font-size: 0.95rem;
-    font-family: Arial, sans-serif;
+    font-family: sans-serif;
   }
 
   .order-table th, .order-table td {

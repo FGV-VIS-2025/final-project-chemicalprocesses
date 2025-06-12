@@ -807,7 +807,7 @@ svg.append("text")
   
   .page {
     padding: 20px;
-    font-family: Arial, sans-serif;
+    font-family: sans-serif;
     max-width: 900px;
     margin: 0 auto;
   }
@@ -881,7 +881,7 @@ svg.append("text")
 }
 
 .explanation {
-  font-family: Arial, sans-serif;
+  font-family: sans-serif;
   fill: #333;
 }
 </style>

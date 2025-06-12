@@ -270,124 +270,124 @@ const seriesData = {
 
   // Dados básicos da tabela periódica (Z, símbolo, nome)
   const tabelaPeriodica = [
-    {Z:1, simbolo:"H", nome:"Hidrogênio"},
-    {Z:2, simbolo:"He", nome:"Hélio"},
-    {Z:3, simbolo:"Li", nome:"Lítio"},
-    {Z:4, simbolo:"Be", nome:"Berílio"},
-    {Z:5, simbolo:"B", nome:"Boro"},
-    {Z:6, simbolo:"C", nome:"Carbono"},
-    {Z:7, simbolo:"N", nome:"Nitrogênio"},
-    {Z:8, simbolo:"O", nome:"Oxigênio"},
-    {Z:9, simbolo:"F", nome:"Flúor"},
-    {Z:10, simbolo:"Ne", nome:"Neônio"},
-    {Z:11, simbolo:"Na", nome:"Sódio"},
-    {Z:12, simbolo:"Mg", nome:"Magnésio"},
-    {Z:13, simbolo:"Al", nome:"Alumínio"},
-    {Z:14, simbolo:"Si", nome:"Silício"},
-    {Z:15, simbolo:"P", nome:"Fósforo"},
-    {Z:16, simbolo:"S", nome:"Enxofre"},
-    {Z:17, simbolo:"Cl", nome:"Cloro"},
-    {Z:18, simbolo:"Ar", nome:"Argônio"},
-    {Z:19, simbolo:"K", nome:"Potássio"},
-    {Z:20, simbolo:"Ca", nome:"Cálcio"},
-    {Z:21, simbolo:"Sc", nome:"Escândio"},
-    {Z:22, simbolo:"Ti", nome:"Titânio"},
-    {Z:23, simbolo:"V", nome:"Vanádio"},
-    {Z:24, simbolo:"Cr", nome:"Cromo"},
-    {Z:25, simbolo:"Mn", nome:"Manganês"},
-    {Z:26, simbolo:"Fe", nome:"Ferro"},
-    {Z:27, simbolo:"Co", nome:"Cobalto"},
-    {Z:28, simbolo:"Ni", nome:"Níquel"},
-    {Z:29, simbolo:"Cu", nome:"Cobre"},
-    {Z:30, simbolo:"Zn", nome:"Zinco"},
-    {Z:31, simbolo:"Ga", nome:"Gálio"},
-    {Z:32, simbolo:"Ge", nome:"Germânio"},
-    {Z:33, simbolo:"As", nome:"Arsênio"},
-    {Z:34, simbolo:"Se", nome:"Selênio"},
-    {Z:35, simbolo:"Br", nome:"Bromo"},
-    {Z:36, simbolo:"Kr", nome:"Criptônio"},
-    {Z:37, simbolo:"Rb", nome:"Rubídio"},
-    {Z:38, simbolo:"Sr", nome:"Estrôncio"},
-    {Z:39, simbolo:"Y", nome:"Ítrio"},
-    {Z:40, simbolo:"Zr", nome:"Zircônio"},
-    {Z:41, simbolo:"Nb", nome:"Nióbio"},
-    {Z:42, simbolo:"Mo", nome:"Molibdênio"},
-    {Z:43, simbolo:"Tc", nome:"Tecnécio"},
-    {Z:44, simbolo:"Ru", nome:"Rutênio"},
-    {Z:45, simbolo:"Rh", nome:"Ródio"},
-    {Z:46, simbolo:"Pd", nome:"Paládio"},
-    {Z:47, simbolo:"Ag", nome:"Prata"},
-    {Z:48, simbolo:"Cd", nome:"Cádmio"},
-    {Z:49, simbolo:"In", nome:"Índio"},
-    {Z:50, simbolo:"Sn", nome:"Estanho"},
-    {Z:51, simbolo:"Sb", nome:"Antimônio"},
-    {Z:52, simbolo:"Te", nome:"Telúrio"},
-    {Z:53, simbolo:"I", nome:"Iodo"},
-    {Z:54, simbolo:"Xe", nome:"Xenônio"},
-    {Z:55, simbolo:"Cs", nome:"Césio"},
-    {Z:56, simbolo:"Ba", nome:"Bário"},
-    {Z:57, simbolo:"La", nome:"Lantânio"},
-    {Z:58, simbolo:"Ce", nome:"Cério"},
-    {Z:59, simbolo:"Pr", nome:"Praseodímio"},
-    {Z:60, simbolo:"Nd", nome:"Neodímio"},
-    {Z:61, simbolo:"Pm", nome:"Promécio"},
-    {Z:62, simbolo:"Sm", nome:"Samário"},
-    {Z:63, simbolo:"Eu", nome:"Európio"},
-    {Z:64, simbolo:"Gd", nome:"Gadolínio"},
-    {Z:65, simbolo:"Tb", nome:"Térbio"},
-    {Z:66, simbolo:"Dy", nome:"Disprósio"},
-    {Z:67, simbolo:"Ho", nome:"Hólmio"},
-    {Z:68, simbolo:"Er", nome:"Érbio"},
-    {Z:69, simbolo:"Tm", nome:"Túlio"},
-    {Z:70, simbolo:"Yb", nome:"Itérbio"},
-    {Z:71, simbolo:"Lu", nome:"Lutécio"},
-    {Z:72, simbolo:"Hf", nome:"Háfnio"},
-    {Z:73, simbolo:"Ta", nome:"Tântalo"},
-    {Z:74, simbolo:"W", nome:"Tungstênio"},
-    {Z:75, simbolo:"Re", nome:"Rênio"},
-    {Z:76, simbolo:"Os", nome:"Ósmio"},
-    {Z:77, simbolo:"Ir", nome:"Irídio"},
-    {Z:78, simbolo:"Pt", nome:"Platina"},
-    {Z:79, simbolo:"Au", nome:"Ouro"},
-    {Z:80, simbolo:"Hg", nome:"Mercúrio"},
-    {Z:81, simbolo:"Tl", nome:"Tálio"},
-    {Z:82, simbolo:"Pb", nome:"Chumbo"},
-    {Z:83, simbolo:"Bi", nome:"Bismuto"},
-    {Z:84, simbolo:"Po", nome:"Polônio"},
-    {Z:85, simbolo:"At", nome:"Astato"},
-    {Z:86, simbolo:"Rn", nome:"Radônio"},
-    {Z:87, simbolo:"Fr", nome:"Frâncio"},
-    {Z:88, simbolo:"Ra", nome:"Rádio"},
-    {Z:89, simbolo:"Ac", nome:"Actínio"},
-    {Z:90, simbolo:"Th", nome:"Tório"},
-    {Z:91, simbolo:"Pa", nome:"Protactínio"},
-    {Z:92, simbolo:"U", nome:"Urânio"},
-    {Z:93, simbolo:"Np", nome:"Neptúnio"},
-    {Z:94, simbolo:"Pu", nome:"Plutônio"},
-    {Z:95, simbolo:"Am", nome:"Amerício"},
-    {Z:96, simbolo:"Cm", nome:"Cúrio"},
-    {Z:97, simbolo:"Bk", nome:"Berquélio"},
-    {Z:98, simbolo:"Cf", nome:"Califórnio"},
-    {Z:99, simbolo:"Es", nome:"Einstênio"},
-    {Z:100, simbolo:"Fm", nome:"Férmio"},
-    {Z:101, simbolo:"Md", nome:"Mendelévio"},
-    {Z:102, simbolo:"No", nome:"Nobélio"},
-    {Z:103, simbolo:"Lr", nome:"Laurêncio"},
-    {Z:104, simbolo:"Rf", nome:"Rutherfordônio"},
-    {Z:105, simbolo:"Db", nome:"Dúbnio"},
-    {Z:106, simbolo:"Sg", nome:"Seabórgio"},
-    {Z:107, simbolo:"Bh", nome:"Bóhrio"},
-    {Z:108, simbolo:"Hs", nome:"Hássio"},
-    {Z:109, simbolo:"Mt", nome:"Meitnério"},
-    {Z:110, simbolo:"Ds", nome:"Darmstádio"},
-    {Z:111, simbolo:"Rg", nome:"Roentgênio"},
-    {Z:112, simbolo:"Cn", nome:"Copernício"},
-    {Z:113, simbolo:"Nh", nome:"Nihônio"},
-    {Z:114, simbolo:"Fl", nome:"Fleróvio"},
-    {Z:115, simbolo:"Mc", nome:"Moscóvio"},
-    {Z:116, simbolo:"Lv", nome:"Livermório"},
-    {Z:117, simbolo:"Ts", nome:"Tenessino"},
-    {Z:118, simbolo:"Og", nome:"Oganessônio"}
+    {Z:1, symbol:"H", name:"Hydrogen"},
+    {Z:2, symbol:"He", name:"Helium"},
+    {Z:3, symbol:"Li", name:"Lithium"},
+    {Z:4, symbol:"Be", name:"Beryllium"},
+    {Z:5, symbol:"B", name:"Boron"},
+    {Z:6, symbol:"C", name:"Carbon"},
+    {Z:7, symbol:"N", name:"Nitrogen"},
+    {Z:8, symbol:"O", name:"Oxygen"},
+    {Z:9, symbol:"F", name:"Fluorine"},
+    {Z:10, symbol:"Ne", name:"Neon"},
+    {Z:11, symbol:"Na", name:"Sodium"},
+    {Z:12, symbol:"Mg", name:"Magnesium"},
+    {Z:13, symbol:"Al", name:"Aluminum"},
+    {Z:14, symbol:"Si", name:"Silicon"},
+    {Z:15, symbol:"P", name:"Phosphorus"},
+    {Z:16, symbol:"S", name:"Sulfur"},
+    {Z:17, symbol:"Cl", name:"Chlorine"},
+    {Z:18, symbol:"Ar", name:"Argon"},
+    {Z:19, symbol:"K", name:"Potassium"},
+    {Z:20, symbol:"Ca", name:"Calcium"},
+    {Z:21, symbol:"Sc", name:"Scandium"},
+    {Z:22, symbol:"Ti", name:"Titanium"},
+    {Z:23, symbol:"V", name:"Vanadium"},
+    {Z:24, symbol:"Cr", name:"Chromium"},
+    {Z:25, symbol:"Mn", name:"Manganese"},
+    {Z:26, symbol:"Fe", name:"Iron"},
+    {Z:27, symbol:"Co", name:"Cobalt"},
+    {Z:28, symbol:"Ni", name:"Nickel"},
+    {Z:29, symbol:"Cu", name:"Copper"},
+    {Z:30, symbol:"Zn", name:"Zinc"},
+    {Z:31, symbol:"Ga", name:"Gallium"},
+    {Z:32, symbol:"Ge", name:"Germanium"},
+    {Z:33, symbol:"As", name:"Arsenic"},
+    {Z:34, symbol:"Se", name:"Selenium"},
+    {Z:35, symbol:"Br", name:"Bromine"},
+    {Z:36, symbol:"Kr", name:"Krypton"},
+    {Z:37, symbol:"Rb", name:"Rubidium"},
+    {Z:38, symbol:"Sr", name:"Strontium"},
+    {Z:39, symbol:"Y", name:"Yttrium"},
+    {Z:40, symbol:"Zr", name:"Zirconium"},
+    {Z:41, symbol:"Nb", name:"Niobium"},
+    {Z:42, symbol:"Mo", name:"Molybdenum"},
+    {Z:43, symbol:"Tc", name:"Technetium"},
+    {Z:44, symbol:"Ru", name:"Ruthenium"},
+    {Z:45, symbol:"Rh", name:"Rhodium"},
+    {Z:46, symbol:"Pd", name:"Palladium"},
+    {Z:47, symbol:"Ag", name:"Silver"},
+    {Z:48, symbol:"Cd", name:"Cadmium"},
+    {Z:49, symbol:"In", name:"Indium"},
+    {Z:50, symbol:"Sn", name:"Tin"},
+    {Z:51, symbol:"Sb", name:"Antimony"},
+    {Z:52, symbol:"Te", name:"Tellurium"},
+    {Z:53, symbol:"I", name:"Iodine"},
+    {Z:54, symbol:"Xe", name:"Xenon"},
+    {Z:55, symbol:"Cs", name:"Cesium"},
+    {Z:56, symbol:"Ba", name:"Barium"},
+    {Z:57, symbol:"La", name:"Lanthanum"},
+    {Z:58, symbol:"Ce", name:"Cerium"},
+    {Z:59, symbol:"Pr", name:"Praseodymium"},
+    {Z:60, symbol:"Nd", name:"Neodymium"},
+    {Z:61, symbol:"Pm", name:"Promethium"},
+    {Z:62, symbol:"Sm", name:"Samarium"},
+    {Z:63, symbol:"Eu", name:"Europium"},
+    {Z:64, symbol:"Gd", name:"Gadolinium"},
+    {Z:65, symbol:"Tb", name:"Terbium"},
+    {Z:66, symbol:"Dy", name:"Dysprosium"},
+    {Z:67, symbol:"Ho", name:"Holmium"},
+    {Z:68, symbol:"Er", name:"Erbium"},
+    {Z:69, symbol:"Tm", name:"Thulium"},
+    {Z:70, symbol:"Yb", name:"Ytterbium"},
+    {Z:71, symbol:"Lu", name:"Lutetium"},
+    {Z:72, symbol:"Hf", name:"Hafnium"},
+    {Z:73, symbol:"Ta", name:"Tantalum"},
+    {Z:74, symbol:"W", name:"Tungsten"},
+    {Z:75, symbol:"Re", name:"Rhenium"},
+    {Z:76, symbol:"Os", name:"Osmium"},
+    {Z:77, symbol:"Ir", name:"Iridium"},
+    {Z:78, symbol:"Pt", name:"Platinum"},
+    {Z:79, symbol:"Au", name:"Gold"},
+    {Z:80, symbol:"Hg", name:"Mercury"},
+    {Z:81, symbol:"Tl", name:"Thallium"},
+    {Z:82, symbol:"Pb", name:"Lead"},
+    {Z:83, symbol:"Bi", name:"Bismuth"},
+    {Z:84, symbol:"Po", name:"Polonium"},
+    {Z:85, symbol:"At", name:"Astatine"},
+    {Z:86, symbol:"Rn", name:"Radon"},
+    {Z:87, symbol:"Fr", name:"Francium"},
+    {Z:88, symbol:"Ra", name:"Radium"},
+    {Z:89, symbol:"Ac", name:"Actinium"},
+    {Z:90, symbol:"Th", name:"Thorium"},
+    {Z:91, symbol:"Pa", name:"Protactinium"},
+    {Z:92, symbol:"U", name:"Uranium"},
+    {Z:93, symbol:"Np", name:"Neptunium"},
+    {Z:94, symbol:"Pu", name:"Plutonium"},
+    {Z:95, symbol:"Am", name:"Americium"},
+    {Z:96, symbol:"Cm", name:"Curium"},
+    {Z:97, symbol:"Bk", name:"Berkelium"},
+    {Z:98, symbol:"Cf", name:"Californium"},
+    {Z:99, symbol:"Es", name:"Einsteinium"},
+    {Z:100, symbol:"Fm", name:"Fermium"},
+    {Z:101, symbol:"Md", name:"Mendelevium"},
+    {Z:102, symbol:"No", name:"Nobelium"},
+    {Z:103, symbol:"Lr", name:"Lawrencium"},
+    {Z:104, symbol:"Rf", name:"Rutherfordium"},
+    {Z:105, symbol:"Db", name:"Dubnium"},
+    {Z:106, symbol:"Sg", name:"Seaborgium"},
+    {Z:107, symbol:"Bh", name:"Bohrium"},
+    {Z:108, symbol:"Hs", name:"Hassium"},
+    {Z:109, symbol:"Mt", name:"Meitnerium"},
+    {Z:110, symbol:"Ds", name:"Darmstadtium"},
+    {Z:111, symbol:"Rg", name:"Roentgenium"},
+    {Z:112, symbol:"Cn", name:"Copernicium"},
+    {Z:113, symbol:"Nh", name:"Nihonium"},
+    {Z:114, symbol:"Fl", name:"Flerovium"},
+    {Z:115, symbol:"Mc", name:"Moscovium"},
+    {Z:116, symbol:"Lv", name:"Livermorium"},
+    {Z:117, symbol:"Ts", name:"Tennessine"},
+    {Z:118, symbol:"Og", name:"Oganesson"}
   ];
 
   let estado = {
@@ -414,7 +414,7 @@ const seriesData = {
     botFala("Do you want to choose by name or by atomic number?");
     limpaOpcoes();
     optionsContent = [
-      { type: 'button', text: 'By name', action: () => { estado.metodoEscolha = "nome"; etapa2(); } },
+      { type: 'button', text: 'By name', action: () => { estado.metodoEscolha = "name"; etapa2(); } },
       { type: 'button', text: 'By atomic number', action: () => { estado.metodoEscolha = "numero"; etapa2(); } }
     ];
   }
@@ -422,7 +422,7 @@ const seriesData = {
   function etapa2() {
     limpaOpcoes();
 
-    if (estado.metodoEscolha === "nome") {
+    if (estado.metodoEscolha === "name") {
       botFala("Enter the element name:");
       optionsContent = [
         { 
@@ -437,10 +437,10 @@ const seriesData = {
           text: 'Confirm', 
           action: () => {
             const nomeBusca = document.getElementById('nomeElemento')?.value.trim().toLowerCase();
-            const elem = tabelaPeriodica.find((el) => el.nome.toLowerCase() === nomeBusca);
+            const elem = tabelaPeriodica.find((el) => el.name.toLowerCase() === nomeBusca);
             if (elem) {
               estado.elementoSelecionado = elem;
-              botFala(`You chose ${elem.nome} (${elem.simbolo}), Z=${elem.Z}.`);
+              botFala(`You chose ${elem.name} (${elem.symbol}), Z=${elem.Z}.`);
               etapa3();
             } else {
               botFala("Element not found. Please try again.");
@@ -467,7 +467,7 @@ const seriesData = {
             const elem = tabelaPeriodica.find((el) => el.Z === num);
             if (elem) {
               estado.elementoSelecionado = elem;
-              botFala(`You chose ${elem.nome} (${elem.simbolo}), Z=${elem.Z}.`);
+              botFala(`You chose ${elem.name} (${elem.symbol}), Z=${elem.Z}.`);
               etapa3();
             } else {
               botFala("Invalid atomic number. Please try again.");
@@ -508,9 +508,9 @@ const seriesData = {
           const A = parseInt(document.getElementById('isotopoSelect')?.value);
           estado.isotopoSelecionado = {
             A,
-            nome: `${estado.elementoSelecionado.nome}-${A}`
+            name: `${estado.elementoSelecionado.name}-${A}`
           };
-          botFala(`Selected isotope: ${estado.isotopoSelecionado.nome}`);
+          botFala(`Selected isotope: ${estado.isotopoSelecionado.name}`);
           etapa4();
         }
       }
@@ -548,7 +548,7 @@ const seriesData = {
 
     let Z = estado.elementoSelecionado.Z;
     let A = estado.isotopoSelecionado.A;
-    let explicacao = `Decay of ${estado.isotopoSelecionado.nome} (Z=${Z}, A=${A}):\n\n`;
+    let explicacao = `Decay of ${estado.isotopoSelecionado.name} (Z=${Z}, A=${A}):\n\n`;
 
     const aplicarDecaimento = (tipo, vezes) => {
       for (let i = 0; i < vezes; i++) {
@@ -576,7 +576,7 @@ const seriesData = {
     const novoElemento = tabelaPeriodica.find((e) => e.Z === Z);
 
     if (novoElemento) {
-      explicacao += `\nFinal result: ${novoElemento.simbolo}-${A} (${novoElemento.nome}), Z=${Z}, A=${A}`;
+      explicacao += `\nFinal result: ${novoElemento.symbol}-${A} (${novoElemento.name}), Z=${Z}, A=${A}`;
     } else {
       explicacao += `\nFinal result: Element outside the periodic table (Z=${Z}, A=${A})`;
     }
@@ -620,7 +620,7 @@ const seriesData = {
       .style("font-size", "24px")
       .style("font-weight", "bold")
       .style("fill", "#1D3557") // Cor mais forte
-      .text(`${estado.elementoSelecionado.simbolo}-${A}`);
+      .text(`${estado.elementoSelecionado.symbol}-${A}`);
 
     // Configuração inicial
     const configInicial = obterConfiguracaoEletronica(Z);
@@ -694,7 +694,7 @@ const seriesData = {
       .attr("x", 10)
       .attr("y", 50)
       .style("fill", "#1D3557") // Cor mais forte
-      .text(`Element: ${estado.elementoSelecionado.nome} (Z=${Z}, A=${A})`);
+      .text(`Element: ${estado.elementoSelecionado.name} (Z=${Z}, A=${A})`);
 
     const infoProtons = infoPanel.append("text")
       .attr("x", 10)
@@ -720,17 +720,17 @@ const seriesData = {
       A += dA;
       
       const novoElemento = tabelaPeriodica.find(e => e.Z === Z) || {
-        simbolo: `X${Z}`,
-        nome: `Elemento ${Z}`
+        symbol: `X${Z}`,
+        name: `Elemento ${Z}`
       };
       
       configAtual = obterConfiguracaoEletronica(Z);
       
       // Atualizar displays com cores fortes
-      elementoAtual.text(`${novoElemento.simbolo}-${A}`)
+      elementoAtual.text(`${novoElemento.symbol}-${A}`)
         .style("fill", "#1D3557");
       
-      infoElement.text(`Element: ${novoElemento.nome} (Z=${Z}, A=${A})`)
+      infoElement.text(`Element: ${novoElemento.name} (Z=${Z}, A=${A})`)
         .style("fill", "#1D3557");
       infoProtons.text(`Protons: ${Z}`)
         .style("fill", "#1D3557");
@@ -754,7 +754,7 @@ const seriesData = {
           const novoElemento = atualizarAtomo(props.dZ, props.dA);
           
           chatMessages = [...chatMessages, {
-            text: `Emitida 1 partícula ${props.desc}. Novo elemento: ${novoElemento.nome} (${novoElemento.simbolo}-${A})`,
+            text: `Emitida 1 partícula ${props.desc}. Novo elemento: ${novoElemento.name} (${novoElemento.symbol}-${A})`,
             type: 'bot'
           }];
           
@@ -791,7 +791,7 @@ const seriesData = {
       .attr("stroke-width", 2);
     
     // Texto no núcleo - cor mais forte e contraste
-    const elemento = tabelaPeriodica.find(e => e.Z === Z) || { simbolo: `X${Z}` };
+    const elemento = tabelaPeriodica.find(e => e.Z === Z) || { symbol: `X${Z}` };
     grupoNucleo.append("text")
       .attr("x", cx)
       .attr("y", cy)
@@ -800,7 +800,7 @@ const seriesData = {
       .style("font-size", `${Math.min(24, 14 + raioBase/3)}px`)
       .style("font-weight", "bold")
       .style("fill", "#1D3557") // Mudei para azul escuro
-      .text(`${elemento.simbolo}-${A}`);
+      .text(`${elemento.symbol}-${A}`);
     
     // Elétrons
     const grupoEletrons = grupo.append("g").attr("class", "eletrons");

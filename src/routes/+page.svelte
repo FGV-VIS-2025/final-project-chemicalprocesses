@@ -1,6 +1,5 @@
 <svelte:head>
   <title>Chemical Reaction Visualizer</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </svelte:head>
 

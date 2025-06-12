@@ -110,7 +110,7 @@
   onMount(() => {
     const styleContent = `
       body {
-        font-family: 'Inter', sans-serif;
+        font-family: sans-serif;
         background-color: #f4f4f9;
         color: #333;
         margin: 0;
@@ -183,7 +183,7 @@
         background: #e3f2f9;
         padding: 0.2rem 0.4rem;
         border-radius: 4px;
-        font-family: 'Inter', monospace;
+        font-family: sans-serif, monospace;
       }
       
       svg {

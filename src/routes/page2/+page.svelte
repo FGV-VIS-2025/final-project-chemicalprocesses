@@ -267,7 +267,7 @@
     padding: 0.5rem 1rem;
     border-radius: 4px;
     cursor: pointer;
-    font-family: 'Inter', sans-serif;
+    font-family: sans-serif;
     transition: background-color 0.3s;
     min-width: 180px;
   }
@@ -283,12 +283,6 @@
     align-items: flex-start;
   }
 
-  .animation-legend {
-    font-size: 0.85rem;
-    color: #333;
-    margin-top: 0.5rem;
-  }
-
   @media (max-width: 600px) {
     .side-by-side {
       flex-direction: column;
@@ -296,11 +290,6 @@
 
     .animation-controls {
       flex-direction: column;
-    }
-
-    nav ul {
-      flex-direction: column;
-      gap: 0.5rem;
     }
 
     nav a {
