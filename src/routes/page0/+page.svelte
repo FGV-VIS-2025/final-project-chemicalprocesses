@@ -210,32 +210,37 @@
 
   <h1>Order of Reaction</h1>
 
-  <p>
-    A fundamental concept in kinetics is the <strong>rate law</strong>, which defines how the rate of a reaction is related to the concentrations of the reactants.
-    The rate law varies based on the order of the reaction, which is determined experimentally. Below are explanations for the most common types of reaction orders:
-  </p>
+<p>
+  A fundamental concept in kinetics is the <strong>rate law</strong>, which defines how the rate of a reaction is related to the concentrations of the reactants.
+  The rate law varies based on the order of the reaction, which is determined experimentally. Below are explanations for the most common types of reaction orders:
+</p>
 
-  <ul>
-    <li>
-      <strong>First-order reactions:</strong> In a first-order reaction, the rate is directly proportional to the concentration of one reactant.
-      For example, for the reaction <em>A → B</em>, the rate law is: <code>rate = k[A]</code>.
-      Here, doubling the concentration of A will double the reaction rate.
-    </li>
-    <li>
-      <strong>Second-order reactions:</strong> In a second-order reaction, the rate is proportional to the square of the concentration of the reactant,
-      or to the product of the concentrations of two reactants. For example, <em>2A → B</em> would have the rate law:
-      <code>rate = k[A]<sup>2</sup></code>. If the concentration of A is doubled, the rate increases by a factor of four.
-    </li>
-    <li>
-      <strong>Third-order reactions:</strong> In a third-order reaction, the rate depends on the concentration of a reactant raised to the third power
-      or a combination of three reactants. For example, the rate law for a reaction involving three molecules of A might be:
-      <code>rate = k[A]<sup>3</sup></code>. If the concentration of A is doubled, the rate increases by a factor of eight.
-    </li>
-  </ul>
+<ul>
+  <li>
+    <strong>Zero-order reactions:</strong> In a zero-order reaction, the rate is independent of the concentration of the reactants.
+    This means that changing the concentration has no effect on the rate. For example, for the reaction <em>A → B</em>,
+    the rate law is: <code>rate = k</code>. These reactions often occur when a catalyst or surface is saturated.
+  </li>
+  <li>
+    <strong>First-order reactions:</strong> In a first-order reaction, the rate is directly proportional to the concentration of one reactant.
+    For example, for the reaction <em>A → B</em>, the rate law is: <code>rate = k[A]</code>.
+    Here, doubling the concentration of A will double the reaction rate.
+  </li>
+  <li>
+    <strong>Second-order reactions:</strong> In a second-order reaction, the rate is proportional either to the square of the concentration of a single reactant,
+    or to the product of the concentrations of two reactants. For example, <em>2A → B</em> would have the rate law:
+    <code>rate = k[A]<sup>2</sup></code>. If the concentration of A is doubled, the rate increases by a factor of four.
+  </li>
+</ul>
 
-  <p>
-    The rate constant, <code>k</code>, is unique to each reaction and depends on factors such as temperature and the presence of a catalyst.
-  </p>
+<p>
+  The rate constant, <code>k</code>, is unique to each reaction and depends on factors such as temperature and the presence of a catalyst.
+</p>
+
+<p>
+  Although higher-order reactions (third-order and above) are theoretically possible, they are rarely observed in practice due to the low probability of three or more particles colliding simultaneously with the correct orientation and energy.
+</p>
+
 
  <h2>Catalysis</h2>
 
