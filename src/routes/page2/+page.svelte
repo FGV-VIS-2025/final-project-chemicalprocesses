@@ -6,7 +6,7 @@
   import { base } from '$app/paths';
   import { onMount, onDestroy } from 'svelte';
   import * as THREE from 'three';
-  import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'; // Import OrbitControls
+  import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
   let currentPage = $page.url.pathname;
   let Ea = 50;
@@ -24,63 +24,50 @@
   let collisionHistory1 = [];
   let collisionHistory2 = [];
 
-  // 3D chart controls
+  // 3D chart controls - updated to use buttons
   let rotate3D = true;
-  let showElementary = true;
-  let showFirstOrder = true;
-  let showCatalyzed = true;
+  let activeSurfaces = {
+    elementary: true,
+    firstOrder: true,
+    catalyzed: true
+  };
 
   // Three.js variables
   let scene, camera, renderer, controls, animationFrameId;
-  let containerDiv; // Reference to the div where the Three.js canvas will be
-  let elementarySurface, firstOrderSurface, catalyzedSurface; // Meshes for each surface
+  let containerDiv;
+  let elementarySurface, firstOrderSurface, catalyzedSurface;
 
-  // Particle animation interval (from original code)
+  // Particle animation interval
   let animationInterval;
 
+  function toggleSurface(surface) {
+    activeSurfaces[surface] = !activeSurfaces[surface];
+    drawPotentialEnergySurfaceThreeJs();
+  }
+
   onMount(() => {
-    console.log("Container Div onMount:", containerDiv); // Verificação importante
+    console.log("Container Div onMount:", containerDiv);
     if (containerDiv) {
         initThreeJs();
         animateThreeJs();
-        // Add event listener for window resize to handle responsiveness
         window.addEventListener('resize', onWindowResize);
     } else {
-        console.error("Container div not found for Three.js initialization. Three.js will not render.");
+        console.error("Container div not found for Three.js initialization.");
     }
 
     return () => {
-      // Clean up on component destroy
       window.removeEventListener('resize', onWindowResize);
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }
       if (renderer) {
-        // Dispose of renderer and its DOM element
         renderer.dispose();
         if (renderer.domElement && renderer.domElement.parentNode === containerDiv) {
             containerDiv.removeChild(renderer.domElement);
         }
       }
-      // Cleanup for particle animation interval (from original code)
       if (animationInterval) clearInterval(animationInterval);
     };
-  });
-
-  onDestroy(() => {
-    // Ensure animation and Three.js resources are cleaned up
-    // This is often redundant if onMount's return function handles it,
-    // but good for robustness or if onMount doesn't complete.
-    if (animationFrameId) {
-      cancelAnimationFrame(animationFrameId);
-    }
-    if (renderer) {
-      renderer.dispose();
-      if (renderer.domElement && renderer.domElement.parentNode === containerDiv) {
-          containerDiv.removeChild(renderer.domElement);
-      }
-    }
-    if (animationInterval) clearInterval(animationInterval); // Ensure interval is cleared on destroy (from original code)
   });
 
   function toggleRunning() {
@@ -94,8 +81,6 @@
     collisionHistory2 = [];
   }
 
-  // --- Three.js Functions ---
-
   function initThreeJs() {
     console.log("Initializing Three.js...");
     if (!containerDiv) {
@@ -105,31 +90,28 @@
 
     // Scene
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf0f0f0); // Light grey background
+    scene.background = new THREE.Color(0xf0f0f0);
 
     // Camera
     camera = new THREE.PerspectiveCamera(75, containerDiv.clientWidth / containerDiv.clientHeight, 0.1, 1000);
-    camera.position.set(2, 2, 4); // Adjusted camera position for better view
+    camera.position.set(2, 2, 4);
 
     // Renderer
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(containerDiv.clientWidth, containerDiv.clientHeight);
     containerDiv.appendChild(renderer.domElement);
-    console.log("Three.js canvas appended to containerDiv:", renderer.domElement);
-
 
     // Controls
     controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true; // An animation loop is required when damping is enabled
+    controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.screenSpacePanning = false;
     controls.minDistance = 1;
     controls.maxDistance = 10;
-    controls.maxPolarAngle = Math.PI / 2; // Prevent camera from going below the ground
-    // controls.autoRotate = rotate3D; // Can be set here, or managed manually in animateThreeJs
+    controls.maxPolarAngle = Math.PI / 2;
 
     // Lights
-    const ambientLight = new THREE.AmbientLight(0x404040, 2); // soft white light
+    const ambientLight = new THREE.AmbientLight(0x404040, 2);
     scene.add(ambientLight);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
     directionalLight.position.set(5, 5, 5).normalize();
@@ -140,12 +122,10 @@
   }
 
   function onWindowResize() {
-    if (!containerDiv || !camera || !renderer) return; // Safeguard
+    if (!containerDiv || !camera || !renderer) return;
     camera.aspect = containerDiv.clientWidth / containerDiv.clientHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(containerDiv.clientWidth, containerDiv.clientHeight);
-    // No explicit render call needed here as animateThreeJs runs continuously
-    // but good practice if you only render on demand
   }
 
   function animateThreeJs() {
@@ -153,13 +133,12 @@
 
     if (controls) {
         if (rotate3D) {
-            // Apply auto-rotation if desired
             controls.autoRotate = true;
-            controls.autoRotateSpeed = 2.0; // Adjust speed as needed
+            controls.autoRotateSpeed = 2.0;
         } else {
             controls.autoRotate = false;
         }
-        controls.update(); // Required if controls.enableDamping or controls.autoRotate are true
+        controls.update();
     }
 
     if (renderer && scene && camera) {
@@ -168,36 +147,29 @@
   }
 
   function createSurface(zData, color, name) {
-    // Corrected: segments should be equal to steps for 51x51 points
-    const steps = 50; // Number of divisions used when generating zData
-    const segments = steps; // Number of segments for PlaneGeometry to match steps+1 vertices
+    const steps = 50;
+    const segments = steps;
 
-    const geometry = new THREE.PlaneGeometry(10, 10, segments, segments); // Adjusted size to match data range (8 is too small for -2 to 8)
-    geometry.rotateX(-Math.PI / 2); // Orient the plane to be horizontal
+    const geometry = new THREE.PlaneGeometry(10, 10, segments, segments);
+    geometry.rotateX(-Math.PI / 2);
 
-    const xRange = 10; // Corresponds to original x[i] = i/steps * 10 - 2 (range 10 units: 8 - (-2))
-    const yRange = 10; // Corresponds to original y[i] = i/steps * 10 - 2 (range 10 units)
+    const xRange = 10;
+    const yRange = 10;
     const xMin = -2;
     const yMin = -2;
 
     const vertices = geometry.attributes.position.array;
     for (let i = 0, j = 0; i < vertices.length; i += 3, j++) {
-        // Normalize the vertex position from PlaneGeometry's default (-width/2 to width/2) to (0 to 1)
-        // geometry.parameters.width/2 because PlaneGeometry is centered at 0,0
-        const u = (vertices[i + 0] + (geometry.parameters.width / 2)) / geometry.parameters.width; // Normalized X (0 to 1)
-        const v = (vertices[i + 2] + (geometry.parameters.height / 2)) / geometry.parameters.height; // Normalized Y (0 to 1)
+        const u = (vertices[i + 0] + (geometry.parameters.width / 2)) / geometry.parameters.width;
+        const v = (vertices[i + 2] + (geometry.parameters.height / 2)) / geometry.parameters.height;
 
-        // Map normalized (0-1) position to zData array indices (0 to steps)
-        // Ensure indices are within bounds (0 to steps)
-        const dataX = Math.round(u * steps); // Rounds to the nearest integer index
-        const dataY = Math.round(v * steps); // Rounds to the nearest integer index
+        const dataX = Math.round(u * steps);
+        const dataY = Math.round(v * steps);
 
-        // Assign Z value (potential energy) from zData
-        // Add a small offset to the Z value to visually separate overlapping surfaces
-        const zOffset = 0.01; // Small offset
-        vertices[i + 1] = zData[dataY][dataX] + zOffset; // zData is [row][col]
+        const zOffset = 0.01;
+        vertices[i + 1] = zData[dataY][dataX] + zOffset;
     }
-    geometry.computeVertexNormals(); // For lighting
+    geometry.computeVertexNormals();
 
     const material = new THREE.MeshPhongMaterial({
         color: color,
@@ -206,26 +178,18 @@
         opacity: 0.8,
         specular: 0x111111,
         shininess: 30,
-        flatShading: true, // Gives a faceted look
+        flatShading: true,
     });
 
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.name = name; // For easy identification
-
-    // Center the geometry to align with your original data range (-2 to 8)
-    // PlaneGeometry is centered at 0,0. Its actual x-range is -5 to 5.
-    // Your data range is -2 to 8 (length 10).
-    // To align, shift by (x_min_data + x_max_data)/2 = (-2+8)/2 = 3
-    // Shift PlaneGeometry's center from 0 to 3.
-    mesh.position.set( (xMin + xRange / 2), 0, (yMin + yRange / 2)); // Shift to align with data origin/center
-                                                                     // (xMin + width/2) = -2 + 5 = 3
+    mesh.name = name;
+    mesh.position.set((xMin + xRange / 2), 0, (yMin + yRange / 2));
+    
     return mesh;
   }
 
   function drawPotentialEnergySurfaceThreeJs() {
     console.log("Drawing Potential Energy Surfaces (Three.js)...");
-    // Clear existing surfaces from the scene
-    // Dispose of geometry and material to prevent memory leaks
     scene.children.forEach(child => {
         if (child.isMesh && (child.name === 'elementary' || child.name === 'firstOrder' || child.name === 'catalyzed')) {
             scene.remove(child);
@@ -234,15 +198,12 @@
         }
     });
 
-
-    // Generate Z data (same logic as before)
-    const steps = 50; // Number of divisions in x and y (for PlaneGeometry this is segments+1)
+    const steps = 50;
     const x = [], y = [], zElementary = [], zFirstOrder = [], zCatalyzed = [];
 
-
     for (let i = 0; i <= steps; i++) {
-      x[i] = i/steps * 10 - 2; // Range -2 to 8
-      y[i] = i/steps * 10 - 2; // Range -2 to 8
+      x[i] = i/steps * 10 - 2;
+      y[i] = i/steps * 10 - 2;
     }
 
     for (let i = 0; i <= steps; i++) {
@@ -250,8 +211,8 @@
       zFirstOrder[i] = [];
       zCatalyzed[i] = [];
       for (let j = 0; j <= steps; j++) {
-        const xVal = x[j]; // Note: used j for x-coordinate to match array indexing [row][col] where col is x
-        const yVal = y[i]; // used i for y-coordinate
+        const xVal = x[j];
+        const yVal = y[i];
 
         const xMinus3 = xVal - 3;
         const yMinus3 = yVal - 3;
@@ -278,33 +239,26 @@
       }
     }
 
-    // Create and add surfaces if selected
-    if (showElementary) {
-      elementarySurface = createSurface(zElementary, 0x008000, 'elementary'); // Green
+    if (activeSurfaces.elementary) {
+      elementarySurface = createSurface(zElementary, 0x90EE90, 'elementary');
       scene.add(elementarySurface);
     }
-    if (showFirstOrder) {
-      firstOrderSurface = createSurface(zFirstOrder, 0x0000ff, 'firstOrder'); // Blue
+    if (activeSurfaces.firstOrder) {
+      firstOrderSurface = createSurface(zFirstOrder, 0x0000ff, 'firstOrder');
       scene.add(firstOrderSurface);
     }
-    if (showCatalyzed) {
-      catalyzedSurface = createSurface(zCatalyzed, 0xff0000, 'catalyzed'); // Red
+    if (activeSurfaces.catalyzed) {
+      catalyzedSurface = createSurface(zCatalyzed, 0xff0000, 'catalyzed');
       scene.add(catalyzedSurface);
     }
 
-    // If controls exist, update them after adding/removing meshes
     if (controls) {
         controls.update();
     }
   }
 
-  // Reactive statement to redraw when controls change
   $: {
-    // Only redraw if Three.js is initialized and any of the relevant control variables change
-    if (scene && renderer && camera && (showElementary !== undefined || showFirstOrder !== undefined || showCatalyzed !== undefined || rotate3D !== undefined)) {
-        // A simple check like 'showElementary !== undefined' ensures the reactive block runs after these variables are set
-        // However, Svelte's reactivity usually handles this well.
-        // The most critical part is ensuring scene, renderer, camera are initialized.
+    if (scene && renderer && camera) {
         drawPotentialEnergySurfaceThreeJs();
     }
   }
@@ -330,7 +284,7 @@
   </h1>
 
   <p>
-    This page illustrates the concept of **activation energy** using the Arrhenius equation
+    This page illustrates the concept of <strong>activation energy</strong> using the Arrhenius equation
     and dynamic simulations. You can explore how temperature affects the likelihood of particles gaining
     enough energy to react.
   </p>
@@ -356,7 +310,7 @@
   </div>
 
   <p>
-    The chart below shows the **Arrhenius equation**, which models the rate constant k
+    The chart below shows the <strong>Arrhenius equation</strong>, which models the rate constant k
     as a function of temperature and activation energy. The marker highlights the current value of k
     for the selected temperature T.
   </p>
@@ -401,7 +355,7 @@
       The particles are initialized with random positions and velocities, and they collide with each other.
       When a particle's energy exceeds the activation energy (Ea), it is marked as "activated" and changes color.
       In the animations below, the particles do not follow straight paths. Instead, they move in a random, jittery way, simulating
-      what is known as **Brownian motion**. This phenomenon occurs when small particles are constantly bombarded by
+      what is known as <strong>Brownian motion</strong>. This phenomenon occurs when small particles are constantly bombarded by
       molecules in a fluid, causing erratic movement. It helps illustrate how thermal energy translates into microscopic motion,
       and how higher temperatures increase the chances of particles overcoming the activation barrier.
     </p>
@@ -452,38 +406,42 @@
   </div>
 
   <div class="content-section">
-    <h2>Potential Energy Surfaces for Different Reaction Types (Three.js)</h2>
+    <h2>Potential Energy Surfaces for Different Reaction Types</h2>
 
     <p>
       The 3D visualization below shows potential energy surfaces for different types of chemical reactions, rendered using Three.js.
       The surface represents how the potential energy changes as reactants transform into products.
     </p>
 
-    <div class="controls">
-      <label>
-        <input type="checkbox" bind:checked={rotate3D} />
-        <span>Auto-rotate 3D view</span>
-      </label>
-      <div class="surface-options">
-        <label>
-          <input type="checkbox" bind:checked={showElementary} />
-          <span>Elementary Reactions</span>
-        </label>
-        <label>
-          <input type="checkbox" bind:checked={showFirstOrder} />
-          <span>First-Order Reactions</span>
-        </label>
-        <label>
-          <input type="checkbox" bind:checked={showCatalyzed} />
-          <span>Catalyzed Reactions</span>
-        </label>
+    <div class="controls-3d">
+      <div class="toggle-group">
+        <button class:active={rotate3D} on:click={() => rotate3D = !rotate3D}>
+          <span class="icon">🔄</span> Auto-rotate
+        </button>
+      </div>
+      
+      <div class="surface-toggle-group">
+        <button class:active={activeSurfaces.elementary} on:click={() => toggleSurface('elementary')}>
+          <span class="color-indicator" style="background: #008000;"></span>
+          Elementary Reactions
+        </button>
+        
+        <button class:active={activeSurfaces.firstOrder} on:click={() => toggleSurface('firstOrder')}>
+          <span class="color-indicator" style="background: #0000ff;"></span>
+          First-Order Reactions
+        </button>
+        
+        <button class:active={activeSurfaces.catalyzed} on:click={() => toggleSurface('catalyzed')}>
+          <span class="color-indicator" style="background: #ff0000;"></span>
+          Catalyzed Reactions
+        </button>
       </div>
     </div>
 
-    <div bind:this={containerDiv} style="width: 100%; height: 500px; background-color: #f0f0f0; border: 1px solid #ccc;"></div>
+    <div bind:this={containerDiv} class="threejs-container"></div>
 
     <div class="reaction-explanations">
-      <div class:explanation-box-active={showElementary} class="explanation-box">
+      <div class:explanation-box-active={activeSurfaces.elementary} class="explanation-box">
         <h3>Elementary Reactions</h3>
         <p>
           Elementary reactions occur in a single step with a single transition state (the peak in the energy surface).
@@ -492,7 +450,7 @@
         </p>
       </div>
 
-      <div class:explanation-box-active={showFirstOrder} class="explanation-box">
+      <div class:explanation-box-active={activeSurfaces.firstOrder} class="explanation-box">
         <h3>First-Order Reactions</h3>
         <p>
           First-order reactions often show more complex energy landscapes where the rate depends on the concentration
@@ -501,7 +459,7 @@
         </p>
       </div>
 
-      <div class:explanation-box-active={showCatalyzed} class="explanation-box">
+      <div class:explanation-box-active={activeSurfaces.catalyzed} class="explanation-box">
         <h3>Catalyzed Reactions</h3>
         <p>
           Catalyzed reactions have a different pathway with lower activation energy. The catalyst provides an alternative
@@ -602,7 +560,7 @@
   }
 
   .action-btn:hover {
-    background: #003366;
+    background: #004080;
   }
 
   .side-by-side {
@@ -646,18 +604,65 @@
     background-color: orange;
   }
 
-  .surface-options {
+  .controls-3d {
     display: flex;
-    gap: 1.5rem;
-    margin-top: 1rem;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .toggle-group, .surface-toggle-group {
+    display: flex;
+    gap: 0.8rem;
     flex-wrap: wrap;
   }
 
-  .surface-options label {
+  .surface-toggle-group {
+    gap: 0.5rem;
+  }
+
+  .controls-3d button {
+    padding: 0.6rem 1rem;
+    border: 1px solid #ccc;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+  }
+
+  .controls-3d button:hover {
+    background: #f0f0f0;
+  }
+
+  .controls-3d button.active {
+    background: #003366;
+    color: white;
+    border-color: #003366;
+  }
+
+  .controls-3d button.active .color-indicator {
+    box-shadow: 0 0 0 2px white;
+  }
+
+  .color-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .threejs-container {
+    width: 100%;
+    height: 500px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   }
 
   .reaction-explanations {
@@ -673,11 +678,13 @@
     border-radius: 8px;
     border-left: 4px solid #e3f2f9;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
   }
 
   .explanation-box-active {
     border-left-color: #003366;
     background: #e3f2f9;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   }
 
   .explanation-box h3 {
@@ -685,7 +692,7 @@
     margin-top: 0;
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     .side-by-side {
       flex-direction: column;
     }
@@ -694,9 +701,13 @@
       flex-direction: column;
     }
 
-    nav a {
+    .surface-toggle-group {
+      flex-direction: column;
+    }
+    
+    .controls-3d button {
       width: 100%;
-      text-align: center;
+      justify-content: center;
     }
 
     .reaction-explanations {

@@ -8,8 +8,8 @@
   let svg;
   let tooltip;
 
-  const width = 600;
-  const height = 250;
+  const width = 900;
+  const height = 600;
   const margin = { top: 20, right: 40, bottom: 40, left: 40 };
 
   const fixedTimeLimit = 30;
