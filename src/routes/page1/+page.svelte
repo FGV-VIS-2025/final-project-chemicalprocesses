@@ -2,8 +2,6 @@
   <title>Reaction Orders - Chemical Kinetics</title>
  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
-  
-
 </svelte:head>
 
 <nav class="main-nav">

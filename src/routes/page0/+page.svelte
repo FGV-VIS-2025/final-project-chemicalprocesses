@@ -261,7 +261,7 @@
   let currentPage = $page.url.pathname;
 
   onMount(() => {
-    // Certifique-se de carregar a fonte Inter
+    // Carrega a fonte Inter
     const fontLink = document.createElement('link');
     fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap';
     fontLink.rel = 'stylesheet';
