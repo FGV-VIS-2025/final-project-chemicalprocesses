@@ -145,54 +145,6 @@
     </table>
   </section>
 
-
- <!-- 3D Potential Energy Surface Visualization -->
-  <section class="tool-section">
-    <h2>3D Potential Energy Surface</h2>
-    <div class="info-box">
-      <p>This visualization shows how potential energy changes along the reaction coordinate for different reaction orders.</p>
-    </div>
-    <div id="energy3d-container"></div>
-    <div class="controls">
-      <label>
-        Surface Type:
-        <select id="surface-type">
-          <option value="simple">Simple (1st Order)</option>
-          <option value="complex">Elementary Reaction</option>
-          <option value="catalyzed">Catalyzed Reaction</option>
-        </select>
-      </label>
-      <button id="rotate-btn">Auto Rotation</button>
-    </div>
-
-    <div class="info-box">
-      
-      <p>A <strong>3D Potential Energy Surface</strong> is a visual representation of how the potential energy of a chemical system changes as atoms move during a reaction.</p>
-    
-    <h3>Key Features:</h3>
-    <ul>
-      <li>The <span class="highlight">x and z axes</span> typically represent molecular coordinates or reaction progress</li>
-      <li>The <span class="highlight">y axis (vertical)</span> shows potential energy</li>
-      <li><span class="highlight">Reactants</span> appear at one end of the surface</li>
-      <li><span class="highlight">Products</span> appear at the other end</li>
-      <li>The <span class="highlight">highest point</span> represents the transition state (activation energy)</li>
-    </ul>
-    
-    <h3>What It Tells Us:</h3>
-    <p>This visualization helps chemists understand:
-      <ul>
-        <li>The energy pathway of reactions</li>
-        <li>Activation energy requirements</li>
-        <li>How catalysts lower energy barriers</li>
-        <li>Why some reactions occur faster than others</li>
-      </ul>
-    </div>
-
-
-
-
-  </section>
-
   <!-- Reaction Time Calculator -->
   <section class="tool-section">
     <h2>Reaction Time Calculator</h2>
@@ -581,74 +533,6 @@
     });
   });
 
-// 1. 3D Potential Energy Surface
-  function init3DVisualization() {
-    const container = document.getElementById('energy3d-container');
-    const width = container.clientWidth;
-    const height = Math.min(500, window.innerHeight * 0.6);
-    
-    // Scene setup
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(width, height);
-    container.appendChild(renderer.domElement);
-    
-    // Controls
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    camera.position.set(5, 5, 5);
-    
-    // Surface creation
-    const createSurface = (type) => {
-      let geometry;
-      if (type === 'simple') {
-        const pts = Array.from({length: 20}, (_, i) => 
-          new THREE.Vector2((i/20)*8, Math.exp(-i/5)*5));
-        geometry = new THREE.LatheGeometry(pts, 20);
-      } else {
-        geometry = new THREE.ParametricGeometry((u, v, target) => {
-          u = u*2 - 1;
-          target.x = u*5;
-          target.y = type === 'complex' 
-            ? Math.sin(u*Math.PI)*3 + Math.sin(v*2)*0.5
-            : Math.exp(-u*u*2)*4 + Math.sin(v*3)*0.3;
-          target.z = v*2;
-        }, 50, 50);
-      }
-      return new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({
-        color: 0x1f77b4, transparent: true, opacity: 0.9
-      }));
-    };
-    
-    let surface = createSurface('simple');
-    scene.add(surface);
-    scene.add(new THREE.AxesHelper(5));
-    scene.add(new THREE.DirectionalLight(0xffffff, 1));
-    scene.add(new THREE.AmbientLight(0x404040));
-    
-    // Event handlers
-    document.getElementById('surface-type').onchange = () => {
-      scene.remove(surface);
-      surface = createSurface(document.getElementById('surface-type').value);
-      scene.add(surface);
-    };
-    
-    let rotate = false;
-    document.getElementById('rotate-btn').onclick = () => {
-      rotate = !rotate;
-      document.getElementById('rotate-btn').textContent = 
-        rotate ? 'Stop Rotation' : 'Auto Rotation';
-    };
-    
-    // Animation loop
-    function animate() {
-      requestAnimationFrame(animate);
-      if (rotate) surface.rotation.y += 0.005;
-      controls.update();
-      renderer.render(scene, camera);
-    }
-    animate();
-  }
 
   // 2. Reaction Time Calculator
   function setupCalculator() {
@@ -794,7 +678,7 @@
   }
 
   onMount(() => {
-    init3DVisualization();
+    
     setupCalculator();
     setupHalfLifeChart();
   });
@@ -1079,16 +963,6 @@
     border-radius: 0 4px 4px 0;
   }
   
-  /* Estilos para a visualização 3D */
-  #energy3d-container {
-    width: 100%;
-    height: 500px;
-    background: #f5f7fa;
-    border-radius: 4px;
-    margin: 1rem 0;
-    position: relative;
-  }
-  
   /* Estilos para a calculadora */
   .calculator-grid {
     display: grid;
@@ -1163,9 +1037,6 @@
       grid-column: span 1;
     }
     
-    #energy3d-container {
-      height: 350px;
-    }
   }
   
   main {
@@ -1198,15 +1069,7 @@
     border-radius: 0 4px 4px 0;
   }
   
-  /* 3D Visualization Styles */
-  #energy3d-container {
-    width: 100%;
-    height: 500px;
-    background: #f5f7fa;
-    border-radius: 4px;
-    margin: 1rem 0;
-  }
-  
+ 
   /* Calculator Styles */
   .calculator-grid {
     display: grid;
@@ -1315,10 +1178,6 @@
     .controls {
       flex-direction: column;
       gap: 1rem;
-    }
-    
-    #energy3d-container {
-      height: 350px;
     }
   }
 
