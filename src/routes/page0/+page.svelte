@@ -1,5 +1,161 @@
 <svelte:head>
   <title>Page 0 - Summary</title>
+  <style>
+    #page0 {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background-color: #f4f4f9;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .main-nav {
+      background-color: #2c3e50;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .main-nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+
+    .main-nav a:hover {
+      background-color: #34495e;
+    }
+
+    .main-nav a.active {
+      background-color: #3498db;
+    }
+    
+    #page0 {
+      padding: 2rem;
+      max-width: 900px;
+      margin: 2rem auto;
+      background: white;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      border-radius: 12px;
+      position: relative;
+    }
+    
+    #page0 h1 {
+      color: #003366;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    
+    #page0 p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    
+    #page0 ul {
+      padding-left: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    #page0 li {
+      margin-bottom: 0.5rem;
+    }
+    
+    #page0 code {
+      background: #e3f2f9;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    
+    svg {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    
+    .axis-label {
+      font-weight: bold;
+      fill: #003366;
+      font-size: 14px;
+    }
+    
+    .label-reactant {
+      fill: #d62728;
+      font-weight: bold;
+    }
+    
+    .label-product {
+      fill: #1f77b4;
+      font-weight: bold;
+    }
+    
+    .tube-label {
+      font-size: 14px;
+      fill: #333;
+      text-anchor: middle;
+    }
+    
+    .tube {
+      fill: #c49b6a;
+      stroke: #987a4d;
+      stroke-width: 2px;
+      filter: drop-shadow(0 1px 0px #7a5f2e);
+    }
+    
+    .cork {
+      fill: #8c6d4a;
+      stroke: #6b5436;
+      stroke-width: 1.5px;
+    }
+    
+    .bubbleA {
+      fill: #d62728;
+      opacity: 0.85;
+    }
+    
+    .bubbleB {
+      fill: #1f77b4;
+      opacity: 0.85;
+    }
+    
+    @media (max-width: 600px) {
+      .main-nav {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      
+      .main-nav a {
+        padding: 0.3rem 0;
+      }
+    }
+
+    #container3 {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin: 0 auto 40px;
+    }
+
+    #container3 svg {
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
 </svelte:head>
 
 <nav class="main-nav">
@@ -45,15 +201,12 @@
 </p>
 
 <p>
-  Both axes are labeled in bold, with “<strong>CONCENTRATION</strong>” and “<strong>TIME</strong>” clearly indicated.
+  Both axes are labeled in bold, with "CONCENTRATION" and "TIME" clearly indicated.
 </p>
 
 <p>
   This is a typical kinetic profile of a <strong>first-order or pseudo-first-order reaction</strong>, where one reactant is converted into one product over time.
 </p>
-
-
-
 
   <h1>Order of Reaction</h1>
 
@@ -108,162 +261,11 @@
   let currentPage = $page.url.pathname;
 
   onMount(() => {
-    const styleContent = `
-      body {
-        font-family: sans-serif;
-        background-color: #f4f4f9;
-        color: #333;
-        margin: 0;
-        padding: 0;
-      }
-      
-      .main-nav {
-        background-color: #2c3e50;
-        padding: 1rem 2rem;
-        display: flex;
-        justify-content: center;
-        gap: 2rem;
-        flex-wrap: wrap;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-      }
-
-      .main-nav a {
-        color: white;
-        text-decoration: none;
-        font-weight: 500;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        transition: background-color 0.2s;
-      }
-
-      .main-nav a:hover {
-        background-color: #34495e;
-      }
-
-      .main-nav a.active {
-        background-color: #3498db;
-      }
-      
-      #page0 {
-        padding: 2rem;
-        max-width: 900px;
-        margin: 2rem auto;
-        background: white;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        border-radius: 12px;
-        position: relative;
-      }
-      
-      #page0 h1 {
-        color: #003366;
-        margin-bottom: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.7rem;
-      }
-      
-      #page0 p {
-        font-size: 1.1rem;
-        line-height: 1.6;
-        margin-bottom: 1rem;
-      }
-      
-      #page0 ul {
-        padding-left: 1.5rem;
-        margin-bottom: 1.5rem;
-      }
-      
-      #page0 li {
-        margin-bottom: 0.5rem;
-      }
-      
-      #page0 code {
-        background: #e3f2f9;
-        padding: 0.2rem 0.4rem;
-        border-radius: 4px;
-        font-family: sans-serif, monospace;
-      }
-      
-      svg {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      }
-      
-      .axis-label {
-        font-weight: bold;
-        fill: #003366;
-        font-size: 14px;
-      }
-      
-      .label-reactant {
-        fill: #d62728;
-        font-weight: bold;
-      }
-      
-      .label-product {
-        fill: #1f77b4;
-        font-weight: bold;
-      }
-      
-      .tube-label {
-        font-size: 14px;
-        fill: #333;
-        text-anchor: middle;
-      }
-      
-      .tube {
-        fill: #c49b6a;
-        stroke: #987a4d;
-        stroke-width: 2px;
-        filter: drop-shadow(0 1px 0px #7a5f2e);
-      }
-      
-      .cork {
-        fill: #8c6d4a;
-        stroke: #6b5436;
-        stroke-width: 1.5px;
-      }
-      
-      .bubbleA {
-        fill: #d62728;
-        opacity: 0.85;
-      }
-      
-      .bubbleB {
-        fill: #1f77b4;
-        opacity: 0.85;
-      }
-      
-      @media (max-width: 600px) {
-        nav ul {
-          flex-direction: column;
-          align-items: center;
-          gap: 0.5rem;
-        }
-        
-        nav a {
-          padding: 0.3rem 0;
-        }
-      }
-
-      #container3 {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-        margin: 0 auto 40px;
-      }
-
-      #container3 svg {
-        display: block;
-        margin: 0 auto;
-      }
-    `;
-    const style = document.createElement("style");
-    style.textContent = styleContent;
-    document.head.appendChild(style);
+    // Certifique-se de carregar a fonte Inter
+    const fontLink = document.createElement('link');
+    fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap';
+    fontLink.rel = 'stylesheet';
+    document.head.appendChild(fontLink);
 
     // === Configurações do Gráfico ===
     const width = 800, height = 500, margin = { top: 40, right: 30, bottom: 40, left: 50 };
