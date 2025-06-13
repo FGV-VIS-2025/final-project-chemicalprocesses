@@ -499,7 +499,7 @@ const seriesData = {
         options: isotopos.map(a => ({ value: a, text: `A = ${a}` })),
         selected: selectedIsotope,
         id: 'isotopoSelect',
-        label: 'Select an isotope:'
+        label: 'Select an isotope (atoms of the same element that have the same number of protons but different numbers of neutrons):'
       },
       { 
         type: 'button', 
@@ -524,10 +524,10 @@ const seriesData = {
     estado.emissoes = { alfa: 0, beta: 0, positron: 0, neutron: 0 };
 
     optionsContent = [
-      { type: 'input', inputType: 'number', min: 0, value: 0, id: 'alfaInput', label: 'Alpha particles:' },
-      { type: 'input', inputType: 'number', min: 0, value: 0, id: 'betaInput', label: 'Beta particles:' },
-      { type: 'input', inputType: 'number', min: 0, value: 0, id: 'positronInput', label: 'Positrons:' },
-      { type: 'input', inputType: 'number', min: 0, value: 0, id: 'neutronInput', label: 'Neutrons:' },
+      { type: 'input', inputType: 'number', min: 0, value: 0, id: 'alfaInput', label: 'Alpha particles (positively charged particles, formed by two protons and two neutrons):' },
+      { type: 'input', inputType: 'number', min: 0, value: 0, id: 'betaInput', label: 'Beta particles (negatively charged particles, which resemble electrons and have a much smaller mass than alpha particles):' },
+      { type: 'input', inputType: 'number', min: 0, value: 0, id: 'positronInput', label: 'Positrons (antiparticle of the electron, that is, it has the same mass but opposite charge (positive)):' },
+      { type: 'input', inputType: 'number', min: 0, value: 0, id: 'neutronInput', label: 'Neutrons (neutral particle, with mass similar to that of the proton):' },
       { 
         type: 'button', 
         text: 'Calculate Decay', 

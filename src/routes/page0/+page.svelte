@@ -6,9 +6,9 @@
     }
     
     body {
-      background-color: #f4f4f9;
+      background-color: white;
       color: #333;
-      margin: 0;
+      margin: 0.5rem;
       padding: 0;
     }
     
