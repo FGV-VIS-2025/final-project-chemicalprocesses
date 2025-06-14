@@ -1,17 +1,17 @@
 <svelte:head>
-  <title>Reaction Orders - Chemical Kinetics</title>
+  <title>Chemical Kinetics - Reaction Orders</title>
  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
 </svelte:head>
 
 <nav class="main-nav">
-  <a href="{base}/" class={currentPage === `${base}/` ? 'active' : ''}>Home</a>
-  <a href="{base}/page0" class={currentPage === `${base}/page0` ? 'active' : ''}>Introduction</a>
-  <a href="{base}/page1" class={currentPage === `${base}/page1` ? 'active' : ''}>Reaction Orders</a>
-  <a href="{base}/page2" class={currentPage === `${base}/page2` ? 'active' : ''}>Activation Energy</a>
-  <a href="{base}/page3" class={currentPage === `${base}/page3` ? 'active' : ''}>Simulation</a>
-  <a href="{base}/page4" class={currentPage === `${base}/page4` ? 'active' : ''}>Catalyst Effect</a>
-  <a href="{base}/page5" class={currentPage === `${base}/page5` ? 'active' : ''}>Radioactivity</a>
+  <a href="{base}/" class={isActive('/') ? 'active' : ''}>Home</a>
+  <a href="{base}/page0" class={isActive('/page0') ? 'active' : ''}>Introduction</a>
+  <a href="{base}/page1" class={isActive('/page1') ? 'active' : ''}>Reaction Orders</a>
+  <a href="{base}/page2" class={isActive('/page2') ? 'active' : ''}>Activation Energy</a>
+  <a href="{base}/page3" class={isActive('/page3') ? 'active' : ''}>Simulation</a>
+  <a href="{base}/page4" class={isActive('/page4') ? 'active' : ''}>Catalyst Effect</a>
+  <a href="{base}/page5" class={isActive('/page5') ? 'active' : ''}>Radioactivity</a>
 </nav>
 
 
@@ -292,7 +292,13 @@
   import { page } from '$app/stores';
   import { base } from '$app/paths';
 
-  let currentPage = $page.url.pathname;
+  $: isActive = (path) => {
+    // Remove a barra final para consistência
+    const currentPath = $page.url.pathname.replace(/\/$/, '');
+    const comparePath = `${base}${path}`.replace(/\/$/, '');
+    return currentPath === comparePath;
+  };
+
   let concAInput, concAVal, kInput, kVal, orderInput;
   let rateLawDescription;
 
@@ -1109,47 +1115,6 @@
     padding: 1.5rem;
     border-radius: 4px;
     border-left: 4px solid #2ecc71;
-  }
-  
-  /* Half-Life Chart Styles */
-  #half-life-chart svg {
-    display: block;
-    margin: 0 auto;
-    background: white;
-    border-radius: 4px;
-  }
-  
-  .line {
-    fill: none;
-    stroke-width: 2;
-  }
-  
-  .line.zero {
-    stroke: #e74c3c;
-  }
-  
-  .line.first {
-    stroke: #3498db;
-  }
-  
-  .line.second {
-    stroke: #2ecc71;
-  }
-  
-  .legend {
-    font-size: 0.9rem;
-  }
-  
-  .legend.zero {
-    fill: #e74c3c;
-  }
-  
-  .legend.first {
-    fill: #3498db;
-  }
-  
-  .legend.second {
-    fill: #2ecc71;
   }
   
   /* Controls Styling */

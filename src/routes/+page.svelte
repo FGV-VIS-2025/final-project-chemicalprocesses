@@ -3,16 +3,96 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </svelte:head>
 
-<nav class="main-nav">
-  <a href="{base}/" class={currentPage === `${base}/` ? 'active' : ''}>Home</a>
-  <a href="{base}/page0" class={currentPage === `${base}/page0` ? 'active' : ''}>Introduction</a>
-  <a href="{base}/page1" class={currentPage === `${base}/page1` ? 'active' : ''}>Reaction Orders</a>
-  <a href="{base}/page2" class={currentPage === `${base}/page2` ? 'active' : ''}>Activation Energy</a>
-  <a href="{base}/page3" class={currentPage === `${base}/page3` ? 'active' : ''}>Simulation</a>
-  <a href="{base}/page4" class={currentPage === `${base}/page4` ? 'active' : ''}>Catalyst Effect</a>
-  <a href="{base}/page5" class={currentPage === `${base}/page5` ? 'active' : ''}>Radioactivity</a>
-</nav>
+<script>
+  import { onMount } from 'svelte';
+  import * as d3 from 'd3';
+  import { page } from '$app/stores';
+  import { base } from '$app/paths';
+  
+  $: isActive = (path) => {
+    // Remove a barra final para consistência
+    const currentPath = $page.url.pathname.replace(/\/$/, '');
+    const comparePath = `${base}${path}`.replace(/\/$/, '');
+    return currentPath === comparePath;
+  };
 
+  onMount(() => {
+    const svg = d3.select("#molecule-bg")
+      .attr("width", window.innerWidth)
+      .attr("height", window.innerHeight)
+      .style("position", "fixed")
+      .style("top", 0)
+      .style("left", 0)
+      .style("z-index", -1)
+      .style("opacity", 0.25);
+
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const numMolecules = 150;
+
+    const moleculeTypes = ['H2O', 'CO2', 'O2', 'NH3', 'CH4'];
+
+    const molecules = d3.range(numMolecules).map(() => ({
+      type: moleculeTypes[Math.floor(Math.random() * moleculeTypes.length)],
+      x: Math.random() * width,
+      y: Math.random() * height,
+      dx: Math.random() * 0.5 - 0.25,
+      dy: Math.random() * 0.5 - 0.25
+    }));
+
+    const groups = svg.selectAll("g.molecule")
+      .data(molecules)
+      .enter()
+      .append("g")
+      .attr("class", "molecule")
+      .attr("transform", d => `translate(${d.x}, ${d.y})`);
+
+    groups.each(function (d) {
+      const g = d3.select(this);
+      if (d.type === 'H2O') {
+        g.append("circle").attr("r", 5).attr("cx", 0).attr("cy", 0).attr("fill", "#0077cc");
+        g.append("circle").attr("r", 3).attr("cx", -10).attr("cy", 10).attr("fill", "#00aaff");
+        g.append("circle").attr("r", 3).attr("cx", 10).attr("cy", 10).attr("fill", "#00aaff");
+      } else if (d.type === 'CO2') {
+        g.append("circle").attr("r", 5).attr("cx", 0).attr("cy", 0).attr("fill", "#0077cc");
+        g.append("circle").attr("r", 4).attr("cx", -12).attr("cy", 0).attr("fill", "#66ccff");
+        g.append("circle").attr("r", 4).attr("cx", 12).attr("cy", 0).attr("fill", "#66ccff");
+      } else if (d.type === 'O2') {
+        g.append("circle").attr("r", 4).attr("cx", -6).attr("cy", 0).attr("fill", "#66ccff");
+        g.append("circle").attr("r", 4).attr("cx", 6).attr("cy", 0).attr("fill", "#66ccff");
+      } else if (d.type === 'NH3') {
+        g.append("circle").attr("r", 5).attr("cx", 0).attr("cy", 0).attr("fill", "#4d88ff");
+        g.append("circle").attr("r", 3).attr("cx", -10).attr("cy", 6).attr("fill", "#99ccff");
+        g.append("circle").attr("r", 3).attr("cx", 10).attr("cy", 6).attr("fill", "#99ccff");
+        g.append("circle").attr("r", 3).attr("cx", 0).attr("cy", -10).attr("fill", "#99ccff");
+      } else if (d.type === 'CH4') {
+        g.append("circle").attr("r", 5).attr("cx", 0).attr("cy", 0).attr("fill", "#333");
+        g.append("circle").attr("r", 3).attr("cx", 12).attr("cy", 0).attr("fill", "#999");
+        g.append("circle").attr("r", 3).attr("cx", -12).attr("cy", 0).attr("fill", "#999");
+        g.append("circle").attr("r", 3).attr("cx", 0).attr("cy", 12).attr("fill", "#999");
+        g.append("circle").attr("r", 3).attr("cx", 0).attr("cy", -12).attr("fill", "#999");
+      }
+    });
+
+    d3.timer(() => {
+      groups.each(function (d) {
+        d.x = (d.x + d.dx + width) % width;
+        d.y = (d.y + d.dy + height) % height;
+        d3.select(this).attr("transform", `translate(${d.x}, ${d.y})`);
+      });
+    });
+  });
+</script>
+
+<nav class="main-nav">
+  <a href="{base}/" class={isActive('/') ? 'active' : ''}>Home</a>
+  <a href="{base}/page0" class={isActive('/page0') ? 'active' : ''}>Introduction</a>
+  <a href="{base}/page1" class={isActive('/page1') ? 'active' : ''}>Reaction Orders</a>
+  <a href="{base}/page2" class={isActive('/page2') ? 'active' : ''}>Activation Energy</a>
+  <a href="{base}/page3" class={isActive('/page3') ? 'active' : ''}>Simulation</a>
+  <a href="{base}/page4" class={isActive('/page4') ? 'active' : ''}>Catalyst Effect</a>
+  <a href="{base}/page5" class={isActive('/page5') ? 'active' : ''}>Radioactivity</a>
+</nav>
 
 <svg id="molecule-bg"></svg>
 
@@ -66,81 +146,6 @@
 <footer>
   <p>&copy; 2025 Chemical Reaction Visualizer | All rights reserved</p>
 </footer>
-
-<script>
-  import { onMount } from 'svelte';
-  import * as d3 from 'd3';
-  import { page } from '$app/stores';
-  import { base } from '$app/paths';
-  let currentPage = $page.url.pathname; // Isso identifica a página atual
-
-  onMount(() => {
-    const svg = d3.select("#molecule-bg")
-      .attr("width", window.innerWidth)
-      .attr("height", window.innerHeight)
-      .style("position", "fixed")
-      .style("top", 0)
-      .style("left", 0)
-      .style("z-index", -1)
-      .style("opacity", 0.25);
-
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    const numMolecules = 150;
-
-    const moleculeTypes = ['H2O', 'CO2', 'O2', 'NH3', 'CH4'];
-
-    const molecules = d3.range(numMolecules).map(() => ({
-      type: moleculeTypes[Math.floor(Math.random() * moleculeTypes.length)],
-      x: Math.random() * width,
-      y: Math.random() * height,
-      dx: Math.random() * 0.5 - 0.25,
-      dy: Math.random() * 0.5 - 0.25
-    }));
-
-    const groups = svg.selectAll("g.molecule")
-      .data(molecules)
-      .enter()
-      .append("g")
-      .attr("class", "molecule")
-      .attr("transform", d => `translate(${d.x}, ${d.y})`);
-
-    groups.each(function (d) {
-      const g = d3.select(this);
-      if (d.type === 'H2O') {
-        g.append("circle").attr("r", 5).attr("cx", 0).attr("cy", 0).attr("fill", "#0077cc"); // O
-        g.append("circle").attr("r", 3).attr("cx", -10).attr("cy", 10).attr("fill", "#00aaff"); // H
-        g.append("circle").attr("r", 3).attr("cx", 10).attr("cy", 10).attr("fill", "#00aaff"); // H
-      } else if (d.type === 'CO2') {
-        g.append("circle").attr("r", 5).attr("cx", 0).attr("cy", 0).attr("fill", "#0077cc"); // C
-        g.append("circle").attr("r", 4).attr("cx", -12).attr("cy", 0).attr("fill", "#66ccff"); // O
-        g.append("circle").attr("r", 4).attr("cx", 12).attr("cy", 0).attr("fill", "#66ccff"); // O
-      } else if (d.type === 'O2') {
-        g.append("circle").attr("r", 4).attr("cx", -6).attr("cy", 0).attr("fill", "#66ccff");
-        g.append("circle").attr("r", 4).attr("cx", 6).attr("cy", 0).attr("fill", "#66ccff");
-      } else if (d.type === 'NH3') {
-        g.append("circle").attr("r", 5).attr("cx", 0).attr("cy", 0).attr("fill", "#4d88ff"); // N
-        g.append("circle").attr("r", 3).attr("cx", -10).attr("cy", 6).attr("fill", "#99ccff"); // H
-        g.append("circle").attr("r", 3).attr("cx", 10).attr("cy", 6).attr("fill", "#99ccff"); // H
-        g.append("circle").attr("r", 3).attr("cx", 0).attr("cy", -10).attr("fill", "#99ccff"); // H
-      } else if (d.type === 'CH4') {
-        g.append("circle").attr("r", 5).attr("cx", 0).attr("cy", 0).attr("fill", "#333"); // C
-        g.append("circle").attr("r", 3).attr("cx", 12).attr("cy", 0).attr("fill", "#999"); // H
-        g.append("circle").attr("r", 3).attr("cx", -12).attr("cy", 0).attr("fill", "#999"); // H
-        g.append("circle").attr("r", 3).attr("cx", 0).attr("cy", 12).attr("fill", "#999"); // H
-        g.append("circle").attr("r", 3).attr("cx", 0).attr("cy", -12).attr("fill", "#999"); // H
-      }
-    });
-
-    d3.timer(() => {
-      groups.each(function (d) {
-        d.x = (d.x + d.dx + width) % width;
-        d.y = (d.y + d.dy + height) % height;
-        d3.select(this).attr("transform", `translate(${d.x}, ${d.y})`);
-      });
-    });
-  });
-</script>
 
 <style>
   .main-nav {
@@ -288,7 +293,6 @@
     z-index: 0;
   }
 
-  /* Ícones com links diretos para imagens válidas */
   .chem-dna {
     width: 40px;
     height: 50px;

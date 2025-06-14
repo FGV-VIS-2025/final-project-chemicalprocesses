@@ -1,5 +1,5 @@
 <svelte:head>
-  <title>Radioactive Decay - Chemical Kinetics</title>
+  <title>Chemical Kinetics - Radioactive Decay</title>
   <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
 </svelte:head>
@@ -12,7 +12,13 @@
   import { page } from '$app/stores';
   import { base } from '$app/paths';
 
-  let currentPage = $page.url.pathname; // Isso identifica a página atual
+  $: isActive = (path) => {
+    // Remove a barra final para consistência
+    const currentPath = $page.url.pathname.replace(/\/$/, '');
+    const comparePath = `${base}${path}`.replace(/\/$/, '');
+    return currentPath === comparePath;
+  };
+
   let n0 = 1000;
   let lambda = 0.1;
   let simulatedTime = 0;
@@ -39,15 +45,14 @@
 </script>
 
 <nav class="main-nav">
-  <a href="{base}/" class={currentPage === `${base}/` ? 'active' : ''}>Home</a>
-  <a href="{base}/page0" class={currentPage === `${base}/page0` ? 'active' : ''}>Introduction</a>
-  <a href="{base}/page1" class={currentPage === `${base}/page1` ? 'active' : ''}>Reaction Orders</a>
-  <a href="{base}/page2" class={currentPage === `${base}/page2` ? 'active' : ''}>Activation Energy</a>
-  <a href="{base}/page3" class={currentPage === `${base}/page3` ? 'active' : ''}>Simulation</a>
-  <a href="{base}/page4" class={currentPage === `${base}/page4` ? 'active' : ''}>Catalyst Effect</a>
-  <a href="{base}/page5" class={currentPage === `${base}/page5` ? 'active' : ''}>Radioactivity</a>
+  <a href="{base}/" class={isActive('/') ? 'active' : ''}>Home</a>
+  <a href="{base}/page0" class={isActive('/page0') ? 'active' : ''}>Introduction</a>
+  <a href="{base}/page1" class={isActive('/page1') ? 'active' : ''}>Reaction Orders</a>
+  <a href="{base}/page2" class={isActive('/page2') ? 'active' : ''}>Activation Energy</a>
+  <a href="{base}/page3" class={isActive('/page3') ? 'active' : ''}>Simulation</a>
+  <a href="{base}/page4" class={isActive('/page4') ? 'active' : ''}>Catalyst Effect</a>
+  <a href="{base}/page5" class={isActive('/page5') ? 'active' : ''}>Radioactivity</a>
 </nav>
-
 
 <main class="page" id="page5">
   <h1>

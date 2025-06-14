@@ -1,17 +1,16 @@
 <svelte:head>
-  <title>Page 3 - Simulation</title>
+  <title>Chemical Kinetics - Simulation</title>
 </svelte:head>
 
 <nav class="main-nav">
-  <a href="{base}/" class={currentPage === `${base}/` ? 'active' : ''}>Home</a>
-  <a href="{base}/page0" class={currentPage === `${base}/page0` ? 'active' : ''}>Introduction</a>
-  <a href="{base}/page1" class={currentPage === `${base}/page1` ? 'active' : ''}>Reaction Orders</a>
-  <a href="{base}/page2" class={currentPage === `${base}/page2` ? 'active' : ''}>Activation Energy</a>
-  <a href="{base}/page3" class={currentPage === `${base}/page3` ? 'active' : ''}>Simulation</a>
-  <a href="{base}/page4" class={currentPage === `${base}/page4` ? 'active' : ''}>Catalyst Effect</a>
-  <a href="{base}/page5" class={currentPage === `${base}/page5` ? 'active' : ''}>Radioactivity</a>
+  <a href="{base}/" class={isActive('/') ? 'active' : ''}>Home</a>
+  <a href="{base}/page0" class={isActive('/page0') ? 'active' : ''}>Introduction</a>
+  <a href="{base}/page1" class={isActive('/page1') ? 'active' : ''}>Reaction Orders</a>
+  <a href="{base}/page2" class={isActive('/page2') ? 'active' : ''}>Activation Energy</a>
+  <a href="{base}/page3" class={isActive('/page3') ? 'active' : ''}>Simulation</a>
+  <a href="{base}/page4" class={isActive('/page4') ? 'active' : ''}>Catalyst Effect</a>
+  <a href="{base}/page5" class={isActive('/page5') ? 'active' : ''}>Radioactivity</a>
 </nav>
-
 
 <main class="page" id="page5">
   <h1>
@@ -157,7 +156,13 @@
   import { fade } from 'svelte/transition';
   import { page } from '$app/stores';
   import { base } from '$app/paths';
-  let currentPage = $page.url.pathname; // Isso identifica a página atual
+
+  $: isActive = (path) => {
+    // Remove a barra final para consistência
+    const currentPath = $page.url.pathname.replace(/\/$/, '');
+    const comparePath = `${base}${path}`.replace(/\/$/, '');
+    return currentPath === comparePath;
+  };
 
 // Natural radioactive series data
 const seriesData = {

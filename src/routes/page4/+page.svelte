@@ -6,7 +6,13 @@
   import ReactionRateChart from './components/ReactionRateChart.svelte';
   import CatalystTypes from './components/CatalystTypes.svelte';
 
-  let currentPage = $page.url.pathname;
+  $: isActive = (path) => {
+    // Remove a barra final para consistência
+    const currentPath = $page.url.pathname.replace(/\/$/, '');
+    const comparePath = `${base}${path}`.replace(/\/$/, '');
+    return currentPath === comparePath;
+  };
+  
   let showExplanation = false;
 </script>
 
@@ -15,13 +21,13 @@
 </svelte:head>
 
 <nav class="main-nav">
-  <a href="{base}/" class={currentPage === `${base}/` ? 'active' : ''}>Home</a>
-  <a href="{base}/page0" class={currentPage === `${base}/page0` ? 'active' : ''}>Introduction</a>
-  <a href="{base}/page1" class={currentPage === `${base}/page1` ? 'active' : ''}>Reaction Orders</a>
-  <a href="{base}/page2" class={currentPage === `${base}/page2` ? 'active' : ''}>Activation Energy</a>
-  <a href="{base}/page3" class={currentPage === `${base}/page3` ? 'active' : ''}>Simulation</a>
-  <a href="{base}/page4" class={currentPage === `${base}/page4` ? 'active' : ''}>Catalyst Effect</a>
-  <a href="{base}/page5" class={currentPage === `${base}/page5` ? 'active' : ''}>Radioactivity</a>
+  <a href="{base}/" class={isActive('/') ? 'active' : ''}>Home</a>
+  <a href="{base}/page0" class={isActive('/page0') ? 'active' : ''}>Introduction</a>
+  <a href="{base}/page1" class={isActive('/page1') ? 'active' : ''}>Reaction Orders</a>
+  <a href="{base}/page2" class={isActive('/page2') ? 'active' : ''}>Activation Energy</a>
+  <a href="{base}/page3" class={isActive('/page3') ? 'active' : ''}>Simulation</a>
+  <a href="{base}/page4" class={isActive('/page4') ? 'active' : ''}>Catalyst Effect</a>
+  <a href="{base}/page5" class={isActive('/page5') ? 'active' : ''}>Radioactivity</a>
 </nav>
 
 <main class="page" id="page4">
