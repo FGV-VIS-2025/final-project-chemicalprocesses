@@ -113,5 +113,11 @@ http://localhost:5173
 
 ## Contribuidores
 
+- **Ana Júlia Amaro Pereira Rocha**
+   Design visual e simulação de decaimento radioativo.
+
+- **Maria Eduarda Mesquita Magalhães**
+   Implementação dos conceitos de energia de ativação e catálise.
+
 - **Ramyro Corrêa Aquines**  
-  Idealização, desenvolvimento dos gráficos interativos, animações e layout completo do projeto.
+   Lógica de interação, tooltip dinâmica, integração Svelte+D3, animação temporal
