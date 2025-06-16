@@ -1,99 +1,117 @@
 
-# Chemical Kinetics Visualizer – Plataforma Interativa Educacional
+# Reaction Visualizer – Simulador Interativo de Reações Químicas
 
 ## Estrutura do Repositório
 
 ```
-├─ src/
-│  ├─ lib/
-│  │  ├─ components/
-│  │  │  ├─ ArrheniusChart.svelte       ← Curva da equação de Arrhenius
-│  │  │  ├─ CollisionChart.svelte       ← Comparação de colisões moleculares
-│  │  │  ├─ DecayGraph.svelte           ← Gráfico N(t) com bola animada e tooltip
-│  │  │  ├─ ParticleDecay.svelte        ← Simulação do decaimento de partículas
-│  │  │  ├─ DecayHistogram.svelte       ← Histograma dos tempos de vida simulados
-│  │  │  ├─ FormulaBox.svelte           ← Renderização de fórmulas matemáticas
-│  │  ├─ utils/
-│  │  │  └─ decay.js                    ← Funções de simulação e cálculos
-│  ├─ routes/
-│  │  ├─ +page.svelte                   ← Página principal com layout, controles e integração dos gráficos
-├─ static/
-│  └─ css/
-│     └─ global.css                     ← Estilos globais (inclui fundo cinza e texto em negrito)
-├─ public/
-│  └─ data/                             ← Dados ou recursos estáticos
-├─ README.md                            ← Este arquivo
-├─ svelte.config.js                     ← Configuração do SvelteKit
-├─ package.json                         ← Dependências do projeto
-└─ vite.config.js                       ← Configuração do Vite
+.
+├── .github/              ← Workflows de CI/CD (deploy automático)
+│   └── workflows/
+│       └── deploy.yml    ← Configuração de deploy
+├── src/                  ← Código fonte do projeto SvelteKit
+│   ├── app.html          ← Template HTML principal
+│   ├── lib/              ← Componentes e utilitários reutilizáveis
+│   │   ├── components/
+│   │   │   ├── ArrheniusChart.svelte
+│   │   │   ├── CollisionChart.svelte
+│   │   │   ├── Controls.svelte
+│   │   │   ├── DecayGraph.svelte
+│   │   │   ├── DecayHistogram.svelte
+│   │   │   ├── FormulaBox.svelte
+│   │   │   ├── InfoBox.svelte
+│   │   │   ├── ParticleAnimation.svelte
+│   │   │   └── ParticleDecay.svelte
+│   │   └── utils/
+│   │       └── decayUtils.js
+│   └── routes/           ← Rotas das páginas do projeto
+│       ├── +layout.js
+│       ├── +page.svelte  ← Página principal com simulação interativa
+│       ├── page0/        ← Introdução ao tema
+│       │   └── +page.svelte
+│       ├── page1/        ← Ordens de reação
+│       │   └── +page.svelte
+│       ├── page2/        ← Energia de ativação e modelo de Arrhenius
+│       │   └── +page.svelte
+│       ├── page3/        ← Simulação de decaimento radioativo
+│       │   └── +page.svelte
+│       ├── page4/        ← Efeito de catalisadores
+│       │   ├── +page.svelte
+│       │   ├── components/
+│       │   ├── styles/
+│       │   │   └── page4.css
+│       │   └── utils/
+│       └── page5/        ← Encerramento e resumo
+│           └── +page.svelte
+├── static/               ← Arquivos estáticos
+│   ├── .nodekyll         ← Controle de build (ignorar)
+│   └── favicon.png
+├── .gitignore
+├── .npmrc
+├── package.json
+├── package-lock.json
+├── svelte.config.js
+├── vite.config.js
+└── README.md             ← Este arquivo
 ```
 
 ## Como Funciona a Visualização
 
-Este projeto visa facilitar o ensino de *cinética química* por meio de **simulações interativas** com forte apelo visual.
+O projeto é uma simulação educacional interativa que explora conceitos fundamentais de reações químicas:
 
-### Componentes Principais
-
-- **ParticleDecay**: Representa visualmente partículas decaindo com movimentação Browniana.
-- **DecayGraph**: Mostra a curva exponencial N(t) com uma bola animada e tooltip dinâmico.
-- **DecayHistogram**: Visualiza a distribuição de tempos de decaimento.
-- **ArrheniusChart**: Gráfico da equação de Arrhenius com curva suave e ponto destacado.
-- **CollisionChart**: Mostra a distribuição de colisões moleculares em diferentes temperaturas.
-
-### Integração e Interatividade
-
-- A simulação é controlada por `+page.svelte`, que envia parâmetros para os componentes e escuta eventos como `simulationFinished`.
-- Ao final da simulação (quando todas as partículas decaem ou o tempo máximo é atingido), um aviso é exibido automaticamente.
+- **Page 0 – Introdução**: Apresenta o tema da cinética química e contextualiza o projeto.
+- **Page 1 – Ordem de Reações**: Demonstra o impacto das ordens de reação com visualização em tempo real.
+- **Page 2 – Energia de Ativação**: Gráfico de Arrhenius interativo com controle de temperatura e energia.
+- **Page 3 – Decaimento Radioativo**: Simulação de partículas, histograma animado e visualização de N(t).
+- **Page 4 – Catalisadores**: Exibe superfícies energéticas e curvas de energia com e sem catalisador.
+- **Page 5 – Conclusão**: Conecta os tópicos e propõe reflexões para o aprendizado.
 
 ## Processo de Desenvolvimento
 
-### 1. Definição Conceitual
-Mapeamos os principais conceitos de cinética química que apresentam dificuldades didáticas: ordem de reação, energia de ativação, decaimento radioativo e catálise.
+1. **Conceituação**
+   - Definição dos conceitos-chave da cinética química a serem visualizados.
 
-### 2. Prototipagem Visual e Arquitetura
-Foram criados protótipos de visualizações com SVG e D3.js integradas ao Svelte para permitir interações suaves e animações visuais.
+2. **Prototipagem das Visualizações**
+   - Desenvolvimento de gráficos com D3.js integrados ao Svelte.
 
-### 3. Simulação e Interação
-Cada conceito foi representado por meio de simulações específicas com cálculos analíticos (ex: N(t) = N₀e^(-λt), Arrhenius).
+3. **Estruturação de Páginas**
+   - Modularização em rotas distintas para cada conceito.
 
-### 4. Ajuste Estético e Didático
-Foram adicionadas tooltips, animações e feedback visual com foco em acessibilidade e clareza. Paleta de cores, fundo e negrito nos textos foram otimizados para contraste e leitura.
+4. **Refinamento**
+   - Ajustes estéticos, interações e tooltips para acessibilidade e clareza.
 
-### 5. Testes, Feedback e Finalização
-O projeto foi testado com usuários e o relatório final foi gerado para documentar os resultados e objetivos alcançados.
+5. **Deploy**
+   - Configuração do deploy automático via GitHub Actions para o GitHub Pages.
 
 ## Como Rodar Localmente
 
+Este projeto utiliza o SvelteKit.
+
 1. Clone o repositório:
-   ```bash
-   git clone https://github.com/seu-usuario/chemical-kinetics-visualizer.git
-   cd chemical-kinetics-visualizer
-   ```
+
+```bash
+git clone <url-do-repo>
+cd nome-do-projeto
+```
 
 2. Instale as dependências:
-   ```bash
-   npm install
-   ```
 
-3. Rode o servidor de desenvolvimento:
-   ```bash
-   npm run dev
-   ```
+```bash
+npm install
+```
 
-4. Acesse a aplicação no navegador:
-   ```
-   http://localhost:5173
-   ```
+3. Rode o servidor local:
 
-## Créditos
+```bash
+npm run dev
+```
 
-- **Ana Júlia Amaro** — Design visual, simulação de decaimento radioativo
-- **Maria Eduarda Mesquita** — Implementação dos conceitos de energia de ativação e catálise
-- **Ramyro Corrêa** — Lógica de interação, tooltip dinâmica, integração Svelte+D3, animação temporal
+4. Acesse no navegador:
 
-## Referências
+```
+http://localhost:5173
+```
 
-- Atkins’ Physical Chemistry (Oxford, 2022)  
-- Inorganic Chemistry – Housecroft & Sharpe (Pearson, 2018)  
-- Nuclear Decay Data – IAEA (2020)  
-- Introduction to Surface Chemistry – Somorjai & Li (Wiley, 2010)
+## Contribuidores
+
+- **Ramyro Corrêa Aquines**  
+  Idealização, desenvolvimento dos gráficos interativos, animações e layout completo do projeto.
